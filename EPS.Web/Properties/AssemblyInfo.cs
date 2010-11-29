@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("EPS.Web")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("EPS.Web")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
