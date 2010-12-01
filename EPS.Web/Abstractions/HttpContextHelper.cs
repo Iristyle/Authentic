@@ -8,9 +8,9 @@ namespace EPS.ServiceModel.Web.Abstractions
     /// <remarks>   ebrown, 11/8/2010. </remarks>
     public class HttpContextHelper
     {
-        /// <summary>   Gets or sets a Func&lt;HttpContext&gt; that can be used as a substitute in code for HttpContext.Current. </summary>
+        /// <summary>   Gets or sets a <see cref="Func{Httpcontext}"/> that can be used as a substitute in code for HttpContext.Current. </summary>
         /// <remarks>   ebrown, 11/8/2010. </remarks>
-        /// <returns>   A Func&lt;HttpContext&gt; that can be evaluated to return a HttpContext</returns>
+        /// <returns>   A <see cref="Func{HttpContext}"/> that can be evaluated to return a HttpContext</returns>
         public static Func<HttpContext> Current = () =>
         {
             return HttpContext.Current;

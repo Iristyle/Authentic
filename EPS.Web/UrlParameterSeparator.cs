@@ -13,7 +13,7 @@ namespace EPS.Web
         /// <summary> Query string separator ?.  </summary>
         [EnumValue("?")]
         QuestionMark,
-        /// <summary> Query parameter separator &.  </summary>
+        /// <summary> Query parameter separator &amp;.  </summary>
         [EnumValue("&")]
         Ampersand
     }
