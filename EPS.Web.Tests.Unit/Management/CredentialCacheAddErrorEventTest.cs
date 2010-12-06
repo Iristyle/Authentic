@@ -8,7 +8,7 @@ using Xunit;
 
 namespace EPS.Web.Management.Tests.Unit
 {
-    class CredentialCacheAddErrorEventTest
+    public class CredentialCacheAddErrorEventTest
     {
         [Fact]
         public void TestSuite()

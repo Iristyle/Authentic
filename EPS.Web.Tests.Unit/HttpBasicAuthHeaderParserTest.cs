@@ -8,7 +8,7 @@ using Xunit;
 
 namespace EPS.Web.Tests.Unit
 {
-    class HttpBasicAuthHeaderParserTest
+    public class HttpBasicAuthHeaderParserTest
     {
         [Fact]
         public void TestSuite()

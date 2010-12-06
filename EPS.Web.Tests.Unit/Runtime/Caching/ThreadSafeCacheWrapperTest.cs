@@ -8,7 +8,7 @@ using Xunit;
 
 namespace EPS.Runtime.Caching.Tests.Unit
 {
-    class ThreadSafeCacheWrapperTest
+    public class ThreadSafeCacheWrapperTest
     {
         [Fact]
         public void TestSuite()

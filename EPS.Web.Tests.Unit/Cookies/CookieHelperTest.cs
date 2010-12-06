@@ -8,7 +8,7 @@ using Xunit;
 
 namespace EPS.Web.Tests.Unit
 {
-    class CookieHelperTest
+    public class CookieHelperTest
     {
     }
 }

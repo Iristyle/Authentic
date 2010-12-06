@@ -8,7 +8,7 @@ using Xunit;
 
 namespace EPS.Web.Abstractions.Tests.Unit
 {
-    class HttpAsyncHandlerBaseTest
+    public class HttpAsyncHandlerBaseTest
     {
         [Fact]
         public void TestSuite()

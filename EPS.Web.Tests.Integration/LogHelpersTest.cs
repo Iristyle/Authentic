@@ -8,7 +8,7 @@ using Xunit;
 
 namespace EPS.Web.Tests.Integration
 {
-    class LogHelpersTest
+    public class LogHelpersTest
     {
         [Fact]
         public void TestSuite()

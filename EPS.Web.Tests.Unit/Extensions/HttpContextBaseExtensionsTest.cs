@@ -8,7 +8,7 @@ using Xunit;
 
 namespace EPS.Web.Extensions.Tests.Unit
 {
-    class HttpContextBaseExtensionsTest
+    public class HttpContextBaseExtensionsTest
     {
         [Fact]
         public void TestSuite()

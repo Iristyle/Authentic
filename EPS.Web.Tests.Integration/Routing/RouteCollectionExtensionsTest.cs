@@ -8,7 +8,7 @@ using Xunit;
 
 namespace EPS.Web.Routing.Tests.Integration
 {
-    class RouteCollectionExtensionsTest
+    public class RouteCollectionExtensionsTest
     {
         [Fact]
         public void TestSuite()
