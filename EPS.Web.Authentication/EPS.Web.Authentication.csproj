@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E5EA4024-EB71-462D-A3D4-447182A000D6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EPS.Web.Authentication</RootNamespace>
+    <AssemblyName>EPS.Web.Authentication</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\EPS.Web.Authentication.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\EPS.Web.Authentication.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetOpenAuth">
+      <HintPath>..\lib\DotNetOpenAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Build\SharedAssemblyVersioning.cs">
+      <Link>Properties\SharedAssemblyVersioning.cs</Link>
+    </Compile>
+    <Compile Include="SimpleAuthenticationFailureEventArgs.cs" />
+    <Compile Include="SimpleAuthenticationFailureHandler.cs" />
+    <Compile Include="Configuration\SimpleAuthenticationFailureHandlerConfigurationSection.cs" />
+    <Compile Include="SimpleAuthenticationFailureHandlerFactory.cs" />
+    <Compile Include="RedirectOnAuthenticationFailureHandler.cs" />
+    <Compile Include="Configuration\RedirectOnAuthenticationFailureHandlerConfigurationSection.cs" />
+    <Compile Include="RedirectOnAuthenticationFailureHandlerFactory.cs" />
+    <Compile Include="Abstractions\HttpContextInspectingAuthenticationFailureHandlerBase.cs" />
+    <Compile Include="Abstractions\HttpContextInspectingAuthenticationFailureHandlerFactoryBase.cs" />
+    <Compile Include="Abstractions\HttpContextInspectingAuthenticatorBase.cs" />
+    <Compile Include="Abstractions\HttpHeaderInspectingAuthenticatorFactoryBase.cs" />
+    <Compile Include="InspectorAuthenticationResult.cs" />
+    <Compile Include="Basic\BasicAuthenticationFailureHandler.cs" />
+    <Compile Include="Basic\BasicAuthenticationFailureHandlerFactory.cs" />
+    <Compile Include="Basic\Configuration\BasicAuthenticationFailureHandlerConfigurationSection.cs" />
+    <Compile Include="Configuration\HttpContextInspectingAuthenticationFailureConfigurationSection.cs" />
+    <Compile Include="Abstractions\IHttpContextInspectingAuthenticationFailureHandler.cs" />
+    <Compile Include="Abstractions\IHttpContextInspectingAuthenticationFailureHandlerFactory.cs" />
+    <Compile Include="Basic\BasicAuthenticationInspectingAuthenticator.cs" />
+    <Compile Include="Basic\BasicAuthenticationInspectingAuthenticatorFactory.cs" />
+    <Compile Include="Basic\Configuration\BasicAuthenticationHeaderInspectorConfigurationElement.cs" />
+    <Compile Include="Configuration\HttpContextInspectingAuthenticationModuleSection.cs" />
+    <Compile Include="Configuration\HttpContextInspectingAuthenticatorConfigurationElement.cs" />
+    <Compile Include="Configuration\HttpContextInspectingAuthenticatorConfigurationElementCollection.cs" />
+    <Compile Include="Basic\IBasicAuthPrincipalBuilder.cs" />
+    <Compile Include="Basic\IBasicAuthPrincipalBuilderFactory.cs" />
+    <Compile Include="Configuration\AuthenticationConfigurationSectionGroup.cs" />
+    <Compile Include="Security\FixedProviderRolePrincipal.cs" />
+    <Compile Include="HttpContextInspectingAuthenticationModule.cs" />
+    <Compile Include="Abstractions\IHttpContextInspectingAuthenticator.cs" />
+    <Compile Include="Abstractions\IHttpContextInspectingAuthenticatorFactory.cs" />
+    <Compile Include="Utility\IPrincipalExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\RoleHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EPS.Utility\EPS.Utility.csproj">
+      <Project>{10D51FFF-4F91-4917-82EA-B7426B2652F6}</Project>
+      <Name>EPS.Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EPS.Web\EPS.Web.csproj">
+      <Project>{41E2BFC8-105F-4927-B43D-644DD25BD8CE}</Project>
+      <Name>EPS.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent />
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
