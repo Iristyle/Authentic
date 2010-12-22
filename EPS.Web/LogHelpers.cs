@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Web;
 using System.Web.Security;
@@ -23,11 +24,11 @@ namespace EPS.Web
             {                                
                 string logString = string.Empty;
                 if (null != Thread.CurrentPrincipal)
-                    logString = String.Format("Current Thread Principal is a {0}{1}{2}{1}{1}", Thread.CurrentPrincipal.GetType(), Environment.NewLine, Thread.CurrentPrincipal.ToLogString());
+                    logString = String.Format(CultureInfo.InvariantCulture, "Current Thread Principal is a {0}{1}{2}{1}{1}", Thread.CurrentPrincipal.GetType(), Environment.NewLine, Thread.CurrentPrincipal.ToLogString());
                 
                 var user = HttpContextHelper.GetContextUser(request);
                 if (null != user)
-                    logString += String.Format("{0}{0}HTTP Context Principal is a {1}{0}{2}", Environment.NewLine, user.GetType(), user.ToLogString());
+                    logString += String.Format(CultureInfo.InvariantCulture, "{0}{0}HTTP Context Principal is a {1}{0}{2}", Environment.NewLine, user.GetType(), user.ToLogString());
 
                 return logString;
             }
@@ -46,29 +47,29 @@ namespace EPS.Web
         /// <returns>   A log friendly string that summarizes the request details. </returns>
         public static string GetRequestDetailsString(Uri url, Uri urlReferrer, HttpBrowserCapabilitiesBase browser, string userAgent, string userHostAddress, HttpCookieCollection cookies)
         {
-            string requestDetails = null != url && null != url.AbsoluteUri ? String.Format("URL: {0}{1}", url.AbsoluteUri, Environment.NewLine) : 
+            string requestDetails = null != url && null != url.AbsoluteUri ? String.Format(CultureInfo.InvariantCulture, "URL: {0}{1}", url.AbsoluteUri, Environment.NewLine) : 
                 string.Empty;
             
             if ((null != urlReferrer) && (null != urlReferrer.AbsoluteUri))
-                requestDetails += String.Format("Referrer: {0}{1}", urlReferrer.AbsoluteUri, Environment.NewLine);
-            requestDetails += String.Format("Browser (User-Agent): {0} ({1}){2}", (null != browser ? browser.Id ?? "Not Identified" : "Not Identified"), userAgent.IfMissing("NULL"), Environment.NewLine);
-            requestDetails += String.Format("IP: {0}{1}", userHostAddress ?? "NULL", Environment.NewLine);
+                requestDetails += String.Format(CultureInfo.InvariantCulture, "Referrer: {0}{1}", urlReferrer.AbsoluteUri, Environment.NewLine);
+            requestDetails += String.Format(CultureInfo.InvariantCulture, "Browser (User-Agent): {0} ({1}){2}", (null != browser ? browser.Id ?? "Not Identified" : "Not Identified"), userAgent.IfMissing("NULL"), Environment.NewLine);
+            requestDetails += String.Format(CultureInfo.InvariantCulture, "IP: {0}{1}", userHostAddress ?? "NULL", Environment.NewLine);
            
 
             if ((null != cookies) && (0 != cookies.Count))
             {
-                requestDetails += String.Format("{0}Cookies:{0}{0}", Environment.NewLine);
-                requestDetails += String.Format("Name\t\t\tValue{0}", Environment.NewLine);
+                requestDetails += String.Format(CultureInfo.InvariantCulture, "{0}Cookies:{0}{0}", Environment.NewLine);
+                requestDetails += String.Format(CultureInfo.InvariantCulture, "Name\t\t\tValue{0}", Environment.NewLine);
                 for (int i = 0; i < cookies.Count; ++i)
-                    requestDetails += String.Format("{0}\t{1}{2}", cookies[i].Name, cookies[i].Value ?? string.Empty, Environment.NewLine);
+                    requestDetails += String.Format(CultureInfo.InvariantCulture, "{0}\t{1}{2}", cookies[i].Name, cookies[i].Value ?? string.Empty, Environment.NewLine);
             }
 
             if (null != Thread.CurrentPrincipal)
-                requestDetails += String.Format("{0}{0}Current Thread Principal is a {1}{0}{2}", Environment.NewLine, Thread.CurrentPrincipal.GetType(), Thread.CurrentPrincipal.ToLogString());
+                requestDetails += String.Format(CultureInfo.InvariantCulture, "{0}{0}Current Thread Principal is a {1}{0}{2}", Environment.NewLine, Thread.CurrentPrincipal.GetType(), Thread.CurrentPrincipal.ToLogString());
 
             var user = HttpContextHelper.GetContextUser();
             if (null != user)
-                requestDetails += String.Format("{0}{0}HTTP Context Principal is a {1}{0}{2}", Environment.NewLine, user.GetType(), user.ToLogString());
+                requestDetails += String.Format(CultureInfo.InvariantCulture, "{0}{0}HTTP Context Principal is a {1}{0}{2}", Environment.NewLine, user.GetType(), user.ToLogString());
 
             return requestDetails;
         }        
@@ -83,9 +84,9 @@ namespace EPS.Web
             if (null == formsIdentity)
                 return "FormsIdentity is null";
 
-            return String.Format("Forms Identity - Name: {0}{1}", formsIdentity.Name ?? "N/A", Environment.NewLine)
-            + String.Format("Forms Identity - Authenticated: [{0}]{1}", (formsIdentity.IsAuthenticated ? "X" : " "), Environment.NewLine)
-            + String.Format("Forms Identity - Authentication Type: {0}{1}", formsIdentity.AuthenticationType ?? "N/A", Environment.NewLine);
+            return String.Format(CultureInfo.InvariantCulture, "Forms Identity - Name: {0}{1}", formsIdentity.Name ?? "N/A", Environment.NewLine)
+            + String.Format(CultureInfo.InvariantCulture, "Forms Identity - Authenticated: [{0}]{1}", (formsIdentity.IsAuthenticated ? "X" : " "), Environment.NewLine)
+            + String.Format(CultureInfo.InvariantCulture, "Forms Identity - Authentication Type: {0}{1}", formsIdentity.AuthenticationType ?? "N/A", Environment.NewLine);
         }
     }
 }
