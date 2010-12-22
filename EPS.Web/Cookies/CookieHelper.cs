@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -20,7 +21,10 @@ namespace EPS.Web
         /// <returns>   The cookie as a string. </returns>
         public static string ToCookieString(this HttpCookie cookie, bool encode)
         {
-            return String.Format("{0}={1}; ", (encode ? HttpUtility.HtmlEncode(cookie.Name) : cookie.Name), (encode ? HttpUtility.HtmlEncode(cookie.Value) : cookie.Value));
+            if (null == cookie)
+                throw new ArgumentNullException("cookie");
+
+            return String.Format(CultureInfo.InvariantCulture, "{0}={1}; ", (encode ? HttpUtility.HtmlEncode(cookie.Name) : cookie.Name), (encode ? HttpUtility.HtmlEncode(cookie.Value) : cookie.Value));
         }
 
         /// <summary>   A HttpCookie extension method that converts a cookie to a string that can be used in a HTTP 'Set-Cookie' header. </summary>
@@ -30,6 +34,9 @@ namespace EPS.Web
         /// <returns>   This cookie string. </returns>
         public static string ToSetCookieString(this HttpCookie cookie, bool includeSet)
         {
+            if (null == cookie)
+                throw new ArgumentNullException("cookie");
+
             return (includeSet ? "Set-Cookie: " : string.Empty) +
                 EPS.Net.CookieHelper.GetSetCookieHeader(cookie.Name, cookie.Value, cookie.Expires, cookie.Domain, cookie.Path);
         }
@@ -40,6 +47,9 @@ namespace EPS.Web
         /// <returns>   This cookie string. </returns>
         public static string GetSetCookieHeader(this HttpCookie cookie)
         {
+            if (null == cookie)
+                throw new ArgumentNullException("cookie");
+
             return EPS.Net.CookieHelper.GetSetCookieHeader(cookie.Name, cookie.Value, cookie.Expires, cookie.Domain, cookie.Path);
         }
 
@@ -56,6 +66,9 @@ namespace EPS.Web
         /// <returns>   A new HttpCookie. </returns>
         public static HttpCookie ToCookieWithNewDomain(this HttpCookie cookie, string domain, string path = "/")
         {
+            if (null == cookie)
+                throw new ArgumentNullException("cookie");
+
             return new HttpCookie(cookie.Name, cookie.Value) { Path = path, Domain = domain };
         }
 
@@ -72,7 +85,10 @@ namespace EPS.Web
         /// <returns>   A new Cookie. </returns>
         public static Cookie ConvertToCookieWithNewDomain(this HttpCookie cookie, string domain, string path = "/")
         {
-            return new Cookie(cookie.Name, cookie.Value, "/", domain);
+            if (null == cookie)
+                throw new ArgumentNullException("cookie");
+
+            return new Cookie(cookie.Name, cookie.Value, path, domain);
         }
 
 
@@ -81,7 +97,10 @@ namespace EPS.Web
         /// <param name="cookie">   A HttpCookie to copy. </param>
         /// <returns>   A new Cookie. </returns>
         public static Cookie ConvertToCookie(this HttpCookie cookie)
-        {            
+        {
+            if (null == cookie)
+                throw new ArgumentNullException("cookie");
+
             return new Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain)
             {
                 Expires = cookie.Expires,
@@ -96,6 +115,9 @@ namespace EPS.Web
         /// <returns>   A new HttpCookie. </returns>
         public static HttpCookie ConvertToHttpCookie(this Cookie cookie)
         {
+            if (null == cookie)
+                throw new ArgumentNullException("cookie");
+
             return new HttpCookie(cookie.Name, cookie.Value)
             {
                 Domain = cookie.Domain,
@@ -112,6 +134,9 @@ namespace EPS.Web
         /// <returns>   The http cookies. </returns>
         public static IEnumerable<HttpCookie> GetHttpCookies(this HttpWebResponse response)
         {
+            if (null == response)
+                throw new ArgumentNullException("response");
+
             return response.Cookies.OfType<Cookie>().Select(c => c.ConvertToHttpCookie());
         }
         //5-3-2010 -- old code -- instead just converters above since the runtime has done this work already
