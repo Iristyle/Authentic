@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Threading;
@@ -65,7 +66,7 @@ namespace EPS.Runtime.Caching
                     //validate that T passed in is same type of existing T
                     var cache = existingCaches[cacheName];
                     if (typeof(T) != cache.GetType().GetGenericArguments().First())
-                        throw new ArgumentException(String.Format("A cache with name [{0}] exists, but the type specified [{1}] does not match the existing type", cacheName, typeof(T).Name), "T");
+                        throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "A cache with name [{0}] exists, but the type specified [{1}] does not match the existing type", cacheName, typeof(T).Name), "cacheName");
 
                     return cache;
                 }
@@ -79,7 +80,7 @@ namespace EPS.Runtime.Caching
             }
             catch (Exception ex)
             {
-                log.Error(String.Format("Unexpected error constructing SimpleThreadSafeCacheWrapper<{0}>", typeof(T).Name), ex);
+                log.Error(String.Format(CultureInfo.CurrentCulture, "Unexpected error constructing SimpleThreadSafeCacheWrapper<{0}>", typeof(T).Name), ex);
                 throw;
             }
             finally
@@ -97,8 +98,10 @@ namespace EPS.Runtime.Caching
 
         /// <summary>   Gets an or fill cache. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
-        /// <exception cref="Exception">                Thrown when exception. </exception>
-        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
+        /// <exception cref="LockRecursionException">   Thrown when a lock cannot be . </exception>
+        /// <exception cref="ApplicationException">     Thrown when the user supplied fillIfMissing Func{T} throws an Exception -- look at InnerException for details</exception>
+        /// <exception cref="NullReferenceException">   Thrown when the user supplied fillIfMissing Func{T} generates a null object instance.  </exception>
+        /// <exception cref="Exception">                An error of any type may be rethrown when something unexpected happens. </exception>
         /// <param name="key">              The key. </param>
         /// <param name="fillIfMissing">    The delegate used to provide the item for the cache. </param>
         /// <returns>   The item if it exists, or after construction of the instance using the fillIfMissing delegate. </returns>
@@ -106,7 +109,7 @@ namespace EPS.Runtime.Caching
         {
             //TODO: this code is crying for refactoring
             T cachedItem = default(T);
-            string cacheKey = String.Format("{0}//{1}", cacheName, key);
+            string cacheKey = String.Format(CultureInfo.InvariantCulture, "{0}//{1}", cacheName, key);
 
             try
             {
@@ -138,9 +141,9 @@ namespace EPS.Runtime.Caching
                             constructionLocks.Add(cacheKey, keySpecificLock);
                         }
                     }
-                    catch (Exception ex)
+                    catch (LockRecursionException ex)
                     {
-                        log.Error(String.Format("Error getting lock in cache [{0}] for key [{1}]", cacheName, cacheKey), ex);
+                        log.Error(String.Format(CultureInfo.InvariantCulture, "Error getting lock in cache [{0}] for key [{1}]", cacheName, cacheKey), ex);
                         throw;
                     }
                     finally
@@ -169,10 +172,11 @@ namespace EPS.Runtime.Caching
                         catch (Exception ex)
                         {
                             log.Error("Item creation function returned a null -- nothing to cache", ex);
+                            throw new ApplicationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} failed -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name));
                         }
 
                         if (null == cachedItem)
-                            throw new ArgumentNullException(String.Format("Call to {0} failed -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name));
+                            throw new NullReferenceException(String.Format(CultureInfo.CurrentCulture, "Call to {0} returned, but the item is null -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name));
 
                         MemoryCache.Default.Add(cacheKey, cachedItem, cachePolicy);
                         /*
@@ -194,7 +198,8 @@ namespace EPS.Runtime.Caching
                 }
                 catch (Exception ex)
                 {
-                    log.Error(String.Format("Problem retrieving or creating new cached item in cache [{0}] for key [{1}]", cacheName, cacheKey), ex);
+                    string msg = String.Format(CultureInfo.InvariantCulture, "Problem retrieving or creating new cached item in cache [{0}] for key [{1}]", cacheName, cacheKey);
+                    log.Error(msg, ex);
                     throw;
                 }
                 finally
