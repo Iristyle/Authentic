@@ -84,7 +84,7 @@
     <Compile Include="Routing\DelegateRouteHandler.cs" />
     <Compile Include="Routing\PermanentRedirects.cs" />
     <Compile Include="Routing\RouteCollectionExtensions.cs" />
-    <Compile Include="Runtime\Caching\ThreadSafeCacheWrapper.cs" />
+    <Compile Include="Runtime\Caching\ThreadSafeCacheManager.cs" />
     <Compile Include="UrlParameterSeparator.cs">
       <SubType>Code</SubType>
     </Compile>

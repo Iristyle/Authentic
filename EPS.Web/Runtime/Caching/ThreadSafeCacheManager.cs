@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Threading;
+using System.Threading.Tasks;
 using log4net;
 
 namespace EPS.Runtime.Caching
@@ -11,11 +12,11 @@ namespace EPS.Runtime.Caching
     //TODO: 5-11-2010 -- move this to our Util library when System.Runtime.Caching gets moved to the Client profile -- maybe 4 SP1?
     /// <summary>   A class for thread-safe access to System.Runtime.Caching on a specific Type</summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
-    public class ThreadSafeCacheManager<T> where T : class
+    public class ThreadSafeCacheManager<T> : IDisposable where T : class
     {        
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         //our static shared list of constructed wrappers... reuse ones constructed with the same type and name
-        private static Dictionary<string, ThreadSafeCacheManager<T>> existingCaches = new Dictionary<string, ThreadSafeCacheManager<T>>();
+        private readonly static Dictionary<string, ThreadSafeCacheManager<T>> existingCaches = new Dictionary<string, ThreadSafeCacheManager<T>>();
 
         //TODO: potentially integrate PerfmonManager
         private string cacheName = string.Empty;
@@ -99,8 +100,9 @@ namespace EPS.Runtime.Caching
         /// <summary>   Gets an or fill cache. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <exception cref="LockRecursionException">   Thrown when a lock cannot be . </exception>
-        /// <exception cref="ApplicationException">     Thrown when the user supplied fillIfMissing Func{T} throws an Exception -- look at InnerException for details</exception>
-        /// <exception cref="NullReferenceException">   Thrown when the user supplied fillIfMissing Func{T} generates a null object instance.  </exception>
+        /// <exception cref="InvalidOperationException">     Thrown when the user supplied fillIfMissing Func{T} throws an Exception -- look at InnerException for details
+        /// 												 OR when the user supplied fillIfMissing Func{T} generates a null object instance.
+        /// 												 </exception>
         /// <exception cref="Exception">                An error of any type may be rethrown when something unexpected happens. </exception>
         /// <param name="key">              The key. </param>
         /// <param name="fillIfMissing">    The delegate used to provide the item for the cache. </param>
@@ -172,11 +174,11 @@ namespace EPS.Runtime.Caching
                         catch (Exception ex)
                         {
                             log.Error("Item creation function returned a null -- nothing to cache", ex);
-                            throw new ApplicationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} failed -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name));
+                            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} failed -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name));
                         }
 
                         if (null == cachedItem)
-                            throw new NullReferenceException(String.Format(CultureInfo.CurrentCulture, "Call to {0} returned, but the item is null -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name));
+                            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} returned, but the item is null -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name));
 
                         MemoryCache.Default.Add(cacheKey, cachedItem, cachePolicy);
                         /*
@@ -215,6 +217,25 @@ namespace EPS.Runtime.Caching
             }
 
             return cachedItem;
+        }
+
+        /// <summary>   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. </summary>
+        /// <remarks>   ebrown, 12/23/2010. </remarks>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Parallel.ForEach(constructionLocks, (cl => cl.Value.Dispose()));
+                masterCollectionLock.Dispose();
+            }
+        }
+
+        /// <summary>   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. </summary>
+        /// <remarks>   ebrown, 12/23/2010. </remarks>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
