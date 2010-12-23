@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Security;
 using EPS.Diagnostics;
 using EPS.Security;
-using EPS.ServiceModel.Web.Abstractions;
+using EPS.Web.Abstractions;
 
 namespace EPS.Web
 {
