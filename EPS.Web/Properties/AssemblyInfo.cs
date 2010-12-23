@@ -1,5 +1,5 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -17,3 +17,15 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("02f7fc81-c30c-429b-be60-b65af8ab62ce")]
+
+[assembly: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Target = "EPS.Web", Scope = "assembly", Justification = "EPS is a proper company name")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Target = "EPS.Web", Scope = "namespace", Justification = "EPS is a proper company name")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Target = "EPS.Web.Abstractions", Scope = "namespace", Justification = "EPS is a proper company name")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Target = "EPS.Web.Configuration", Scope = "namespace", Justification = "EPS is a proper company name")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Target = "EPS.Web.Management", Scope = "namespace", Justification = "EPS is a proper company name")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Target = "EPS.Web.Routing", Scope = "namespace", Justification = "EPS is a proper company name")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Target = "EPS.Runtime.Caching", Scope = "namespace", Justification = "EPS is a proper company name")]
+
+[assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Target = "EPS.Web.Abstractions", Scope = "namespace", Justification = "Helpers mirror .NET framework type layout")]
+[assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Target = "EPS.Web.Routing", Scope = "namespace", Justification = "Helpers mirror .NET framework type layout")]
+[assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Target = "EPS.Runtime.Caching", Scope = "namespace", Justification = "Helpers mirror .NET framework type layout")]
