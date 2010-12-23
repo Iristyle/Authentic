@@ -2,19 +2,36 @@
 using System.Web;
 using System.Security.Principal;
 
-namespace EPS.ServiceModel.Web.Abstractions
+namespace EPS.Web.Abstractions
 {
     /// <summary>   A testing friendly class that provides access to HttpContext.Current OR a user defined substitute. </summary>
     /// <remarks>   ebrown, 11/8/2010. </remarks>
-    public class HttpContextHelper
+    public static class HttpContextHelper
     {
-        /// <summary>   Gets or sets a <see cref="Func{Httpcontext}"/> that can be used as a substitute in code for HttpContext.Current. </summary>
-        /// <remarks>   ebrown, 11/8/2010. </remarks>
-        /// <returns>   A <see cref="Func{HttpContext}"/> that can be evaluated to return a HttpContext</returns>
-        public static Func<HttpContext> Current = () =>
+        private static bool currentUserDefined = false;
+        private static Func<HttpContext> current = () =>
         {
             return HttpContext.Current;
         };
+
+        /// <summary>   Gets or sets a <see cref="Func{Httpcontext}"/> that can be used as a substitute in code for HttpContext.Current. </summary>
+        /// <remarks>   ebrown, 11/8/2010. </remarks>
+        /// <returns>   A <see cref="Func{HttpContext}"/> that can be evaluated to return a HttpContext</returns>
+        public static Func<HttpContext> Current
+        {
+            get { return current; }
+            set
+            {
+                lock (typeof(HttpContextHelper))
+                {
+                    if (currentUserDefined)
+                        throw new InvalidOperationException("The Current Func<HttpContext> may only be set once per AppDomain");
+
+                    current = value;
+                    currentUserDefined = true;
+                }
+            }
+        }
 
         /// <summary>   Returns the HttpContextBase attached to the HttpRequestBase if one exists, otherwise wraps up HttpContextHelper.Current(). </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
