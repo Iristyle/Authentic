@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Net;
 using System.Text;
 using log4net;
@@ -41,7 +42,7 @@ namespace EPS.Web
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Basic"))
+                if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Basic", StringComparison.InvariantCulture))
                     throw new ArgumentException("AuthHeader cannot be null or empty OR does not start with Basic", "authHeader");
                 
                 // that's the right encoding -- use the auth header with "basic" stripped out
@@ -50,7 +51,7 @@ namespace EPS.Web
                     throw new ArgumentException("Authorization header did not contain a base 64 encoded user:pass");                    
 
                 string[] credentials = userPass.Split(new char[] { ':' }, 2);
-                log.Info(String.Format("Authorization header contains user [{0}] / pass [{1}] selected", 
+                log.Info(String.Format(CultureInfo.InvariantCulture, "Authorization header contains user [{0}] / pass [{1}] selected", 
                     credentials[0] ?? "* EMPTY *", credentials[1] ?? "* EMPTY *"));
                 return new NetworkCredential(credentials[0], credentials[1]);
             }
