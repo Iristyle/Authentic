@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using EPS.Text;
@@ -8,16 +9,16 @@ namespace EPS.Web
 {
     /// <summary>   Some helper classes for working with web goop. </summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
-    public class WebHelpers
+    public static class WebHelpers
     {
         /// <summary>   Encodes a NameValueCollection full of parameters as a POST friendly string. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <param name="parameters">   The parameters. </param>
         /// <returns>   a string that can be used to POST with. </returns>
-        public static string EncodePOSTString(NameValueCollection parameters)
+        public static string EncodePostString(NameValueCollection parameters)
         {
             return string.Join("&", parameters.AllKeys.Where(k => null != k)
-                .Select(key => string.Format("{0}={1}", HttpUtility.UrlEncodeUnicode(key), HttpUtility.UrlEncodeUnicode(parameters[key]))));            
+                .Select(key => string.Format(CultureInfo.InvariantCulture, "{0}={1}", HttpUtility.UrlEncodeUnicode(key), HttpUtility.UrlEncodeUnicode(parameters[key]))));            
         }
         
         /// <summary>   Encodes a parameter for use in a URL with an optional separator. </summary>
@@ -37,9 +38,9 @@ namespace EPS.Web
             if (allowBlank || !string.IsNullOrEmpty(value))
             {                
                 if (EncodeType.Url == encodeType)
-                    return String.Format("{0}{1}={2}", prepend.ToEnumValueString(), HttpUtility.UrlEncode(name), HttpUtility.UrlEncode(value));
+                    return String.Format(CultureInfo.InvariantCulture, "{0}{1}={2}", prepend.ToEnumValueString(), HttpUtility.UrlEncode(name), HttpUtility.UrlEncode(value));
 
-                return String.Format("{0}{1}={2}", prepend.ToEnumValueString(), HttpUtility.HtmlEncode(name), HttpUtility.HtmlEncode(value));
+                return String.Format(CultureInfo.InvariantCulture, "{0}{1}={2}", prepend.ToEnumValueString(), HttpUtility.HtmlEncode(name), HttpUtility.HtmlEncode(value));
             }
 
             return string.Empty;
@@ -53,29 +54,24 @@ namespace EPS.Web
         /// <a href="http://www.west-wind.com/Weblog/posts/154812.aspx" />
         /// </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
-        /// <param name="originalUrl">  Any Url including those starting with ~. </param>
+        /// <param name="originalUri">  Any Url including those starting with ~. </param>
         /// <returns>   Site relative url. </returns>
-        public static string ResolveUrl(string originalUrl)
+        public static Uri ResolveUrl(Uri originalUri)
         {
-            if (string.IsNullOrEmpty(originalUrl) ||
-                IsAbsolutePath(originalUrl) ||
+            if (string.IsNullOrEmpty(originalUri.OriginalString) ||
+                originalUri.IsAbsoluteUri ||
                 // *** We don't start with the '~' -> we don't process the Url
-                !originalUrl.StartsWith("~"))
-                return originalUrl;
+                !originalUri.OriginalString.StartsWith("~"))
+                return originalUri;
 
             // *** Fix up path for ~ root app dir directory
             // VirtualPathUtility blows up if there is a 
             // query string, so we have to account for this.
-            int queryStringStartIndex = originalUrl.IndexOf('?');
-            if (queryStringStartIndex != -1)
-            {
-                string queryString = originalUrl.Substring(queryStringStartIndex);
-                string baseUrl = originalUrl.Substring(0, queryStringStartIndex);
+            string queryString = originalUri.Query;
 
-                return string.Concat(VirtualPathUtility.ToAbsolute(baseUrl), queryString);
-            }
-
-            return VirtualPathUtility.ToAbsolute(originalUrl);
+            return !string.IsNullOrWhiteSpace(queryString) ?
+                new Uri(VirtualPathUtility.ToAbsolute(originalUri.GetLeftPart(UriPartial.Path)) + queryString) : 
+                new Uri(VirtualPathUtility.ToAbsolute(originalUri.OriginalString));
         }
 
         /// <summary>   
@@ -86,18 +82,17 @@ namespace EPS.Web
         /// </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <param name="context">      Any Url, either App relative or fully qualified. </param>
-        /// <param name="serverUrl">    URL of the server. </param>
+        /// <param name="serverUri">    URL of the server. </param>
         /// <param name="forceHttps">   if true forces the url to use https - default is false. </param>
-        /// <returns>   A fully qualified absolute server Url . </returns>
-        public static string ResolveServerUrl(HttpContextBase context, string serverUrl, bool forceHttps = false)
+        /// <returns>   A fully qualified absolute server Uri . </returns>
+        public static Uri ResolveServerUrl(HttpContextBase context, Uri serverUri, bool forceHttps = false)
         {
-            if (string.IsNullOrEmpty(serverUrl) || IsAbsolutePath(serverUrl))
-                return serverUrl;
+            if (null == serverUri || string.IsNullOrEmpty(serverUri.AbsolutePath) || serverUri.IsAbsoluteUri)
+                return serverUri;
 
-            Uri result = new Uri(context.Request.Url, ResolveUrl(serverUrl));
+            Uri result = new Uri(context.Request.Url, ResolveUrl(serverUri));
             
-            return forceHttps ? ForceUriToHttps(result).ToString()
-                : result.ToString();
+            return forceHttps ? ForceUriToHttps(result): result;
         }
 
         /// <summary>   
@@ -108,11 +103,11 @@ namespace EPS.Web
         /// </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <param name="context">      Any Url, either App relative or fully qualified. </param>
-        /// <param name="serverUrl">    URL of the server. </param>
-        /// <returns>   A fully qualified absolute server Url . </returns>
-        public static string ResolveServerUrl(HttpContextBase context, string serverUrl)
+        /// <param name="serverUri">    URL of the server. </param>
+        /// <returns>   A fully qualified absolute server Uri . </returns>
+        public static Uri ResolveServerUrl(HttpContextBase context, Uri serverUri)
         {
-            return ResolveServerUrl(context, serverUrl, false);
+            return ResolveServerUrl(context, serverUri, false);
         }
 
         private static Uri ForceUriToHttps(Uri uri)
@@ -121,16 +116,19 @@ namespace EPS.Web
             return new UriBuilder(uri) { Scheme = Uri.UriSchemeHttps, Port = 443 }.Uri;
         }
 
+        //deprecated
+        /*
         private static bool IsAbsolutePath(string originalUrl)
         {
             // *** Absolute path - just return
-            int indexOfSlashes = originalUrl.IndexOf("://");
-            int indexOfQuestionMarks = originalUrl.IndexOf("?");
+            int indexOfSlashes = originalUrl.IndexOf("://", StringComparison.OrdinalIgnoreCase);
+            int indexOfQuestionMarks = originalUrl.IndexOf("?", StringComparison.OrdinalIgnoreCase);
 
             if (indexOfSlashes > -1 && (indexOfQuestionMarks < 0 || (indexOfQuestionMarks > -1 && indexOfQuestionMarks > indexOfSlashes)))
                 return true;
 
             return false;
         }
+        */
     }
 }
