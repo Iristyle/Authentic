@@ -12,8 +12,6 @@ namespace EPS.Web
     /// <remarks>   ebrown, 11/10/2010. </remarks>
     public static class CookieHelper
     {
-        private static Regex cookieSplitter = new Regex(@"(?=\S),(?=\S)", RegexOptions.Compiled);
-
         /// <summary>   A HttpCookie extension method that converts a cookie to a HTTP header style cookie string. </summary>
         /// <remarks>   ebrown, 11/9/2010. </remarks>
         /// <param name="cookie">   The cookie to convert. </param>
@@ -138,40 +136,6 @@ namespace EPS.Web
                 throw new ArgumentNullException("response");
 
             return response.Cookies.OfType<Cookie>().Select(c => c.ConvertToHttpCookie());
-        }
-        //5-3-2010 -- old code -- instead just converters above since the runtime has done this work already
-        /*
-        if (null == response || null == response.Headers)
-            return new List<HttpCookie>();
-
-        string setCookieHeader = response.Headers[HttpResponseHeader.SetCookie];
-        if (string.IsNullOrEmpty(setCookieHeader))
-            return new List<HttpCookie>();
-
-        log.InfoFormat("Cookie retrieved: Set-Cookie: {0}", setCookieHeader);
-
-        return cookieSplitter.Split(setCookieHeader).Where(s => !string.IsNullOrEmpty(s)).Select(cookieSplit =>
-        {
-            HttpCookie cookie = new HttpCookie(string.Empty, string.Empty);
-            foreach (var s in cookieSplit.Trim().Split(';').Select(s => s.Trim()))
-            {
-                if (0 == s.IndexOf("expires="))
-                    cookie.Expires = DateTime.Parse(s.Replace("expires=", string.Empty));
-                else if (0 == s.IndexOf("path="))
-                    cookie.Path = s.Replace("path=", string.Empty); //"/"; 
-                else if (0 == s.IndexOf("domain="))
-                    cookie.Domain = s.Replace("domain=", string.Empty); //".mykonicaminolta.com";
-                else if (s.IndexOf('=') >= 0)
-                {
-                    int index = s.IndexOf('=');
-                    cookie.Name = s.Substring(0, index);
-                    if ((index + 1) < s.Length)
-                        cookie.Value = s.Substring(index + 1);
-                }
-            }
-            return cookie;
-
-        }).ToList();
-        */
+        }        
     }
 }
