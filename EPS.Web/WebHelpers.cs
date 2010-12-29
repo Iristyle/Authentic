@@ -23,6 +23,7 @@ namespace EPS.Web
         
         /// <summary>   Encodes a parameter for use in a URL with an optional separator. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="encodeType">   Type of the encode. </param>
         /// <param name="name">         Name of the parameter. </param>
         /// <param name="value">        The parameter value. </param>
@@ -32,7 +33,9 @@ namespace EPS.Web
         public static string EncodeUrlParameter(EncodeType encodeType, string name, string value, UrlParameterSeparator prepend = UrlParameterSeparator.None, bool allowBlank = true)
         {
             if (null == name)
-                return string.Empty;
+                throw new ArgumentNullException("name");
+            if (null == value)
+                throw new ArgumentNullException("value");
 
             value = value.Trim();
             if (allowBlank || !string.IsNullOrEmpty(value))
@@ -50,14 +53,18 @@ namespace EPS.Web
         /// Returns a site relative HTTP path from a partial path starting out with a ~. Same syntax that ASP.Net internally supports but this
         /// method can be used outside of the Page framework.
         /// 
-        /// Works like Control.ResolveUrl including support for ~ syntax but returns an absolute URL. 
-        /// <a href="http://www.west-wind.com/Weblog/posts/154812.aspx" />
+        /// Works like Control.ResolveUrl including support for ~ syntax but returns an absolute URL.
+        /// <a href="http://www.west-wind.com/Weblog/posts/154812.aspx" /> 
         /// </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="originalUri">  Any Url including those starting with ~. </param>
         /// <returns>   Site relative url. </returns>
         public static Uri ResolveUrl(Uri originalUri)
         {
+            if (null == originalUri)
+                throw new ArgumentNullException("originalUri");
+
             if (string.IsNullOrEmpty(originalUri.OriginalString) ||
                 originalUri.IsAbsoluteUri ||
                 // *** We don't start with the '~' -> we don't process the Url
@@ -81,6 +88,7 @@ namespace EPS.Web
         /// Works like Control.ResolveUrl including support for ~ syntax but returns an absolute URL. 
         /// </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="context">      Any Url, either App relative or fully qualified. </param>
         /// <param name="serverUri">    URL of the server. </param>
         /// <param name="forceHttps">   if true forces the url to use https - default is false. </param>
@@ -89,6 +97,9 @@ namespace EPS.Web
         {
             if (null == serverUri || string.IsNullOrEmpty(serverUri.AbsolutePath) || serverUri.IsAbsoluteUri)
                 return serverUri;
+
+            if (null == serverUri)
+                throw new ArgumentNullException("serverUri");
 
             Uri result = new Uri(context.Request.Url, ResolveUrl(serverUri));
             
