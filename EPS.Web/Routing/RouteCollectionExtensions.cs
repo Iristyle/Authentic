@@ -26,14 +26,14 @@ namespace EPS.Web.Routing
 
         private static IHttpHandler GetRedirectHandler(RequestContext context, string targetUrl, bool permanently)
         {
-            if (targetUrl.StartsWith("~/"))
+            if (targetUrl.StartsWith("~/", StringComparison.InvariantCulture))
             {
                 Route route = new Route(targetUrl.Substring(2), null);
                 var vpd = route.GetVirtualPath(context, context.RouteData.Values);
                 if (vpd != null)
                     targetUrl = "~/" + vpd.VirtualPath;
             }
-            else if (targetUrl.StartsWith("/"))
+            else if (targetUrl.StartsWith("/", StringComparison.InvariantCulture))
             {
                 Route route = new Route(targetUrl.Substring(1), null);
                 var vpd = route.GetVirtualPath(context, context.RouteData.Values);
