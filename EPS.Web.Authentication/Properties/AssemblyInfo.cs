@@ -26,3 +26,6 @@ using System.Runtime.InteropServices;
 [assembly: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Target = "EPS.Web.Authentication.Configuration", Scope = "namespace", Justification = "EPS is a proper company name")]
 [assembly: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Target = "EPS.Web.Authentication.Security", Scope = "namespace", Justification = "EPS is a proper company name")]
 [assembly: SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Target = "EPS.Web.Authentication.Utility", Scope = "namespace", Justification = "EPS is a proper company name")]
+
+[assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Target = "EPS.Web.Authentication.Security", Scope = "namespace", Justification = "Most appropriate namespace structure")]
+[assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Target = "EPS.Web.Authentication.Utility", Scope = "namespace", Justification = "Most appropriate namespace structure")]
