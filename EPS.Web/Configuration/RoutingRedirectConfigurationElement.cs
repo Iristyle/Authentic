@@ -17,7 +17,7 @@ namespace EPS.Web.Configuration
 
         /// <summary>   Gets or sets the target URL. </summary>
         /// <value> The target url. </value>
-        [ConfigurationProperty("targetUrl", IsRequired = true, DefaultValue = string.Empty)]
+        [ConfigurationProperty("targetUrl", IsRequired = true, DefaultValue = "")]
         public string TargetUrl
         {
             get { return (string)this["targetUrl"]; }
