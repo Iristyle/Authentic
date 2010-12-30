@@ -12,10 +12,10 @@ namespace EPS.Web.Management
         /// <summary>   Constructor that calls the base constructor with EventCodes.CacheAdd. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <param name="sender">       Source of the event. </param>
-        /// <param name="username">     The username. </param>
+        /// <param name="userName">     The username. </param>
         /// <param name="exception">    The exception. </param>
-        public CredentialCacheAddErrorEvent(object sender, string username, Exception exception)
-            : base("Failed to add credential identifier for: " + username, sender, EventCodes.CacheAdd, exception)
+        public CredentialCacheAddErrorEvent(object sender, string userName, Exception exception)
+            : base("Failed to add credential identifier for: " + userName, sender, EventCodes.CacheAdd, exception)
         {
             this.exception = exception;
         }

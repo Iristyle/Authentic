@@ -9,9 +9,9 @@ namespace EPS.Web.Management
         /// <summary>   Constructor. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <param name="sender">   Source of the event. </param>
-        /// <param name="username"> The username. </param>
-        public CredentialCacheAddEvent(object sender, string username)
-            : base("Credential identifier added for: " + username, sender, EventCodes.CacheAdd)
+        /// <param name="userName"> The username. </param>
+        public CredentialCacheAddEvent(object sender, string userName)
+            : base("Credential identifier added for: " + userName, sender, EventCodes.CacheAdd)
         { }
     }
 }
