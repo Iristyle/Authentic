@@ -36,14 +36,14 @@ namespace EPS.Web.Authentication.Basic.Configuration
             {
                 var type = Type.GetType(PrincipalBuilderFactory);
                 if (null == type)
-                    throw new ConfigurationErrorsException(String.Format("The principalBuilderFactory type name specified [{0}] cannot be found - check configuration settings", PrincipalBuilderFactory.IfMissing("")));
+                    throw new ConfigurationErrorsException(String.Format("The principalBuilderFactory type name specified [{0}] cannot be found - check configuration settings", PrincipalBuilderFactory ?? string.Empty));
 
                 if (!typeof(IBasicAuthPrincipalBuilderFactory).IsAssignableFrom(type))                
-                    throw new ConfigurationErrorsException(String.Format("The principalBuilderFactory type name specified [{0}] must implement interface {1} - check configuration settings", PrincipalBuilderFactory.IfMissing(""), typeof(IBasicAuthPrincipalBuilderFactory).Name));
+                    throw new ConfigurationErrorsException(String.Format("The principalBuilderFactory type name specified [{0}] must implement interface {1} - check configuration settings", PrincipalBuilderFactory ?? string.Empty, typeof(IBasicAuthPrincipalBuilderFactory).Name));
 
                 var constructor = type.GetConstructor(Type.EmptyTypes);
                 if (null == constructor)
-                    throw new ConfigurationErrorsException(String.Format("The principalBuilderFactory type name specified [{0}] must have a parameterless constructor - check configuration settings", PrincipalBuilderFactory.IfMissing("")));
+                    throw new ConfigurationErrorsException(String.Format("The principalBuilderFactory type name specified [{0}] must have a parameterless constructor - check configuration settings", PrincipalBuilderFactory ?? string.Empty));
             }
         }
 

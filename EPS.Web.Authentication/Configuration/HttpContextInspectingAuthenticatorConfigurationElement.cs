@@ -30,14 +30,14 @@ namespace EPS.Web.Authentication.Configuration
             //simple verification of info supplied in config -- not used for anything (yet)
             var t = Type.GetType(Factory);
             if (null == t)
-                throw new ConfigurationErrorsException(String.Format("The factory type specified [{0}] cannot be found - check configuration settings", Factory ?? ""));
+                throw new ConfigurationErrorsException(String.Format("The factory type specified [{0}] cannot be found - check configuration settings", Factory ?? string.Empty));
 
             if (!typeof(IHttpContextInspectingAuthenticatorFactory<>).IsGenericInterfaceAssignableFrom(t))
-                throw new ConfigurationErrorsException(String.Format("The factory type specified [{0}] must implement interface {1} - check configuration settings", Factory ?? "", typeof(IHttpContextInspectingAuthenticatorFactory<>).Name));
+                throw new ConfigurationErrorsException(String.Format("The factory type specified [{0}] must implement interface {1} - check configuration settings", Factory ?? string.Empty, typeof(IHttpContextInspectingAuthenticatorFactory<>).Name));
 
             var c = t.GetConstructor(Type.EmptyTypes);
             if (null == c)
-                throw new ConfigurationErrorsException(String.Format("The factory type specified [{0}] must have a parameterless constructor - check configuration settings", Factory ?? ""));
+                throw new ConfigurationErrorsException(String.Format("The factory type specified [{0}] must have a parameterless constructor - check configuration settings", Factory ?? string.Empty));
         }
 
         //this allows us to use types derived from HttpContextInspectingAuthenticatorConfigurationElement
