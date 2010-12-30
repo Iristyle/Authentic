@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 
 namespace EPS.Web.Abstractions
@@ -45,7 +46,8 @@ namespace EPS.Web.Abstractions
         // -- hence the need for this try / catch
         //2.  Would like to use some more succint code like the commented function below -- but can't find a way to call it!
         //http://stackoverflow.com/questions/623716/how-can-i-pass-an-event-to-a-function-in-c
-        private void WrapAttach(Action attachment)
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The purpose of this call is to eat any exceptions that may occur as we're wrapping an existing HttpContext")]
+        private static void WrapAttach(Action attachment)
         {
             try { attachment(); }
             catch (Exception) { }
