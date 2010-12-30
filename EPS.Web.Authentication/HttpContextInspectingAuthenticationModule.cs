@@ -12,12 +12,18 @@ using log4net;
 namespace EPS.Web.Authentication
 {
     //using a unit test friendly base class
-    //http://weblogs.asp.net/rashid/archive/2009/03/12/unit-testable-httpmodule-and-httphandler.aspx
-    
+    //http://weblogs.asp.net/rashid/archive/2009/03/12/unit-testable-httpmodule-and-httphandler.aspx    
     public class HttpContextInspectingAuthenticationModule : HttpModuleBase
     {
-        protected static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private HttpContextInspectingAuthenticationModuleSection configuration;
+
+        /// <summary>   Gets the log4net logger for the class. </summary>
+        /// <value> The logger instance. </value>
+        protected ILog Log
+        {
+            get { return log; }
+        }
 
         protected HttpContextInspectingAuthenticationModuleSection Configuration
         {
