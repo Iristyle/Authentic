@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Caching;
@@ -54,6 +55,7 @@ namespace EPS.Runtime.Caching
         /// <param name="cacheTimeSpan">        The cache time span. </param>
         /// <param name="cacheItemPriority">    The cache item priority. </param>
         /// <returns>   An instance of the cache manager. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
         public static ThreadSafeCacheManager<T> Construct(string cacheName, TimeSpan cacheTimeSpan, CacheItemPriority cacheItemPriority = CacheItemPriority.Default)
         {
             if (string.IsNullOrEmpty(cacheName))
