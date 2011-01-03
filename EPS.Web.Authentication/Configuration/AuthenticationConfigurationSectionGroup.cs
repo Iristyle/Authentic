@@ -3,8 +3,12 @@ using System.Configuration;
 
 namespace EPS.Web.Authentication.Configuration
 {
+    /// <summary>   The configuration section group that defines how the authentication system works. </summary>
+    /// <remarks>   ebrown, 1/3/2011. </remarks>
     public class AuthenticationConfigurationSectionGroup : ConfigurationSectionGroup
     {                
+        /// <summary>   Gets the configuration section responsible for configuring the header inspector. </summary>
+        /// <value> The header inspector. </value>
         [ConfigurationProperty("httpHeaderAuthentication", IsRequired = false)]
         public HttpContextInspectingAuthenticationModuleSection HeaderInspector
         {
@@ -17,18 +21,6 @@ namespace EPS.Web.Authentication.Configuration
         public OpenId.Configuration.AuthenticationConfigurationSection OpenIdAuthentication
         {
             get { return (OpenId.Configuration.AuthenticationConfigurationSection)Sections["openIdAuthentication"]; }
-        }
-
-        [ConfigurationProperty("onyxAuthentication", IsRequired = false)]
-        public Onyx.Configuration.AuthenticationConfigurationSection OnyxAuthentication
-        {
-            get { return (Onyx.Configuration.AuthenticationConfigurationSection)Sections["onyxAuthentication"]; }
-        }
-
-        [ConfigurationProperty("corporateAuthentication", IsRequired = false)]
-        public Corporate.Configuration.AuthenticationConfigurationSection CorporateAuthentication
-        {
-            get { return (Corporate.Configuration.AuthenticationConfigurationSection)Sections["corporateAuthentication"]; }
         }
 
         [ConfigurationProperty("dna", IsRequired = false)]
