@@ -72,7 +72,9 @@ namespace EPS.Web.Authentication.Security
             ConfigurationManager = configurationManager;
             KeyValuePair<string, RoleProvider> pair = roleProviders.Value.FirstOrDefault(rp => (0 == string.Compare(name, rp.Key, StringComparison.CurrentCulture)));
             if (null == pair.Value)
+            {
                 throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "No RoleProvider by the name {0} exists in the <providers> configuration section of the <roleManager>", name), "name");
+            }
 
             return pair.Value;
         }

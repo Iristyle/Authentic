@@ -43,16 +43,22 @@ namespace EPS.Web.Authentication.Configuration
             base.PostDeserialize();
 
             if (Enabled && Roles.Enabled)
+            {
                 throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "To enable custom HTTP Header Authentication with the <httpContextAuthentication> and the enabled=\"true\" setting, the <roleManager> must be set to enabled=\"false\""));
+            }
 
             if (Enabled && Inspectors.Count == 0)
+            {
                 throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "There must be at least one inspector in the <inspectors> section under the <httpContextAuthentication> configuration element"));
+            }
 
             if (!string.IsNullOrEmpty(FailureHandlerFactoryName))
             {
                 var t = Type.GetType(FailureHandlerFactoryName);
                 if (null == t)
+                {
                     throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The factory type specified [{0}] cannot be found - check configuration settings", FailureHandlerFactoryName));
+                }
 
                 if (!typeof(IHttpContextInspectingAuthenticationFailureHandlerFactory<>).IsGenericInterfaceAssignableFrom(t))
                     throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The factory type specified [{0}] must implement interface {1} - check configuration settings", FailureHandlerFactoryName, typeof(IHttpContextInspectingAuthenticationFailureHandlerFactory<>).Name));
