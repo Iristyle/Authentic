@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using System.Web.Routing;
 
@@ -13,12 +14,16 @@ namespace EPS.Web.Routing
     {
         /// <summary>   A RouteCollection extension method that we need to redirect permanently. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="routes">       The routes to act on. </param>
         /// <param name="url">          The base URL to route from. </param>
         /// <param name="targetUrl">    The target URL to route to. </param>
         /// <returns>   A new Route representative of redirecting the routes. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1054:UriPropertiesShouldNotBeStrings", Justification = "These strings may be partial / relative urls or may be prefixed with ~")]
         public static Route RedirectPermanently(this RouteCollection routes, string url, string targetUrl)
         {
+            if (null == routes) { throw new ArgumentNullException("routes"); }
+
             Route route = new Route(url, new DelegateRouteHandler(context => GetRedirectHandler(context, targetUrl, true)));
             routes.Add(route);
             return route;
@@ -42,7 +47,7 @@ namespace EPS.Web.Routing
             }
 
             return new DelegateHttpHandler(httpContext =>
-                {                    
+                {
                     if (permanently)
                     {
                         httpContext.Response.Status = "301 Moved Permanently";
@@ -50,7 +55,9 @@ namespace EPS.Web.Routing
                         httpContext.Response.AddHeader("Location", targetUrl);
                     }
                     else
+                    {
                         httpContext.Response.Redirect(targetUrl, false);
+                    }
                 }, false);
         }
     }
