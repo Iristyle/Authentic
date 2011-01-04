@@ -27,6 +27,9 @@ namespace EPS.Web.Authentication
         public override IPrincipal OnAuthenticationFailure(HttpContextBase context, 
             Dictionary<IHttpContextInspectingAuthenticator, InspectorAuthenticationResult> inspectorResults)
         {
+            //this shouldn't ever happen
+            if (null == context) { throw new ArgumentNullException("context"); }
+
             context.Response.Redirect(Configuration.RedirectUri.ToUrl(), true);
             return null;
         }
