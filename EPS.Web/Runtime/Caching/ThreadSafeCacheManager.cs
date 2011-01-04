@@ -55,7 +55,8 @@ namespace EPS.Runtime.Caching
         /// <param name="cacheTimeSpan">        The cache time span. </param>
         /// <param name="cacheItemPriority">    The cache item priority. </param>
         /// <returns>   An instance of the cache manager. </returns>
-        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes", Justification = "A static factory method is perfectly acceptable in this context"), 
+        SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
         public static ThreadSafeCacheManager<T> Construct(string cacheName, TimeSpan cacheTimeSpan, CacheItemPriority cacheItemPriority = CacheItemPriority.Default)
         {
             if (string.IsNullOrEmpty(cacheName))
@@ -83,7 +84,6 @@ namespace EPS.Runtime.Caching
                 //if (config.Utility.Caching.PerformanceMonitoring)
                  //   DestroyAndCreatePerfmonCounters();
                 return newCache;
-
             }
             catch (Exception ex)
             {
@@ -105,16 +105,21 @@ namespace EPS.Runtime.Caching
 
         /// <summary>   Gets an or fill cache. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
-        /// <exception cref="LockRecursionException">   Thrown when a lock cannot be . </exception>
-        /// <exception cref="InvalidOperationException">     Thrown when the user supplied fillIfMissing Func{T} throws an Exception -- look at InnerException for details
-        /// 												 OR when the user supplied fillIfMissing Func{T} generates a null object instance.
-        /// 												 </exception>
-        /// <exception cref="Exception">                An error of any type may be rethrown when something unexpected happens. </exception>
+        /// <exception cref="ArgumentNullException">        Thrown when one or more required arguments are null. </exception>
+        /// <exception cref="LockRecursionException">       Thrown when a lock cannot be . </exception>
+        /// <exception cref="InvalidOperationException">    Thrown when the user supplied fillIfMissing Func{T} throws an Exception -- look at
+        ///                                                 InnerException for details OR when the user supplied fillIfMissing Func{T} generates
+        ///                                                 a null object instance. </exception>
+        /// <exception cref="Exception">                    An error of any type may be rethrown when something unexpected happens. </exception>
         /// <param name="key">              The key. </param>
         /// <param name="fillIfMissing">    The delegate used to provide the item for the cache. </param>
         /// <returns>   The item if it exists, or after construction of the instance using the fillIfMissing delegate. </returns>
         public T GetOrFillCache(string key, Func<T> fillIfMissing)
         {
+            if (null == key) { throw new ArgumentNullException("key"); }
+            if (null == fillIfMissing) { throw new ArgumentNullException("fillIfMissing"); }
+            if (null == fillIfMissing.Method) { throw new ArgumentException("fillIfMissing.Method is null"); }
+
             //TODO: this code is crying for refactoring
             T cachedItem = default(T);
             string cacheKey = String.Format(CultureInfo.InvariantCulture, "{0}//{1}", cacheName, key);
@@ -183,12 +188,12 @@ namespace EPS.Runtime.Caching
                         catch (Exception ex)
                         {
                             log.Error("Item creation function returned a null -- nothing to cache", ex);
-                            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} failed -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name));
+                            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} failed -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name ?? string.Empty));
                         }
 
                         if (null == cachedItem)
                         {
-                            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} returned, but the item is null -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name));
+                            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} returned, but the item is null -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name ?? string.Empty));
                         }
 
                         MemoryCache.Default.Add(cacheKey, cachedItem, cachePolicy);
