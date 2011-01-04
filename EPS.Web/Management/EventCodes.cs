@@ -6,6 +6,9 @@ namespace EPS.Web.Management
     /// <remarks>   ebrown, 11/10/2010. </remarks>
     internal class EventCodes
     {
+        private EventCodes()
+        { }
+
         private const int _offset = WebEventCodes.WebExtendedBase;
 
         /// <summary> Authentication failure </summary>
