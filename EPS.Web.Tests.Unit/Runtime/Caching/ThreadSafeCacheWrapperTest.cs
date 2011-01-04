@@ -13,6 +13,7 @@ namespace EPS.Runtime.Caching.Tests.Unit
         [Fact]
         public void TestSuite()
         {
+            var cacheManager = ThreadSafeCacheManager<object>.Construct("myObjectCache", TimeSpan.MaxValue);            
             throw new NotImplementedException();
         }
     }
