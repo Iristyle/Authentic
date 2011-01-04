@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
 using System.Text;
@@ -17,6 +18,7 @@ namespace EPS.Web
         /// <param name="authHeader">   The incoming authorization header. </param>
         /// <param name="credentials">  [out] The credentials if they exist, otherwise null. </param>
         /// <returns>   true if it succeeds in extracting credentials, false if it fails. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Intent is to eat any exceptions that may occur")]
         public static bool TryExtractCredentialsFromHeader(string authHeader, out NetworkCredential credentials)
         {
             credentials = null;
@@ -42,7 +44,7 @@ namespace EPS.Web
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Basic", StringComparison.InvariantCulture))
+                if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Basic", StringComparison.OrdinalIgnoreCase))
                     throw new ArgumentException("AuthHeader cannot be null or empty OR does not start with Basic", "authHeader");
                 
                 // that's the right encoding -- use the auth header with "basic" stripped out
