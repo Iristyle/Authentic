@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Web;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
+using System.Web;
 
 namespace EPS.Web.Abstractions
 {
@@ -18,6 +19,9 @@ namespace EPS.Web.Abstractions
         /// <summary>   Gets or sets a <see cref="Func{Httpcontext}"/> that can be used as a substitute in code for HttpContext.Current. </summary>
         /// <remarks>   ebrown, 11/8/2010. </remarks>
         /// <returns>   A <see cref="Func{HttpContext}"/> that can be evaluated to return a HttpContext</returns>
+        /// <exception cref="T:System.InvalidOperationException">   Thrown if a previous non-null Func{HttpContext} exists. </exception>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "AppDomain", Justification = "Framework spelling"),
+        SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "HttpContext", Justification = "Framework spelling")]
         public static Func<HttpContext> Current
         {
             get { return current; }
@@ -40,6 +44,7 @@ namespace EPS.Web.Abstractions
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <param name="request">  An optional request. </param>
         /// <returns>   The context. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
         public static HttpContextBase GetContext(HttpRequestBase request = null)
         {
             return (null != request && null != request.RequestContext && null != request.RequestContext.HttpContext) ? 
@@ -52,6 +57,7 @@ namespace EPS.Web.Abstractions
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <param name="request">  An optional request. </param>
         /// <returns>   The context user if one exists, otherwise null. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
         public static IPrincipal GetContextUser(HttpRequestBase request = null)
         {
             var context = GetContext(request);
