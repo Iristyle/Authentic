@@ -14,33 +14,38 @@ namespace EPS.Web.Abstractions
         /// <summary>   Initializes a module and prepares it to handle requests. </summary>
         /// <param name="context">  An <see cref="T:System.Web.HttpApplication" /> that provides access to the methods, properties, and events
         ///                         common to all application objects within an ASP.NET application. </param>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Not as complex as it might appear")]
         public void Init(HttpApplication context)            
-        {            
-            WrapAttach(() => context.AcquireRequestState += (sender, e) => OnAcquireRequestState(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.AuthenticateRequest += (sender, e) => OnAuthenticateRequest(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.AuthorizeRequest += (sender, e) => OnAuthorizeRequest(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.BeginRequest += (sender, e) => OnBeginRequest(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.EndRequest += (sender, e) => OnEndRequest(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.Error += (sender, e) => OnError(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.LogRequest += (sender, e) => OnLogRequest(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.MapRequestHandler += (sender, e) => OnMapRequestHandler(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PostAcquireRequestState += (sender, e) => OnPostAcquireRequestState(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PostAuthenticateRequest += (sender, e) => OnPostAuthenticateRequest(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PostAuthorizeRequest += (sender, e) => OnPostAuthorizeRequest(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PostLogRequest += (sender, e) => OnPostLogRequest(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PostMapRequestHandler += (sender, e) => OnPostMapRequestHandler(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PostReleaseRequestState += (sender, e) => OnPostReleaseRequestState(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PostRequestHandlerExecute += (sender, e) => OnPostRequestHandlerExecute(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PostResolveRequestCache += (sender, e) => OnPostResolveRequestCache(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PostUpdateRequestCache += (sender, e) => OnPostUpdateRequestCache(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PreRequestHandlerExecute += (sender, e) => OnPreRequestHandlerExecute(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PreSendRequestContent += (sender, e) => OnPreSendRequestContent(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.PreSendRequestHeaders += (sender, e) => OnPreSendRequestHeaders(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.ReleaseRequestState += (sender, e) => OnReleaseRequestState(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.ResolveRequestCache += (sender, e) => OnResolveRequestCache(new HttpContextWrapper(((HttpApplication)sender).Context)));
-            WrapAttach(() => context.UpdateRequestCache += (sender, e) => OnUpdateRequestCache(new HttpContextWrapper(((HttpApplication)sender).Context)));
+        {
+            WrapAttach(() => context.AcquireRequestState += (sender, e) => OnAcquireRequestState(ToWrapper(sender)));
+            WrapAttach(() => context.AuthenticateRequest += (sender, e) => OnAuthenticateRequest(ToWrapper(sender)));
+            WrapAttach(() => context.AuthorizeRequest += (sender, e) => OnAuthorizeRequest(ToWrapper(sender)));
+            WrapAttach(() => context.BeginRequest += (sender, e) => OnBeginRequest(ToWrapper(sender)));
+            WrapAttach(() => context.EndRequest += (sender, e) => OnEndRequest(ToWrapper(sender)));
+            WrapAttach(() => context.Error += (sender, e) => OnError(ToWrapper(sender)));
+            WrapAttach(() => context.LogRequest += (sender, e) => OnLogRequest(ToWrapper(sender)));
+            WrapAttach(() => context.MapRequestHandler += (sender, e) => OnMapRequestHandler(ToWrapper(sender)));
+            WrapAttach(() => context.PostAcquireRequestState += (sender, e) => OnPostAcquireRequestState(ToWrapper(sender)));
+            WrapAttach(() => context.PostAuthenticateRequest += (sender, e) => OnPostAuthenticateRequest(ToWrapper(sender)));
+            WrapAttach(() => context.PostAuthorizeRequest += (sender, e) => OnPostAuthorizeRequest(ToWrapper(sender)));
+            WrapAttach(() => context.PostLogRequest += (sender, e) => OnPostLogRequest(ToWrapper(sender)));
+            WrapAttach(() => context.PostMapRequestHandler += (sender, e) => OnPostMapRequestHandler(ToWrapper(sender)));
+            WrapAttach(() => context.PostReleaseRequestState += (sender, e) => OnPostReleaseRequestState(ToWrapper(sender)));
+            WrapAttach(() => context.PostRequestHandlerExecute += (sender, e) => OnPostRequestHandlerExecute(ToWrapper(sender)));
+            WrapAttach(() => context.PostResolveRequestCache += (sender, e) => OnPostResolveRequestCache(ToWrapper(sender)));
+            WrapAttach(() => context.PostUpdateRequestCache += (sender, e) => OnPostUpdateRequestCache(ToWrapper(sender)));
+            WrapAttach(() => context.PreRequestHandlerExecute += (sender, e) => OnPreRequestHandlerExecute(ToWrapper(sender)));
+            WrapAttach(() => context.PreSendRequestContent += (sender, e) => OnPreSendRequestContent(ToWrapper(sender)));
+            WrapAttach(() => context.PreSendRequestHeaders += (sender, e) => OnPreSendRequestHeaders(ToWrapper(sender)));
+            WrapAttach(() => context.ReleaseRequestState += (sender, e) => OnReleaseRequestState(ToWrapper(sender)));
+            WrapAttach(() => context.ResolveRequestCache += (sender, e) => OnResolveRequestCache(ToWrapper(sender)));
+            WrapAttach(() => context.UpdateRequestCache += (sender, e) => OnUpdateRequestCache(ToWrapper(sender)));
         }
 
+        private static HttpContextWrapper ToWrapper(object sender)
+        {
+            return new HttpContextWrapper(((HttpApplication)sender).Context);
+        }
         //HACK: 9-17-2010 
         //1.  I don't know how to determine if we're running on integrated pipeline -- which some of the above handlers require
         // -- hence the need for this try / catch
