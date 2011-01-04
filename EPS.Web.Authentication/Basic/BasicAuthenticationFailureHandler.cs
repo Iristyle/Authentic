@@ -26,6 +26,7 @@ namespace EPS.Web.Authentication.Basic
         /// setting the HTTP status code to 401 (Unauthorized). 
         /// </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="context">          The incoming context. </param>
         /// <param name="inspectorResults"> The set of failed inspector results. </param>
         /// <returns>   Null -- no IPrincipal is returned as the response is completed after sending the authenticate header. </returns>

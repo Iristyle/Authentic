@@ -17,10 +17,11 @@ namespace EPS.Web.Authentication
 		private static ConcurrentDictionary<HttpContextInspectingAuthenticationModuleSection, IHttpContextInspectingAuthenticationFailureHandlerFactory> failureFactoryInstances
 			= new ConcurrentDictionary<HttpContextInspectingAuthenticationModuleSection, IHttpContextInspectingAuthenticationFailureHandlerFactory>();
 
-		/// <summary>   Gets an actual inspector instance based on configuration values. </summary>
-		/// <remarks>   ebrown, 1/3/2011. </remarks>
-		/// <param name="configuration">    The configuration specifying a factory. </param>
-		/// <returns>   An inspector instance as specified in config. </returns>
+        /// <summary>   Gets an actual inspector instance based on configuration values. </summary>
+        /// <remarks>   ebrown, 1/3/2011. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
+        /// <param name="configuration">    The configuration specifying a factory. </param>
+        /// <returns>   An inspector instance as specified in config. </returns>
 		public static IHttpContextInspectingAuthenticator Construct(HttpContextInspectingAuthenticatorConfigurationElement configuration)
 		{
 			if (null == configuration) { throw new ArgumentNullException("configuration"); }
@@ -40,13 +41,14 @@ namespace EPS.Web.Authentication
 			    }).Construct(configuration);
 		}
 
-		/// <summary>   
-		/// Enumerates all of the configured inspectors in the given collection, returning an Enumeration of the instances. Inspector instances
-		/// are created given the type names specified in configuration. 
-		/// </summary>
-		/// <remarks>   ebrown, 1/3/2011. </remarks>
-		/// <param name="inspectors">   The inspectors. </param>
-		/// <returns>   An enumerator that allows foreach to be used on the configured inspectors. </returns>
+        /// <summary>   
+        /// Enumerates all of the configured inspectors in the given collection, returning an Enumeration of the instances. Inspector instances
+        /// are created given the type names specified in configuration. 
+        /// </summary>
+        /// <remarks>   ebrown, 1/3/2011. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
+        /// <param name="inspectors">   The inspectors. </param>
+        /// <returns>   An enumerator that allows foreach to be used on the configured inspectors. </returns>
 		public static IEnumerable<IHttpContextInspectingAuthenticator> Construct(HttpContextInspectingAuthenticatorConfigurationElementCollection inspectors)
 		{
 			if (null == inspectors) { throw new ArgumentNullException("inspectors"); }
@@ -54,9 +56,11 @@ namespace EPS.Web.Authentication
 			return inspectors.OfType<HttpContextInspectingAuthenticatorConfigurationElement>().Select(i => Construct(i));
 		}
 
-		/// <summary>   Gets the failure handler. </summary>
-		/// <remarks>   ebrown, 1/3/2011. </remarks>
-		/// <returns>   The failure handler. </returns>
+        /// <summary>   Gets the failure handler. </summary>
+        /// <remarks>   ebrown, 1/3/2011. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
+        /// <param name="configuration">    The configuration. </param>
+        /// <returns>   The failure handler. </returns>
 		public static IHttpContextInspectingAuthenticationFailureHandler GetFailureHandler(HttpContextInspectingAuthenticationModuleSection configuration)
 		{
 			if (null == configuration) { throw new ArgumentNullException("configuration"); }

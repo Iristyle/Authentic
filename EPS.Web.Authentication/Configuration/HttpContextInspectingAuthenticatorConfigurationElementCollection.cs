@@ -49,11 +49,15 @@ namespace EPS.Web.Authentication.Configuration
                 string factoryTypeName = reader.GetAttribute("factory");
                 Type factoryType = Type.GetType(factoryTypeName, true, true);
                 if (null == factoryType)
+                {
                     throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The factory type specified [{0}] cannot be found - check configuration settings", factoryTypeName ?? string.Empty));
+                }
 
                 var genericTypeParameter = typeof(IHttpContextInspectingAuthenticatorFactory<>).GetGenericInterfaceTypeParameters(factoryType).ToList();
                 if (genericTypeParameter.Count == 0)
+                {
                     throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The factory type specified [{0}] must implement interface {1} - check configuration settings", factoryTypeName ?? string.Empty, typeof(IHttpContextInspectingAuthenticatorFactory<>).Name));
+                }
 
                 //this automatically throws when there's no default parameterless constructor
                 //just create an instance and see what happens ;0
@@ -90,6 +94,7 @@ namespace EPS.Web.Authentication.Configuration
 
         /// <summary>   Gets the elements key, in this case, its name. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="element">  The configuration element. </param>
         /// <returns>   The element key. </returns>
         public override string GetElementKey(HttpContextInspectingAuthenticatorConfigurationElement element)

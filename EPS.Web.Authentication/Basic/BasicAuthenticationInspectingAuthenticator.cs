@@ -28,6 +28,8 @@ namespace EPS.Web.Authentication.Basic
         
         /// <summary>   Authenticates a HttpContextBase given a specified MembershipProvider. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
+        /// <exception cref="Exception">                Thrown when an unexpected exception occurs. </exception>
         /// <param name="context">  The context. </param>
         /// <returns>   A success or failure if the MembershipProvider validated the credentials found in the header. </returns>
         public override InspectorAuthenticationResult Authenticate(HttpContextBase context)
@@ -115,7 +117,10 @@ namespace EPS.Web.Authentication.Basic
             {
                 MembershipProvider provider = Membership.Providers[Configuration.ProviderName];
                 if (provider == null)
+                {
                     throw new ArgumentOutOfRangeException(String.Format(CultureInfo.InvariantCulture, "Provider {0} specified in configuration not found", Configuration.ProviderName));
+                }
+
                 Log.InfoFormat(CultureInfo.InvariantCulture, "Custom provider of [{0}] specified in configuration selected", provider.Name.IfMissing("*No Name*"));
                 return provider;
             }

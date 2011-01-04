@@ -21,6 +21,7 @@ namespace EPS.Web.Authentication
         #region IHttpHeaderInspectingAuthenticationFailureHandler Members
         /// <summary>   Implements the authentication failure action, redirecting to a specified Uri. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="context">          The incoming request context. </param>
         /// <param name="inspectorResults"> The failed inspector results. </param>
         /// <returns>   Always returns a null IPrincipal. </returns>

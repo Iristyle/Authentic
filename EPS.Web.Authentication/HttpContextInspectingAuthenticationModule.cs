@@ -28,13 +28,16 @@ namespace EPS.Web.Authentication
         /// This property is intended to be set only once by an IoC container (or manually in tests). After an initial set, the property becomes
         /// read-only and throws exceptions. 
         /// </summary>
+        /// <exception cref="InvalidOperationException">    Thrown when configuration has not been injected, OR when it is injected more than once. </exception>
         /// <value> The configuration defining which inspectors to plugin to the system and how to handle failures. </value>
         protected HttpContextInspectingAuthenticationModuleSection Configuration
         {
             get
-            {                
+            {
                 if (configuration == null)
+                {
                     throw new InvalidOperationException("Failed to load the header inspector configuration section, either this dependency has not been injected or set manually before using");
+                }
 
                 return configuration;
             }
@@ -51,13 +54,14 @@ namespace EPS.Web.Authentication
         /// <summary>   
         /// Executes the authenticate request action, by enumerating through our configured list of inspectors. The first <see cref="T:
         /// EPS.Web.Authentication.Abstractions.IHttpContextInspectingAuthenticator"/> that returns a Success = true status, with a valid non-
-        /// null IPrincipal wins. Inspectors are executed in the order they are configured.  <see cref="M:System.Web.HttpContext.Current.User"/> is set
-        /// to the non-null IPrincipal returned by an inspector on success.
+        /// null IPrincipal wins. Inspectors are executed in the order they are configured.  <see cref="M:System.Web.HttpContext.Current.User"/>
+        /// is set to the non-null IPrincipal returned by an inspector on success.
         /// 
-        /// If no suitable IPrincipal can be constructed, the system fails over to the configured failure handler, that has the ability to return 304
-        /// status, request credentials, or any other valid HTTP action.
+        /// If no suitable IPrincipal can be constructed, the system fails over to the configured failure handler, that has the ability to return
+        /// 304 status, request credentials, or any other valid HTTP action. 
         /// </summary>
         /// <remarks>   ebrown, 12/21/2010. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="context">  The context. </param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", 
             Justification = "Rare instance when this is reasonable, since we're implementing a service locator pattern where first handler to process context successfully first wins, and we eat failing handler errors")]            
