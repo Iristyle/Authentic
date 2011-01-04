@@ -8,6 +8,7 @@ namespace EPS.Web.Abstractions
     /// <remarks>   ebrown, 11/8/2010. </remarks>
     public static class HttpContextHelper
     {
+        private static readonly object currentLock = new object();
         private static bool currentUserDefined = false;
         private static Func<HttpContext> current = () =>
         {
@@ -22,10 +23,12 @@ namespace EPS.Web.Abstractions
             get { return current; }
             set
             {
-                lock (typeof(HttpContextHelper))
+                lock (currentLock)
                 {
                     if (currentUserDefined)
+                    {
                         throw new InvalidOperationException("The Current Func<HttpContext> may only be set once per AppDomain");
+                    }
 
                     current = value;
                     currentUserDefined = true;
@@ -39,10 +42,9 @@ namespace EPS.Web.Abstractions
         /// <returns>   The context. </returns>
         public static HttpContextBase GetContext(HttpRequestBase request = null)
         {
-            if (null != request && null != request.RequestContext && null != request.RequestContext.HttpContext)
-                return request.RequestContext.HttpContext;
-
-            return new HttpContextWrapper(Current());
+            return (null != request && null != request.RequestContext && null != request.RequestContext.HttpContext) ? 
+                request.RequestContext.HttpContext : 
+                new HttpContextWrapper(Current());
         }
 
 
@@ -53,9 +55,8 @@ namespace EPS.Web.Abstractions
         public static IPrincipal GetContextUser(HttpRequestBase request = null)
         {
             var context = GetContext(request);
-            if (null != context) return context.User;
 
-            return null;
+            return (null != context) ? context.User : null;
         }
     }
 }
