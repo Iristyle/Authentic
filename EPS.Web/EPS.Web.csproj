@@ -22,7 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\EPS.Web.XML</DocumentationFile>
-	<CodeAnalysisRuleSet>..\Build\FxCopRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Build\FxCopRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,7 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\EPS.Web.XML</DocumentationFile>
-	<CodeAnalysisRuleSet>..\Build\FxCopRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Build\FxCopRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
@@ -81,10 +81,17 @@
     <Compile Include="Management\CredentialCacheAddEvent.cs" />
     <Compile Include="Management\CredentialCacheHitEvent.cs" />
     <Compile Include="Management\CredentialCacheMissEvent.cs" />
-    <Compile Include="Management\WebEventCodes.cs" />
     <Compile Include="Management\CredentialCacheAddErrorEvent.cs" />
+    <Compile Include="Management\EventCodes.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DelegateHttpHandler.cs" />
+    <Compile Include="Properties\ManagementStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ManagementStrings.resx</DependentUpon>
+    </Compile>
     <Compile Include="Routing\DelegateRouteHandler.cs" />
     <Compile Include="Routing\PermanentRedirects.cs" />
     <Compile Include="Routing\RouteCollectionExtensions.cs" />
@@ -100,7 +107,12 @@
       <Name>EPS.Utility</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\ManagementStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ManagementStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
