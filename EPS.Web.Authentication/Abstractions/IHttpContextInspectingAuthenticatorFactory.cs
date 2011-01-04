@@ -19,7 +19,7 @@ namespace EPS.Web.Authentication.Abstractions
     /// </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public interface IHttpContextInspectingAuthenticatorFactory<T> : IHttpContextInspectingAuthenticatorFactory
-        where T: HttpContextInspectingAuthenticatorConfigurationElement
+        where T : HttpContextInspectingAuthenticatorConfigurationElement
     {
         /// <summary>   Constructs the http context inspecting authenticator. </summary>
         /// <param name="config">   The specialized configuration as specified in the class definition. </param>
