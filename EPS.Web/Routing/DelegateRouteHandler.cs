@@ -33,7 +33,9 @@ namespace EPS.Web.Routing
         {
             var action = HttpHandlerAction;
             if (action == null)
+            {
                 throw new InvalidOperationException("No action specified");
+            }
 
             return action(requestContext);
         }
