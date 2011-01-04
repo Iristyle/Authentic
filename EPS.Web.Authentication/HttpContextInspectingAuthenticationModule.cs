@@ -105,8 +105,7 @@ namespace EPS.Web.Authentication
                 }
 
                 //TODO: 9-16-2008 -- determine how we should handle this IsAuthenticated bit in OnyxPrincipal -- may have to be careful b/c of the 'denied users' ability
-                if (!inspectors[inspector].Success)
-                //null == principal || !principal.Identity.IsAuthenticated)
+                if (!inspectors[inspector].Success) //null == principal || !principal.Identity.IsAuthenticated)
                 {
                     log.InfoFormat(CultureInfo.InvariantCulture, "{0} found nothing to validate in current HTTP header", inspector.Name);
                     continue;
