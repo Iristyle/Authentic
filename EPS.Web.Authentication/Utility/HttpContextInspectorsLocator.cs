@@ -23,6 +23,8 @@ namespace EPS.Web.Authentication
 		/// <returns>   An inspector instance as specified in config. </returns>
 		public static IHttpContextInspectingAuthenticator Construct(HttpContextInspectingAuthenticatorConfigurationElement configuration)
 		{
+			if (null == configuration) { throw new ArgumentNullException("configuration"); }
+
 			//TODO: 5-21-2010 -- theres a bug here -- dynamic runtime can't find the appropriate Construct method for some reason
 			//it *should* work, but doesn't
 			//HACK: rather than deal with some funky reflection code, we just use dynamic, since we know there is a Construct here
@@ -30,12 +32,12 @@ namespace EPS.Web.Authentication
 
 			//http://stackoverflow.com/questions/266115/pass-an-instantiated-system-type-as-a-type-parameter-for-a-generic-class
 			//var t = typeof(IHttpContextInspectingAuthenticatorFactory<>).MakeGenericType(this.GetType());
-			// 
 
-			return factoryInstances.GetOrAdd(configuration, (config) =>
-			{
-				return (IHttpContextInspectingAuthenticatorFactory)Activator.CreateInstance(Type.GetType(config.Factory));
-			}).Construct(configuration);
+			return factoryInstances.GetOrAdd(configuration, 
+                (config) =>
+			    {
+				    return (IHttpContextInspectingAuthenticatorFactory)Activator.CreateInstance(Type.GetType(config.Factory));
+			    }).Construct(configuration);
 		}
 
 		/// <summary>   
@@ -47,6 +49,8 @@ namespace EPS.Web.Authentication
 		/// <returns>   An enumerator that allows foreach to be used on the configured inspectors. </returns>
 		public static IEnumerable<IHttpContextInspectingAuthenticator> Construct(HttpContextInspectingAuthenticatorConfigurationElementCollection inspectors)
 		{
+			if (null == inspectors) { throw new ArgumentNullException("inspectors"); }
+
 			return inspectors.OfType<HttpContextInspectingAuthenticatorConfigurationElement>().Select(i => Construct(i));
 		}
 
@@ -55,13 +59,15 @@ namespace EPS.Web.Authentication
 		/// <returns>   The failure handler. </returns>
 		public static IHttpContextInspectingAuthenticationFailureHandler GetFailureHandler(HttpContextInspectingAuthenticationModuleSection configuration)
 		{
+			if (null == configuration) { throw new ArgumentNullException("configuration"); }
+
 			if (string.IsNullOrEmpty(configuration.FailureHandlerFactoryName))
 				return null;
 
 			return failureFactoryInstances.GetOrAdd(configuration, (config) =>            
 			{
 				return (IHttpContextInspectingAuthenticationFailureHandlerFactory)Activator.CreateInstance(Type.GetType(config.FailureHandlerFactoryName));
-            }).Construct(configuration.GetCustomFailureHandlerConfigurationSection());
+			}).Construct(configuration.GetCustomFailureHandlerConfigurationSection());
 		}
 	}
 }
