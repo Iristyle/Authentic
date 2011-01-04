@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 
 namespace EPS.Web.Abstractions
@@ -31,6 +32,7 @@ namespace EPS.Web.Abstractions
         /// <param name="url">              The <see cref="P:System.Web.HttpRequest.RawUrl" /> of the requested resource. </param>
         /// <param name="pathTranslated">   The <see cref="P:System.Web.HttpRequest.PhysicalApplicationPath" /> to the requested resource. </param>
         /// <returns>   A new <see cref="T:System.Web.IHttpHandler" /> object that processes the request. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1054:UriPropertiesShouldNotBeStrings", Justification = "Following convention established by .NET framework with IHttpHandlerFactory")]
         public abstract IHttpHandler GetHandler(HttpContextBase context, string requestType, string url, string pathTranslated);
 
         /// <summary>   Enables a factory to reuse an existing handler instance. </summary>
