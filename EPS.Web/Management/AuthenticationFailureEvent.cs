@@ -12,7 +12,7 @@ namespace EPS.Web.Management
         /// <param name="sender">   Source of the event. </param>
         /// <param name="userName"> The username. </param>
         public AuthenticationFailureEvent(object sender, string userName)
-            : base("Authentication failure", sender, EventCodes.AuthenticationFailure, userName)
+            : base(EPS.Web.Properties.ManagementStrings.AuthenticationFailure, sender, EventCodes.AuthenticationFailure, userName)
         { }
     }
 }

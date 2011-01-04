@@ -11,9 +11,9 @@ namespace EPS.Web.Management
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <param name="message">      The message. </param>
         /// <param name="sender">       Source of the event. </param>
-        /// <param name="eventcode">    The eventcode. </param>
-        protected CacheEvents(string message, object sender, int eventcode)
-            : base(message, sender, eventcode)
+        /// <param name="eventCode">    The eventcode. </param>
+        protected CacheEvents(string message, object sender, int eventCode)
+            : base(message, sender, eventCode)
         { }
     }
 }

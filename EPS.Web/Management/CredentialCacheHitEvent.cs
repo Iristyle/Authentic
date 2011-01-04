@@ -11,7 +11,7 @@ namespace EPS.Web.Management
         /// <param name="sender">   Source of the event. </param>
         /// <param name="userName"> The username. </param>
         public CredentialCacheHitEvent(object sender, string userName)
-            : base("Cache hit for: " + userName, sender, EventCodes.CacheHit)
+            : base(Properties.ManagementStrings.CacheHitFor + userName, sender, EventCodes.CacheHit)
         { }
     }
 }

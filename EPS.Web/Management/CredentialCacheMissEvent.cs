@@ -11,7 +11,7 @@ namespace EPS.Web.Management
         /// <param name="sender">   Source of the event. </param>
         /// <param name="userName"> The username. </param>
         public CredentialCacheMissEvent(object sender, string userName)
-            : base("Cache miss for: " + userName, sender, EventCodes.CacheHit)
+            : base(Properties.ManagementStrings.CacheMissFor + userName, sender, EventCodes.CacheHit)
         { }
     }
 }

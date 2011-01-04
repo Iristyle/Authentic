@@ -11,7 +11,7 @@ namespace EPS.Web.Management
         /// <param name="sender">   Source of the event. </param>
         /// <param name="userName"> The username. </param>
         public CredentialCacheAddEvent(object sender, string userName)
-            : base("Credential identifier added for: " + userName, sender, EventCodes.CacheAdd)
+            : base(Properties.ManagementStrings.CredentialIdentifierAddedFor + userName, sender, EventCodes.CacheAdd)
         { }
     }
 }
