@@ -17,9 +17,10 @@ namespace EPS.Web.Authentication.Basic.Configuration
         private IBasicAuthPrincipalBuilderFactory principalBuilderFactoryInstance = null;
 
         /// <summary>   
-        /// By default no membership provider is used as it may be just as costly as extracting a principal. If a simpler membership provider
-        /// exists that can provide a faster validation of user credentials than a full IPrincipal extraction, then it makes sense to use a
-        /// membershipProvider.  Specify 'default' to use the default configured MembershipProvider for the system. 
+        /// Get or sets the name of the MembershipProvider to be used.  By default no membership provider is used as it may be just as costly as
+        /// extracting a principal. If a simpler membership provider exists that can provide a faster validation of user credentials than a full
+        /// IPrincipal extraction, then it makes sense to use a membershipProvider.  Specify 'default' to use the default configured
+        /// MembershipProvider for the system. 
         /// </summary>
         /// <value> The name of the provider. </value>
         [ConfigurationProperty("providerName", DefaultValue = "")]
@@ -34,7 +35,7 @@ namespace EPS.Web.Authentication.Basic.Configuration
         /// The FullName for the type of the principal builder factory -- i.e. the class that implements <see cref="T:
         /// EPS.Web.Authentication.Basic.IBasicAuthPrincipalBuilderFactory"/>. 
         /// </value>
-        [ConfigurationProperty("principalBuilderFactory", DefaultValue="")]
+        [ConfigurationProperty("principalBuilderFactory", DefaultValue = "")]
         public string PrincipalBuilderFactory
         {
             get { return (string)this["principalBuilderFactory"]; }
@@ -44,6 +45,7 @@ namespace EPS.Web.Authentication.Basic.Configuration
         /// <summary>   Validates the deserialized configuration values. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <exception cref="ConfigurationErrorsException"> Thrown when the PrincipalBuilderFactory is improperly configured. </exception>
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "principalBuilderFactory", Justification = "Name of configuration element / attribute")]
         protected override void PostDeserialize()
         {
             base.PostDeserialize();
@@ -52,14 +54,20 @@ namespace EPS.Web.Authentication.Basic.Configuration
             {
                 var type = Type.GetType(PrincipalBuilderFactory);
                 if (null == type)
+                {
                     throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The principalBuilderFactory type name specified [{0}] cannot be found - check configuration settings", PrincipalBuilderFactory ?? string.Empty));
+                }
 
-                if (!typeof(IBasicAuthPrincipalBuilderFactory).IsAssignableFrom(type))                
+                if (!typeof(IBasicAuthPrincipalBuilderFactory).IsAssignableFrom(type))
+                {
                     throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The principalBuilderFactory type name specified [{0}] must implement interface {1} - check configuration settings", PrincipalBuilderFactory ?? string.Empty, typeof(IBasicAuthPrincipalBuilderFactory).Name));
+                }
 
                 var constructor = type.GetConstructor(Type.EmptyTypes);
                 if (null == constructor)
+                {
                     throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The principalBuilderFactory type name specified [{0}] must have a parameterless constructor - check configuration settings", PrincipalBuilderFactory ?? string.Empty));
+                }
             }
         }
 
@@ -74,7 +82,9 @@ namespace EPS.Web.Authentication.Basic.Configuration
         public IBasicAuthPrincipalBuilder GetPrincipalBuilder()
         {
             if (string.IsNullOrEmpty(PrincipalBuilderFactory))
+            {
                 return null;
+            }
 
             if (null == principalBuilderFactoryInstance)
             {
