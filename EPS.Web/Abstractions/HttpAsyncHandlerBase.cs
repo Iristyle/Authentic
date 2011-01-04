@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 
 namespace EPS.Web.Abstractions
@@ -45,6 +46,7 @@ namespace EPS.Web.Abstractions
         /// <param name="cb">           The cb. </param>
         /// <param name="extraData">    Any extra data needed to process the request. </param>
         /// <returns>   An <see cref="T:System.IAsyncResult" /> that contains information about the status of the process. </returns>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "cb", Justification = "Following IHttpAsyncHandler interface spec")]
         public abstract IAsyncResult BeginProcessRequest(HttpContextBase context, AsyncCallback cb, object extraData);
         
         /// <summary>   Provides an asynchronous process End method when the process ends. </summary>
