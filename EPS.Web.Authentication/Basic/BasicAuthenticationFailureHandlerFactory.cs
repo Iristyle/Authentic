@@ -1,7 +1,6 @@
 using System;
-using EPS.Web.Authentication.Configuration;
-using EPS.Web.Authentication.Basic.Configuration;
 using EPS.Web.Authentication.Abstractions;
+using EPS.Web.Authentication.Basic.Configuration;
 
 namespace EPS.Web.Authentication.Basic
 {
