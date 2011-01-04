@@ -1,4 +1,6 @@
+using System;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EPS.Web.Configuration
 {
@@ -8,7 +10,8 @@ namespace EPS.Web.Configuration
     {
         /// <summary>   Gets or sets the source URL. </summary>
         /// <value> The source url. </value>
-        [ConfigurationProperty("sourceUrl", Options = ConfigurationPropertyOptions.IsKey | ConfigurationPropertyOptions.IsRequired, DefaultValue = "")]
+        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "These strings may be partial / relative urls or may be prefixed with ~"), 
+        ConfigurationProperty("sourceUrl", Options = ConfigurationPropertyOptions.IsKey | ConfigurationPropertyOptions.IsRequired, DefaultValue = "")]
         public string SourceUrl
         {
             get { return (string)this["sourceUrl"]; }
@@ -17,7 +20,8 @@ namespace EPS.Web.Configuration
 
         /// <summary>   Gets or sets the target URL. </summary>
         /// <value> The target url. </value>
-        [ConfigurationProperty("targetUrl", IsRequired = true, DefaultValue = "")]
+        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "These strings may be partial / relative urls or may be prefixed with ~"), 
+        ConfigurationProperty("targetUrl", IsRequired = true, DefaultValue = "")]
         public string TargetUrl
         {
             get { return (string)this["targetUrl"]; }
