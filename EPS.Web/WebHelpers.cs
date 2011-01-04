@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -13,10 +14,13 @@ namespace EPS.Web
     {
         /// <summary>   Encodes a NameValueCollection full of parameters as a POST friendly string. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="parameters">   The parameters. </param>
         /// <returns>   a string that can be used to POST with. </returns>
         public static string EncodePostString(NameValueCollection parameters)
         {
+            if (null == parameters) { throw new ArgumentNullException("parameters"); }
+
             return string.Join("&", parameters.AllKeys.Where(k => null != k)
                 .Select(key => string.Format(CultureInfo.InvariantCulture, "{0}={1}", HttpUtility.UrlEncodeUnicode(key), HttpUtility.UrlEncodeUnicode(parameters[key]))));            
         }
@@ -30,20 +34,19 @@ namespace EPS.Web
         /// <param name="prepend">      A separator to prepend - default of no separator. </param>
         /// <param name="allowBlank">   true to allow blank values, false to deny blank values. </param>
         /// <returns>   The parameter encoded into a URL. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "These strings are url parameter names, not complete urls"),
+        SuppressMessage("Microsoft.Design", "CA1055:UriReturnValuesShouldNotBeStrings", Justification = "These returned string is a combined url parameter set, not a complete url"),
+        SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
         public static string EncodeUrlParameter(EncodeType encodeType, string name, string value, UrlParameterSeparator prepend = UrlParameterSeparator.None, bool allowBlank = true)
         {
-            if (null == name)
-                throw new ArgumentNullException("name");
-            if (null == value)
-                throw new ArgumentNullException("value");
+            if (null == name) { throw new ArgumentNullException("name"); }
+            if (null == value) { throw new ArgumentNullException("value"); }
 
             value = value.Trim();
             if (allowBlank || !string.IsNullOrEmpty(value))
-            {                
-                if (EncodeType.Url == encodeType)
-                    return String.Format(CultureInfo.InvariantCulture, "{0}{1}={2}", prepend.ToEnumValueString(), HttpUtility.UrlEncode(name), HttpUtility.UrlEncode(value));
-
-                return String.Format(CultureInfo.InvariantCulture, "{0}{1}={2}", prepend.ToEnumValueString(), HttpUtility.HtmlEncode(name), HttpUtility.HtmlEncode(value));
+            {
+                Func<string, string> encoder = (s) => { return EncodeType.Url == encodeType ? HttpUtility.UrlEncode(s) : HttpUtility.HtmlEncode(s); };
+                return String.Format(CultureInfo.InvariantCulture, "{0}{1}={2}", prepend.ToEnumValueString(), encoder(name), encoder(value));
             }
 
             return string.Empty;
@@ -60,15 +63,15 @@ namespace EPS.Web
         /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="originalUri">  Any Url including those starting with ~. </param>
         /// <returns>   Site relative url. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "These strings may be partial / relative urls or may be prefixed with ~")]
         public static Uri ResolveUrl(Uri originalUri)
         {
-            if (null == originalUri)
-                throw new ArgumentNullException("originalUri");
+            if (null == originalUri) { throw new ArgumentNullException("originalUri"); }
 
             if (string.IsNullOrEmpty(originalUri.OriginalString) ||
                 originalUri.IsAbsoluteUri ||
                 // *** We don't start with the '~' -> we don't process the Url
-                !originalUri.OriginalString.StartsWith("~"))
+                !originalUri.OriginalString.StartsWith("~", StringComparison.Ordinal))
                 return originalUri;
 
             // *** Fix up path for ~ root app dir directory
@@ -93,13 +96,18 @@ namespace EPS.Web
         /// <param name="serverUri">    URL of the server. </param>
         /// <param name="forceHttps">   if true forces the url to use https - default is false. </param>
         /// <returns>   A fully qualified absolute server Uri . </returns>
+        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "These strings may be partial / relative urls or may be prefixed with ~"),
+        SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
         public static Uri ResolveServerUrl(HttpContextBase context, Uri serverUri, bool forceHttps = false)
         {
-            if (null == serverUri || string.IsNullOrEmpty(serverUri.AbsolutePath) || serverUri.IsAbsoluteUri)
-                return serverUri;
+            if (null == context) { throw new ArgumentNullException("context"); }
 
-            if (null == serverUri)
-                throw new ArgumentNullException("serverUri");
+            if (null == serverUri || string.IsNullOrEmpty(serverUri.AbsolutePath) || serverUri.IsAbsoluteUri)
+            {
+                return serverUri;
+            }
+
+            if (null == serverUri) { throw new ArgumentNullException("serverUri"); }
 
             Uri result = new Uri(context.Request.Url, ResolveUrl(serverUri));
             
@@ -116,6 +124,7 @@ namespace EPS.Web
         /// <param name="context">      Any Url, either App relative or fully qualified. </param>
         /// <param name="serverUri">    URL of the server. </param>
         /// <returns>   A fully qualified absolute server Uri . </returns>
+        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "These strings may be partial / relative urls or may be prefixed with ~")]
         public static Uri ResolveServerUrl(HttpContextBase context, Uri serverUri)
         {
             return ResolveServerUrl(context, serverUri, false);
