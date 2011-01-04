@@ -12,9 +12,12 @@ namespace EPS.Web
         /// DateTime.Now and add the pragma:no-cache header. 
         /// </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
         /// <param name="response"> The response to act on. </param>
         public static void DisableCaching(this HttpResponseBase response)
         {
+            if (null == response) { throw new ArgumentNullException("response"); }
+
             response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
             response.Cache.SetCacheability(HttpCacheability.NoCache);
             response.Cache.SetExpires(DateTime.Now);
