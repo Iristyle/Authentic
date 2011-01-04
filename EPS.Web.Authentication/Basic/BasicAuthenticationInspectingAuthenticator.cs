@@ -20,7 +20,7 @@ namespace EPS.Web.Authentication.Basic
     public class BasicAuthenticationInspectingAuthenticator : 
         HttpContextInspectingAuthenticatorBase<BasicAuthenticationHeaderInspectorConfigurationElement>
     {
-        /// <summary>   Constructs an instance of a basic authenticator. </summary>
+        /// <summary>   Initializes a new instance of the BasicAuthenticationInspectingAuthenticator class. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <param name="config">   The configuration. </param>
         public BasicAuthenticationInspectingAuthenticator(BasicAuthenticationHeaderInspectorConfigurationElement config) 
@@ -32,17 +32,21 @@ namespace EPS.Web.Authentication.Basic
         /// <returns>   A success or failure if the MembershipProvider validated the credentials found in the header. </returns>
         public override InspectorAuthenticationResult Authenticate(HttpContextBase context)
         {            
-            string authHeader = context.Request.Headers["Authorization"];
-            
-            Log.InfoFormat(CultureInfo.InvariantCulture, "Authorization header [{0}] received", authHeader.IfMissing("**Missing**"));
-
             try
             {
-                //attempt to extract credentials from header
+                if (null == context) { throw new ArgumentNullException("context"); }
+
+                string authHeader = context.Request.Headers["Authorization"];
+            
+                Log.InfoFormat(CultureInfo.InvariantCulture, "Authorization header [{0}] received", authHeader.IfMissing("**Missing**"));
+
+                ////attempt to extract credentials from header
                 NetworkCredential credentials;
                 if (!HttpBasicAuthHeaderParser.TryExtractCredentialsFromHeader(authHeader, out credentials))
+                {
                     //don't log an event since there was nothing to succeed / fail
                     return new InspectorAuthenticationResult(false, null, "No basic credentials found in HTTP header");
+                }
 
                 var membershipProvider = GetMembershipProvider();
 
@@ -50,7 +54,9 @@ namespace EPS.Web.Authentication.Basic
                 if (null == membershipProvider || membershipProvider.ValidateUser(credentials.UserName, credentials.Password))
                 {
                     if (null != membershipProvider)
+                    {
                         new AuthenticationSuccessEvent(this, credentials.UserName).Raise();
+                    }
 
                     IPrincipal principal = GetPrincipal(context, credentials.UserName, credentials.Password);
                     if (null != principal && null != principal.Identity && principal.Identity.IsAuthenticated)
