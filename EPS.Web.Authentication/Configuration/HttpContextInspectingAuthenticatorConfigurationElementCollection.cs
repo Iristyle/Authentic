@@ -16,7 +16,7 @@ namespace EPS.Web.Authentication.Configuration
     public class HttpContextInspectingAuthenticatorConfigurationElementCollection : 
         ConfigurationElementCollection<string, HttpContextInspectingAuthenticatorConfigurationElement>
     {
-        private readonly static Dictionary<string, HttpContextInspectingAuthenticatorConfigurationElement> derivedElements 
+        private static readonly Dictionary<string, HttpContextInspectingAuthenticatorConfigurationElement> derivedElements 
             = new Dictionary<string, HttpContextInspectingAuthenticatorConfigurationElement>();
 
         /// <summary>   Gets the type of the collection -- and AddRemoveClearMap. </summary>
