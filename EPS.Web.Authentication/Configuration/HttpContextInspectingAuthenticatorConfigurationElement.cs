@@ -123,7 +123,8 @@ namespace EPS.Web.Authentication.Configuration
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <exception cref="ConfigurationErrorsException"> Thrown when there are configuration errors. </exception>
         /// <returns>   The custom configuration section. </returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is not suitable for a property as configuration is inspected and exceptions may be thrown")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "configurationSection", Justification = "Name of configuration element / attribute"), 
+        SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is not suitable for a property as configuration is inspected and exceptions may be thrown")]
         public ConfigurationSection GetCustomConfigurationSection()
         {
             //TOOD: 5-5-2010 -- unfortunately this defers this error until runtime rather than config parse time
