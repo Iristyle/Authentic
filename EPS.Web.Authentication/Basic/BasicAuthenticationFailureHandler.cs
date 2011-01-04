@@ -14,7 +14,7 @@ namespace EPS.Web.Authentication.Basic
     public class BasicAuthenticationFailureHandler : 
         HttpContextInspectingAuthenticationFailureHandlerBase<BasicAuthenticationFailureHandlerConfigurationSection>
     {
-        /// <summary>   Constructs an instance of the handler given configuration values. </summary>
+        /// <summary>   Initializes a new instance of the BasicAuthenticationFailureHandler class given configuration values. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <param name="config">   The configuration. </param>
         public BasicAuthenticationFailureHandler(BasicAuthenticationFailureHandlerConfigurationSection config)
@@ -31,6 +31,8 @@ namespace EPS.Web.Authentication.Basic
         /// <returns>   Null -- no IPrincipal is returned as the response is completed after sending the authenticate header. </returns>
         public override IPrincipal OnAuthenticationFailure(HttpContextBase context, Dictionary<IHttpContextInspectingAuthenticator, InspectorAuthenticationResult> inspectorResults)
         {
+            if (null == context) { throw new ArgumentNullException("context"); }
+
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             context.Response.AddHeader("WWW-Authenticate", String.Format(CultureInfo.InvariantCulture, "Basic realm=\"{0}\"", Configuration.Realm));
             context.ApplicationInstance.CompleteRequest();
