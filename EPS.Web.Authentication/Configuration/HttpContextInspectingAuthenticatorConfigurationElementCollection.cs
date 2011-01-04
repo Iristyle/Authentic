@@ -41,6 +41,8 @@ namespace EPS.Web.Authentication.Configuration
         /// <returns>   true if it succeeds, false if it fails. </returns>
         protected override bool OnDeserializeUnrecognizedElement(string elementName, XmlReader reader)
         {
+            if (null == reader) { throw new ArgumentNullException("reader"); }
+
             //verify that this element is OK and has a valid factory spec'd
             if (AddElementName == elementName)
             {
@@ -92,6 +94,8 @@ namespace EPS.Web.Authentication.Configuration
         /// <returns>   The element key. </returns>
         public override string GetElementKey(HttpContextInspectingAuthenticatorConfigurationElement element)
         {
+            if (null == element) { throw new ArgumentNullException("element"); }
+
             return element.Name;
         }        
     }
