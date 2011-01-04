@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web.Routing;
 using EPS.Configuration.Abstractions;
 using EPS.Web.Configuration;
@@ -17,6 +18,7 @@ namespace EPS.Web.Routing
         /// <param name="routeCollection">      The applications RouteCollection. </param>
         /// <param name="configurationManager"> An optional IConfigurationManager to read settings from.  If left unspecified or null, the
         ///                                     executing application ConfigurationManager is used. </param>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
         public static void Register(RouteCollection routeCollection, IConfigurationManager configurationManager = null)
         {
             if (null == configurationManager)
