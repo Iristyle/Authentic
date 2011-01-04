@@ -62,7 +62,10 @@ namespace EPS.Web.Authentication
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", 
             Justification = "Rare instance when this is reasonable, since we're implementing a service locator pattern where first handler to process context successfully first wins, and we eat failing handler errors")]            
         public override void OnAuthenticateRequest(HttpContextBase context)
-        {            
+        {
+            //this shouldn't ever happen
+            if (null == context) { throw new ArgumentNullException("context"); }
+
             // check if module is enabled
             if (!Configuration.Enabled)
                 return;
