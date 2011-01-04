@@ -20,10 +20,10 @@ namespace EPS.Runtime.Caching
         private readonly static Dictionary<string, ThreadSafeCacheManager<T>> existingCaches = new Dictionary<string, ThreadSafeCacheManager<T>>();
 
         //TODO: potentially integrate PerfmonManager
-        private string cacheName = string.Empty;
-        private CacheItemPolicy cachePolicy;
-        private Dictionary<string, ReaderWriterLockSlim> constructionLocks = new Dictionary<string, ReaderWriterLockSlim>();
-        private ReaderWriterLockSlim masterCollectionLock = new ReaderWriterLockSlim();
+        private readonly string cacheName = string.Empty;
+        private readonly CacheItemPolicy cachePolicy;
+        private readonly Dictionary<string, ReaderWriterLockSlim> constructionLocks = new Dictionary<string, ReaderWriterLockSlim>();
+        private readonly ReaderWriterLockSlim masterCollectionLock = new ReaderWriterLockSlim();
         
         private ThreadSafeCacheManager(string cacheName, TimeSpan cacheTimeSpan, CacheItemPriority cacheItemPriority)
         {
@@ -59,7 +59,9 @@ namespace EPS.Runtime.Caching
         public static ThreadSafeCacheManager<T> Construct(string cacheName, TimeSpan cacheTimeSpan, CacheItemPriority cacheItemPriority = CacheItemPriority.Default)
         {
             if (string.IsNullOrEmpty(cacheName))
+            {
                 throw new ArgumentOutOfRangeException("cacheName", "cacheName must not be null or empty");
+            }
 
             try
             {
@@ -69,7 +71,9 @@ namespace EPS.Runtime.Caching
                     //validate that T passed in is same type of existing T
                     var cache = existingCaches[cacheName];
                     if (typeof(T) != cache.GetType().GetGenericArguments().First())
+                    {
                         throw new ArgumentException(String.Format(CultureInfo.CurrentCulture, "A cache with name [{0}] exists, but the type specified [{1}] does not match the existing type", cacheName, typeof(T).Name), "cacheName");
+                    }
 
                     return cache;
                 }
@@ -119,15 +123,16 @@ namespace EPS.Runtime.Caching
             {
                 //very simple approach to pulling from the http cache if we already have what we need in there                
                 cachedItem = MemoryCache.Default.Get(cacheKey) as T;
-                if (null != cachedItem)
-                    return cachedItem;
+                if (null != cachedItem) { return cachedItem; }
 
                 //now we get a bit more complicated -- see if we need to put the item in there -- but first see if we've ever done that
                 //by looking for a lock tied into that key
                 ReaderWriterLockSlim keySpecificLock = null;
                 masterCollectionLock.EnterUpgradeableReadLock();
                 if (constructionLocks.ContainsKey(cacheKey))
+                {
                     keySpecificLock = constructionLocks[cacheKey];
+                }
                 else
                 {
                     try
@@ -137,7 +142,9 @@ namespace EPS.Runtime.Caching
 
                         //did another blocked thread get here first?
                         if (constructionLocks.ContainsKey(cacheKey))
+                        {
                             keySpecificLock = constructionLocks[cacheKey];
+                        }
                         //nope, so create a new lock for this particular key while other threads wait
                         else
                         {
@@ -180,7 +187,9 @@ namespace EPS.Runtime.Caching
                         }
 
                         if (null == cachedItem)
+                        {
                             throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} returned, but the item is null -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name));
+                        }
 
                         MemoryCache.Default.Add(cacheKey, cachedItem, cachePolicy);
                         /*
@@ -215,7 +224,9 @@ namespace EPS.Runtime.Caching
             finally
             {
                 if (masterCollectionLock.IsUpgradeableReadLockHeld)
+                {
                     masterCollectionLock.ExitUpgradeableReadLock();
+                }
             }
 
             return cachedItem;
