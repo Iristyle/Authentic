@@ -31,8 +31,10 @@ namespace EPS.Web.Authentication
         /// <param name="context">          The incoming HttpContextBase. </param>
         /// <param name="inspectorResults"> The set of failed inspector results. </param>
         /// <returns>   An IPrincipal instance as returned by the failure event handler. </returns>
-        public override IPrincipal OnAuthenticationFailure(HttpContextBase context,
-            Dictionary<IHttpContextInspectingAuthenticator, InspectorAuthenticationResult> inspectorResults)
+        public override IPrincipal OnAuthenticationFailure(
+            HttpContextBase context, 
+            Dictionary<IHttpContextInspectingAuthenticator, 
+            InspectorAuthenticationResult> inspectorResults)
         {
             var eventArgs = new SimpleAuthenticationFailureEventArgs(Configuration, context, inspectorResults);
 
