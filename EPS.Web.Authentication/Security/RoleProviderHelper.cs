@@ -22,7 +22,7 @@ namespace EPS.Web.Authentication.Security
         public static IConfigurationManager ConfigurationManager { get; private set; }
 
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly static Lazy<Dictionary<string, RoleProvider>> roleProviders = new Lazy<Dictionary<string, RoleProvider>>(() =>
+        private static readonly Lazy<Dictionary<string, RoleProvider>> roleProviders = new Lazy<Dictionary<string, RoleProvider>>(() =>
         {
             try
             {
@@ -52,10 +52,10 @@ namespace EPS.Web.Authentication.Security
             try
             {
                 return Type.GetType(name, true, true);
-            }
-            //assume that the provider is located in System.Web instead of our util library
+            }            
             catch (TypeLoadException)
             {
+                //assume that the provider is located in System.Web instead of our util library
                 return Assembly.Load("System.Web").GetType(name, true, true);
             }
         }
