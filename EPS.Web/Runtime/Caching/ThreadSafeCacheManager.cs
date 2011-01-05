@@ -13,7 +13,8 @@ namespace EPS.Runtime.Caching
     //TODO: 5-11-2010 -- move this to our Util library when System.Runtime.Caching gets moved to the Client profile -- maybe 4 SP1?
     /// <summary>   A class for thread-safe access to System.Runtime.Caching on a specific Type</summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
-    public class ThreadSafeCacheManager<T> : IDisposable where T : class
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Instances of this class are intended to be shared across multiple threads, so implementing IDisposable is not an option.  Instead we can use a finalizer to clean up our ReaderWriterLockSlim instances.")]
+    public class ThreadSafeCacheManager<T> where T : class
     {        
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         //our static shared list of constructed wrappers... reuse ones constructed with the same type and name
@@ -24,7 +25,15 @@ namespace EPS.Runtime.Caching
         private readonly CacheItemPolicy cachePolicy;
         private readonly Dictionary<string, ReaderWriterLockSlim> constructionLocks = new Dictionary<string, ReaderWriterLockSlim>();
         private readonly ReaderWriterLockSlim masterCollectionLock = new ReaderWriterLockSlim();
-        
+
+        /// <summary>   Finalizer that releases any created ReaderWriterLockSlim instances created during the lifetime of this object. </summary>
+        /// <remarks>   ebrown, 1/5/2011. </remarks>
+        ~ThreadSafeCacheManager()
+        {
+            Parallel.ForEach(constructionLocks, (cl => cl.Value.Dispose()));
+            masterCollectionLock.Dispose();            
+        }
+
         private ThreadSafeCacheManager(string cacheName, TimeSpan cacheTimeSpan, CacheItemPriority cacheItemPriority)
         {
             this.cacheName = cacheName;
@@ -114,6 +123,7 @@ namespace EPS.Runtime.Caching
         /// <param name="key">              The key. </param>
         /// <param name="fillIfMissing">    The delegate used to provide the item for the cache. </param>
         /// <returns>   The item if it exists, or after construction of the instance using the fillIfMissing delegate. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "Red herring - fillIfMissing is validated")]
         public T GetOrFillCache(string key, Func<T> fillIfMissing)
         {
             if (null == key) { throw new ArgumentNullException("key"); }
@@ -235,25 +245,6 @@ namespace EPS.Runtime.Caching
             }
 
             return cachedItem;
-        }
-
-        /// <summary>   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. </summary>
-        /// <remarks>   ebrown, 12/23/2010. </remarks>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Parallel.ForEach(constructionLocks, (cl => cl.Value.Dispose()));
-                masterCollectionLock.Dispose();
-            }
-        }
-
-        /// <summary>   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. </summary>
-        /// <remarks>   ebrown, 12/23/2010. </remarks>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }
