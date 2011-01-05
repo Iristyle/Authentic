@@ -6,7 +6,7 @@ namespace EPS.Web.Authentication.Basic.Configuration
 {
     /// <summary>   Basic authentication failure handler configuration section. </summary>
     /// <remarks>   ebrown, 12/30/2010. </remarks>
-    public class BasicAuthenticationFailureHandlerConfigurationSection : HttpContextInspectingAuthenticationFailureConfigurationSection
+    public class AuthenticationFailureHandlerConfigurationSection : HttpContextInspectingAuthenticationFailureConfigurationSection
     {
         /// <summary>   Gets or sets the realm of the cookie on an outgoing cookie request. </summary>
         /// <value> The realm. </value>

@@ -33,7 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\EPS.Web.Authentication.XML</DocumentationFile>
-	<CodeAnalysisRuleSet>..\Build\FxCopRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\Build\FxCopRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
@@ -75,15 +75,15 @@
     <Compile Include="Abstractions\HttpContextInspectingAuthenticatorBase.cs" />
     <Compile Include="Abstractions\HttpContextInspectingAuthenticatorFactoryBase.cs" />
     <Compile Include="InspectorAuthenticationResult.cs" />
-    <Compile Include="Basic\BasicAuthenticationFailureHandler.cs" />
-    <Compile Include="Basic\BasicAuthenticationFailureHandlerFactory.cs" />
-    <Compile Include="Basic\Configuration\BasicAuthenticationFailureHandlerConfigurationSection.cs" />
+    <Compile Include="Basic\AuthenticationFailureHandler.cs" />
+    <Compile Include="Basic\AuthenticationFailureHandlerFactory.cs" />
+    <Compile Include="Basic\Configuration\AuthenticationFailureHandlerConfigurationSection.cs" />
     <Compile Include="Configuration\HttpContextInspectingAuthenticationFailureConfigurationSection.cs" />
     <Compile Include="Abstractions\IHttpContextInspectingAuthenticationFailureHandler.cs" />
     <Compile Include="Abstractions\IHttpContextInspectingAuthenticationFailureHandlerFactory.cs" />
-    <Compile Include="Basic\BasicAuthenticationInspectingAuthenticator.cs" />
-    <Compile Include="Basic\BasicAuthenticationInspectingAuthenticatorFactory.cs" />
-    <Compile Include="Basic\Configuration\BasicAuthenticationHeaderInspectorConfigurationElement.cs" />
+    <Compile Include="Basic\AuthenticationInspectingAuthenticator.cs" />
+    <Compile Include="Basic\AuthenticationInspectingAuthenticatorFactory.cs" />
+    <Compile Include="Basic\Configuration\AuthenticationHeaderInspectorConfigurationElement.cs" />
     <Compile Include="Configuration\HttpContextInspectingAuthenticationModuleSection.cs" />
     <Compile Include="Configuration\HttpContextInspectingAuthenticatorConfigurationElement.cs" />
     <Compile Include="Configuration\HttpContextInspectingAuthenticatorConfigurationElementCollection.cs" />

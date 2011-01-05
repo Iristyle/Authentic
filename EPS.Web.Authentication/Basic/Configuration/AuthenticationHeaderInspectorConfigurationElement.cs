@@ -12,7 +12,7 @@ namespace EPS.Web.Authentication.Basic.Configuration
     /// EPS.Web.Authentication.Basic.IBasicAuthPrincipalBuilderFactory"/>. 
     /// </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public class BasicAuthenticationHeaderInspectorConfigurationElement : HttpContextInspectingAuthenticatorConfigurationElement
+    public class AuthenticationHeaderInspectorConfigurationElement : HttpContextInspectingAuthenticatorConfigurationElement
     {
         private IBasicAuthPrincipalBuilderFactory principalBuilderFactoryInstance = null;
 

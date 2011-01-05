@@ -17,13 +17,13 @@ namespace EPS.Web.Authentication.Basic
     /// MembershipProvider. 
     /// </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public class BasicAuthenticationInspectingAuthenticator : 
-        HttpContextInspectingAuthenticatorBase<BasicAuthenticationHeaderInspectorConfigurationElement>
+    public class AuthenticationInspectingAuthenticator : 
+        HttpContextInspectingAuthenticatorBase<AuthenticationHeaderInspectorConfigurationElement>
     {
-        /// <summary>   Initializes a new instance of the BasicAuthenticationInspectingAuthenticator class. </summary>
+        /// <summary>   Initializes a new instance of the AuthenticationInspectingAuthenticator class. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <param name="config">   The configuration. </param>
-        public BasicAuthenticationInspectingAuthenticator(BasicAuthenticationHeaderInspectorConfigurationElement config) 
+        public AuthenticationInspectingAuthenticator(AuthenticationHeaderInspectorConfigurationElement config) 
             : base(config) {}
         
         /// <summary>   Authenticates a HttpContextBase given a specified MembershipProvider. </summary>

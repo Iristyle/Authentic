@@ -99,7 +99,7 @@
     <Compile Include="UrlParameterSeparator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="WebHelpers.cs" />
+    <Compile Include="Helpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EPS.Utility\EPS.Utility.csproj">

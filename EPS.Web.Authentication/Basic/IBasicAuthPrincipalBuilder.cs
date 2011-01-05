@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
 using System.Web;
 using EPS.Web.Authentication.Basic.Configuration;
@@ -7,6 +8,7 @@ namespace EPS.Web.Authentication.Basic
 {
     /// <summary>   Interface that defines the operations of a basic authorization principal builder. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
+    [SuppressMessage("Gendarme.Rules.Naming", "AvoidRedundancyInTypeNameRule", Justification = "This interface might be implemented by third parties")]
     public interface IBasicAuthPrincipalBuilder
     {
         /// <summary>   Gets the human-friendly name. </summary>
@@ -18,7 +20,7 @@ namespace EPS.Web.Authentication.Basic
         /// EPS.Web.Authentication.Basic.IBasicAuthPrincipalBuilderFactory"/> to use. 
         /// </summary>
         /// <value> The configuration. </value>
-        BasicAuthenticationHeaderInspectorConfigurationElement Configuration { get; }
+        AuthenticationHeaderInspectorConfigurationElement Configuration { get; }
         
         /// <summary>   Construct an IPrincipal given a username and password (context through in for good measure). </summary>
         /// <param name="context">  The context. </param>

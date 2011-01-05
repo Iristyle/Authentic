@@ -10,7 +10,7 @@ namespace EPS.Web
 {
     /// <summary>   Some helper classes for working with web goop. </summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
-    public static class WebHelpers
+    public static class Helpers
     {
         /// <summary>   Encodes a NameValueCollection full of parameters as a POST friendly string. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
