@@ -61,9 +61,10 @@ namespace EPS.Web.Authentication.Basic
                     }
 
                     IPrincipal principal = GetPrincipal(context, credentials.UserName, credentials.Password);
-                    if (null != principal && null != principal.Identity && principal.Identity.IsAuthenticated)
+                    IIdentity identity = null != principal ? principal.Identity : null;
+                    if (null != identity && identity.IsAuthenticated)
                     {
-                        new AuthenticationSuccessEvent(this, principal.Identity.Name).Raise();
+                        new AuthenticationSuccessEvent(this, identity.Name).Raise();
                         return new InspectorAuthenticationResult(true, principal, string.Empty);
                     }
                 }
