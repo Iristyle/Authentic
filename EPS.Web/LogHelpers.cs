@@ -85,8 +85,9 @@ namespace EPS.Web
                 return "FormsIdentity is null";
 
             return String.Format(CultureInfo.InvariantCulture, "Forms Identity - Name: {0}{1}", formsIdentity.Name ?? "N/A", Environment.NewLine)
-            + String.Format(CultureInfo.InvariantCulture, "Forms Identity - Authenticated: [{0}]{1}", (formsIdentity.IsAuthenticated ? "X" : " "), Environment.NewLine)
-            + String.Format(CultureInfo.InvariantCulture, "Forms Identity - Authentication Type: {0}{1}", formsIdentity.AuthenticationType ?? "N/A", Environment.NewLine);
+                + String.Format(CultureInfo.InvariantCulture, "Forms Identity - Ticket: Name: {0} UserData: {1}{2}", null != formsIdentity.Ticket ? formsIdentity.Ticket.Name ?? "N/A" : "N/A", null != formsIdentity.Ticket ? formsIdentity.Ticket.UserData ?? "N/A" : "N/A", Environment.NewLine)
+                + String.Format(CultureInfo.InvariantCulture, "Forms Identity - Authenticated: [{0}]{1}", (formsIdentity.IsAuthenticated ? "X" : " "), Environment.NewLine)
+                + String.Format(CultureInfo.InvariantCulture, "Forms Identity - Authentication Type: {0}{1}", formsIdentity.AuthenticationType ?? "N/A", Environment.NewLine);
         }
     }
 }
