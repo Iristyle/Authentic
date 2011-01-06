@@ -8,7 +8,7 @@ namespace EPS.Web.Configuration
     public class MobileConfigurationSection : ConfigurationSection
     {
         /// <summary> Full configuration path of the MobileConfigurationSection </summary>
-        public static readonly string ConfigurationPath = "eps.web/mobile";
+        public const string ConfigurationPath = "eps.web/mobile";
 
         /// <summary>   Gets the name of the cookie that can be used to override mobile or standard view. </summary>
         /// <value> The cookie name. </value>
