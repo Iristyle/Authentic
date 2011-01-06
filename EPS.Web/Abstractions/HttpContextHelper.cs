@@ -10,7 +10,6 @@ namespace EPS.Web.Abstractions
     public static class HttpContextHelper
     {
         private static readonly object currentLock = new object();
-        private static bool currentUserDefined = false;
         private static Func<HttpContext> current = () =>
         {
             return HttpContext.Current;
@@ -29,13 +28,11 @@ namespace EPS.Web.Abstractions
             {
                 lock (currentLock)
                 {
-                    if (currentUserDefined)
+                    if (null != current)
                     {
                         throw new InvalidOperationException("The Current Func<HttpContext> may only be set once per AppDomain");
                     }
-
                     current = value;
-                    currentUserDefined = true;
                 }
             }
         }
