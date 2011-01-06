@@ -4,11 +4,8 @@ namespace EPS.Web.Management
 {
     /// <summary>   Internal Event codes. </summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
-    internal class EventCodes
-    {
-        private EventCodes()
-        { }
-
+    internal static class EventCodes
+    {        
         private const int _offset = WebEventCodes.WebExtendedBase;
 
         /// <summary> Authentication failure </summary>
