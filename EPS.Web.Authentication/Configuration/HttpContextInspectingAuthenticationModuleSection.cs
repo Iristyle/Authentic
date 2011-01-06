@@ -31,7 +31,7 @@ namespace EPS.Web.Authentication.Configuration
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public class HttpContextInspectingAuthenticationModuleSection : ConfigurationSection
     {
-        private HttpContextInspectingAuthenticationFailureConfigurationSection customFailureConfigurationSection = null;
+        private HttpContextInspectingAuthenticationFailureConfigurationSection customFailureConfigurationSection;
 
         /// <summary>   Inspects the configuration specified and throws errors where configuration is invaild. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>

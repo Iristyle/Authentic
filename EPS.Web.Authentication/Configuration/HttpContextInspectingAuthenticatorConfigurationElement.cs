@@ -13,7 +13,7 @@ namespace EPS.Web.Authentication.Configuration
     public class HttpContextInspectingAuthenticatorConfigurationElement : ConfigurationElement
     {
         //private IHttpContextInspectingAuthenticatorFactory<HttpContextInspectingAuthenticatorConfigurationElement> factoryInstance = null;
-        private ConfigurationSection customConfigurationSection = null;        
+        private ConfigurationSection customConfigurationSection;        
 
         /// <summary>   Sets the <see cref="T:System.Configuration.ConfigurationElement" /> object to its initial state.
         /// 			Necessary to mimic the deserialization process from the collection of these guys. </summary>

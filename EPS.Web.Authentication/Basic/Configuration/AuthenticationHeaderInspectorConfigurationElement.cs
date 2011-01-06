@@ -14,7 +14,7 @@ namespace EPS.Web.Authentication.Basic.Configuration
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public class AuthenticationHeaderInspectorConfigurationElement : HttpContextInspectingAuthenticatorConfigurationElement
     {
-        private IBasicAuthPrincipalBuilderFactory principalBuilderFactoryInstance = null;
+        private IBasicAuthPrincipalBuilderFactory principalBuilderFactoryInstance;
 
         /// <summary>   
         /// Get or sets the name of the MembershipProvider to be used.  By default no membership provider is used as it may be just as costly as
