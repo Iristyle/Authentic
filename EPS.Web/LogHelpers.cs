@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 using System.Web;
@@ -36,7 +37,7 @@ namespace EPS.Web
             return GetRequestDetailsString(request.Url, request.UrlReferrer, request.Browser, request.UserAgent, request.UserHostAddress, request.Cookies);
         }
 
-        /// <summary>   Gets a nicely formatted message given the details from a request. </summary>
+        /// <summary>   Gets a nicely formatted message given the details from a request.  Favor using ToLogString method that accepts <see cref="T:System.Web.HttpRequestBase "/> instead. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <param name="url">              URL of the document. </param>
         /// <param name="urlReferrer">      The url referrer. </param>
@@ -45,6 +46,7 @@ namespace EPS.Web
         /// <param name="userHostAddress">  The user host address. </param>
         /// <param name="cookies">          The cookies. </param>
         /// <returns>   A log friendly string that summarizes the request details. </returns>
+        [SuppressMessage("Gendarme.Rules.Smells", "AvoidLongParameterListsRule", Justification = "ToLogString accepting HttpRequestBase is more appropriate in most cases")]
         public static string GetRequestDetailsString(Uri url, Uri urlReferrer, HttpBrowserCapabilitiesBase browser, string userAgent, string userHostAddress, HttpCookieCollection cookies)
         {
             string requestDetails = null != url && null != url.AbsoluteUri ? String.Format(CultureInfo.InvariantCulture, "URL: {0}{1}", url.AbsoluteUri, Environment.NewLine) : 
@@ -55,7 +57,6 @@ namespace EPS.Web
             requestDetails += String.Format(CultureInfo.InvariantCulture, "Browser (User-Agent): {0} ({1}){2}", (null != browser ? browser.Id ?? "Not Identified" : "Not Identified"), userAgent.IfMissing("NULL"), Environment.NewLine);
             requestDetails += String.Format(CultureInfo.InvariantCulture, "IP: {0}{1}", userHostAddress ?? "NULL", Environment.NewLine);
            
-
             if ((null != cookies) && (0 != cookies.Count))
             {
                 requestDetails += String.Format(CultureInfo.InvariantCulture, "{0}Cookies:{0}{0}", Environment.NewLine);
