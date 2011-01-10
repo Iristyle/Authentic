@@ -62,9 +62,7 @@ namespace EPS.Web.Authentication
         /// </summary>
         /// <remarks>   ebrown, 12/21/2010. </remarks>
         /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
-        /// <param name="context">  The context. </param>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", 
-            Justification = "Rare instance when this is reasonable, since we're implementing a service locator pattern where first handler to process context successfully first wins, and we eat failing handler errors")]            
+        /// <param name="context">  The context. </param>        
         public override void OnAuthenticateRequest(HttpContextBase context)
         {
             //this shouldn't ever happen
@@ -86,7 +84,20 @@ namespace EPS.Web.Authentication
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 context.ApplicationInstance.CompleteRequest();
             }
-            
+
+            //try each of our inspectors in configured order - if one is succesful and creates an IPrincipal, return
+            if (AnyInspectorSuccesful(context, inspectors))
+                return;
+
+            //since we've dropped down this far, it means we have a problem -- nothing authenticated -- so we look at 
+            //our config to determine how to respond to the failure 
+            ExecuteFailureHandler(context, inspectors);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Rare instance when this is reasonable, since we're implementing a service locator pattern where first handler to process context successfully first wins, and we eat failing handler errors")]            
+        private static bool AnyInspectorSuccesful(HttpContextBase context, Dictionary<IHttpContextInspectingAuthenticator, InspectorAuthenticationResult> inspectors)
+        {
             foreach (var inspector in inspectors.Keys.ToList())
             {
                 // if SSL is required by configuration but not enabled, skip to the next inspector
@@ -96,13 +107,13 @@ namespace EPS.Web.Authentication
                     continue;
                 }
 
-                //denies always take precedence over allows                
+                //denies always take precedence over allows
                 try
                 {
                     inspectors[inspector] = inspector.Authenticate(context);
                 }
                 catch (Exception ex)
-                {             
+                {
                     string msg = String.Format(CultureInfo.InvariantCulture, "Unexpected error authenticating with inspector [{0}] of type [{1}]", inspector.Name, inspector.GetType().Name);
                     log.Error(msg, ex);
                     inspectors[inspector] = new InspectorAuthenticationResult(false, null, msg);
@@ -116,15 +127,17 @@ namespace EPS.Web.Authentication
                 }
 
                 context.User = inspectors[inspector].Principal;
-
-                return;                
+                return true;
             }
 
-            //since we've dropped down this far, it means we have a problem -- nothing authenticated -- so we look at 
-            //our config to determine how to respond to the failure 
+            return false;
+        }
+        
+        private void ExecuteFailureHandler(HttpContextBase context, Dictionary<IHttpContextInspectingAuthenticator, InspectorAuthenticationResult> inspectors)
+        {
             IHttpContextInspectingAuthenticationFailureHandler failureHandler = HttpContextInspectorsLocator.GetFailureHandler(Configuration);
             if (null == failureHandler)
-                return; 
+                return;
 
             if (failureHandler.Configuration.RequireSsl && !context.Request.IsSecureConnection)
             {
@@ -132,12 +145,11 @@ namespace EPS.Web.Authentication
                 context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 context.ApplicationInstance.CompleteRequest();
                 return;
-            }            
+            }
 
             //new AuthenticationFailureEvent(this, (null != inspectors[failureInspector] && null != inspectors[failureInspector].Identity ? inspectors[failureInspector].Identity.Name : string.Empty)).Raise();
-            context.User = failureHandler.OnAuthenticationFailure(context, inspectors);             
+            context.User = failureHandler.OnAuthenticationFailure(context, inspectors);
         }
-
         /// <summary>   Executes the post authenticate request action. </summary>
         /// <remarks>   ebrown, 12/21/2010. </remarks>
         /// <param name="context">  The context. </param>
