@@ -5,6 +5,7 @@ using System.Text;
 using EPS.Web;
 using FakeItEasy;
 using Xunit;
+using System.Web.Security;
 
 namespace EPS.Web.Tests.Unit
 {
@@ -14,6 +15,7 @@ namespace EPS.Web.Tests.Unit
         [Fact]
         public void TestSuite()
         {
+            //FormsIdentity formsIdentity = new FormsIdentity();
             throw new NotImplementedException();
         }
     }
