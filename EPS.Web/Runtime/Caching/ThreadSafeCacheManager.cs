@@ -130,110 +130,18 @@ namespace EPS.Runtime.Caching
             if (null == fillIfMissing) { throw new ArgumentNullException("fillIfMissing"); }
             if (null == fillIfMissing.Method) { throw new ArgumentException("fillIfMissing.Method is null"); }
 
-            //TODO: this code is crying for refactoring
-            T cachedItem = default(T);
             string cacheKey = String.Format(CultureInfo.InvariantCulture, "{0}//{1}", cacheName, key);
 
             try
             {
-                //very simple approach to pulling from the http cache if we already have what we need in there                
-                cachedItem = MemoryCache.Default.Get(cacheKey) as T;
+                //very simple approach to pulling from the runtime cache if we already have what we need in there                
+                T cachedItem = MemoryCache.Default.Get(cacheKey) as T;
                 if (null != cachedItem) { return cachedItem; }
 
                 //now we get a bit more complicated -- see if we need to put the item in there -- but first see if we've ever done that
                 //by looking for a lock tied into that key
-                ReaderWriterLockSlim keySpecificLock = null;
-                masterCollectionLock.EnterUpgradeableReadLock();
-                if (constructionLocks.ContainsKey(cacheKey))
-                {
-                    keySpecificLock = constructionLocks[cacheKey];
-                }
-                else
-                {
-                    try
-                    {
-                        //could have multiple threads blocking here 
-                        masterCollectionLock.EnterWriteLock();
-
-                        //did another blocked thread get here first?
-                        if (constructionLocks.ContainsKey(cacheKey))
-                        {
-                            keySpecificLock = constructionLocks[cacheKey];
-                        }
-                        //nope, so create a new lock for this particular key while other threads wait
-                        else
-                        {
-                            keySpecificLock = new ReaderWriterLockSlim();
-                            constructionLocks.Add(cacheKey, keySpecificLock);
-                        }
-                    }
-                    catch (LockRecursionException ex)
-                    {
-                        log.Error(String.Format(CultureInfo.InvariantCulture, "Error getting lock in cache [{0}] for key [{1}]", cacheName, cacheKey), ex);
-                        throw;
-                    }
-                    finally
-                    {
-                        //release our write lock on our lock collection
-                        masterCollectionLock.ExitWriteLock();
-                    }
-                }
-
-                try
-                {
-                    //similar process as above ... now we have a lock that we can use for controlling creation of the new item to cache
-                    //the nice thing is that this lock is tied into that key specifically so items with other keys aren't blocked or anything
-                    keySpecificLock.EnterWriteLock();
-
-                    //did another thread beat us to create this new cached dictionary
-                    cachedItem = MemoryCache.Default.Get(cacheKey) as T;
-
-                    //nope, so call the delegate to have our caller create it... then add it to the cache
-                    if (null == cachedItem)
-                    {
-                        try
-                        {
-                            cachedItem = fillIfMissing();
-                        }
-                        catch (Exception ex)
-                        {
-                            log.Error("Item creation function returned a null -- nothing to cache", ex);
-                            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} failed -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name ?? string.Empty));
-                        }
-
-                        if (null == cachedItem)
-                        {
-                            throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} returned, but the item is null -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name ?? string.Empty));
-                        }
-
-                        MemoryCache.Default.Add(cacheKey, cachedItem, cachePolicy);
-                        /*
-                        if (config.Utility.Caching.PerformanceMonitoring)
-                        {
-                            long size = typeof(string) == CacheType ? cachedItem.Cast<string>().Length * 2 : 0;
-                            AddItemToPerfmon(cacheName, size);
-                        }
-                        */
-                        /*
-                        MemoryCache.Default.CreateCacheEntryChangeMonitor(new[] { cacheKey }).NotifyOnChanged((target) =>
-                            {
-                                //the only notification that can be made is a removal
-                                if (config.Utility.Caching.PerformanceMonitoring)
-                                    RemoveItemFromPerfmon(cacheName, size);
-                            });
-                         */
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string msg = String.Format(CultureInfo.InvariantCulture, "Problem retrieving or creating new cached item in cache [{0}] for key [{1}]", cacheName, cacheKey);
-                    log.Error(msg, ex);
-                    throw;
-                }
-                finally
-                {
-                    keySpecificLock.ExitWriteLock();
-                }
+                ReaderWriterLockSlim keySpecificLock = AcquireKeySpecificLock(cacheKey);
+                return cachedItem = GetOrFillCacheImpl(fillIfMissing, cacheKey, keySpecificLock);
             }
             //just let our exception bubble up
             finally
@@ -242,6 +150,108 @@ namespace EPS.Runtime.Caching
                 {
                     masterCollectionLock.ExitUpgradeableReadLock();
                 }
+            }
+
+        }
+
+        private ReaderWriterLockSlim AcquireKeySpecificLock(string cacheKey)
+        {
+            ReaderWriterLockSlim keySpecificLock = null;
+            masterCollectionLock.EnterUpgradeableReadLock();
+            if (constructionLocks.ContainsKey(cacheKey))
+            {
+                keySpecificLock = constructionLocks[cacheKey];
+            }
+            else
+            {
+                try
+                {
+                    //could have multiple threads blocking here
+                    masterCollectionLock.EnterWriteLock();
+
+                    //did another blocked thread get here first?
+                    if (constructionLocks.ContainsKey(cacheKey))
+                    {
+                        keySpecificLock = constructionLocks[cacheKey];
+                    }
+                    //nope, so create a new lock for this particular key while other threads wait
+                    else
+                    {
+                        keySpecificLock = new ReaderWriterLockSlim();
+                        constructionLocks.Add(cacheKey, keySpecificLock);
+                    }
+                }
+                catch (LockRecursionException ex)
+                {
+                    log.Error(String.Format(CultureInfo.InvariantCulture, "Error getting lock in cache [{0}] for key [{1}]", cacheName, cacheKey), ex);
+                    throw;
+                }
+                finally
+                {
+                    //release our write lock on our lock collection
+                    masterCollectionLock.ExitWriteLock();
+                }
+            }
+            return keySpecificLock;
+        }
+        private T GetOrFillCacheImpl<T>(Func<T> fillIfMissing, string cacheKey, ReaderWriterLockSlim keySpecificLock) where T : class
+        {
+            T cachedItem = default(T);
+
+            try
+            {
+                //similar process as above ... now we have a lock that we can use for controlling creation of the new item to cache
+                //the nice thing is that this lock is tied into that key specifically so items with other keys aren't blocked or anything
+                keySpecificLock.EnterWriteLock();
+
+                //did another thread beat us to create this new cached dictionary
+                cachedItem = MemoryCache.Default.Get(cacheKey) as T;
+
+                //nope, so call the delegate to have our caller create it... then add it to the cache
+                if (null == cachedItem)
+                {
+                    try
+                    {
+                        cachedItem = fillIfMissing();
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Error("Item creation function returned a null -- nothing to cache", ex);
+                        throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} failed -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name ?? string.Empty));
+                    }
+
+                    if (null == cachedItem)
+                    {
+                        throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} returned, but the item is null -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name ?? string.Empty));
+                    }
+
+                    MemoryCache.Default.Add(cacheKey, cachedItem, cachePolicy);
+                    /*
+                    if (config.Utility.Caching.PerformanceMonitoring)
+                    {
+                        long size = typeof(string) == CacheType ? cachedItem.Cast<string>().Length * 2 : 0;
+                        AddItemToPerfmon(cacheName, size);
+                    }
+                    */
+                    /*
+                    MemoryCache.Default.CreateCacheEntryChangeMonitor(new[] { cacheKey }).NotifyOnChanged((target) =>
+                        {
+                            //the only notification that can be made is a removal
+                            if (config.Utility.Caching.PerformanceMonitoring)
+                                RemoveItemFromPerfmon(cacheName, size);
+                        });
+                     */
+                }
+            }
+            catch (Exception ex)
+            {
+                string msg = String.Format(CultureInfo.InvariantCulture, "Problem retrieving or creating new cached item in cache [{0}] for key [{1}]", cacheName, cacheKey);
+                log.Error(msg, ex);
+                throw;
+            }
+            finally
+            {
+                keySpecificLock.ExitWriteLock();
             }
 
             return cachedItem;
