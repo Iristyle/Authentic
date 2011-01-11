@@ -66,6 +66,7 @@ namespace EPS.Web.Abstractions
         }
         */
         /// <summary>   Disposes of the resources (other than memory) used by the module that implements <see cref="T:System.Web.IHttpModule" />. </summary>
+        [SuppressMessage("Gendarme.Rules.BadPractice", "OnlyUseDisposeForIDisposableTypesRule", Justification = "We have no choice since IHttpModule specifies the Dispose method")]
         public void Dispose()
         {
         }
