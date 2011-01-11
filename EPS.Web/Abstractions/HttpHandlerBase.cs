@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 
 namespace EPS.Web.Abstractions
@@ -8,6 +9,7 @@ namespace EPS.Web.Abstractions
     /// <a href="http://weblogs.asp.net/rashid/archive/2009/03/12/unit-testable-httpmodule-and-httphandler.aspx" />
     /// </summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
+    [SuppressMessage("Gendarme.Rules.Smells", "AvoidSpeculativeGeneralityRule", Justification = "Providing base class implementation of .NET framework IHttpHandler that allows using HttpContextBase")]
     public abstract class HttpHandlerBase : IHttpHandler
     {
         /// <summary>   Gets a value indicating whether another request can use the <see cref="T:System.Web.IHttpHandler" /> instance. </summary>
