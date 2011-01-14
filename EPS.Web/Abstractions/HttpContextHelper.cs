@@ -44,9 +44,9 @@ namespace EPS.Web.Abstractions
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
         public static HttpContextBase GetContext(HttpRequestBase request = null)
         {
-            return (null != request && null != request.RequestContext && null != request.RequestContext.HttpContext) ? 
-                request.RequestContext.HttpContext : 
-                new HttpContextWrapper(Current());
+            var requestContext = null != request ? request.RequestContext : null;
+            var httpContext = null != requestContext ? requestContext.HttpContext : null;
+            return httpContext ?? new HttpContextWrapper(Current());
         }
 
 
