@@ -8,7 +8,7 @@ namespace EPS.Web.Configuration
     public class WebConfigurationSectionGroup : ConfigurationSectionGroup
     {
         /// <summary> Full path of the configuration section</summary>
-        public const string ConfigurationPath = "eps.web";
+        public static readonly string ConfigurationPath = "eps.web";
 
         /// <summary>   Gets the MobileConfigurationSection. </summary>
         /// <value> The nested MobileConfigurationSection. </value>
