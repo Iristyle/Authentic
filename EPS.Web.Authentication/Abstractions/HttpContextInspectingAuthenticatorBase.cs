@@ -13,7 +13,7 @@ namespace EPS.Web.Authentication.Abstractions
     public abstract class HttpContextInspectingAuthenticatorBase<T> : IHttpContextInspectingAuthenticator<T> where T : HttpContextInspectingAuthenticatorConfigurationElement
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);        
-        private readonly T config;
+        private readonly T _config;
         
         private HttpContextInspectingAuthenticatorBase()
         { }
@@ -23,7 +23,7 @@ namespace EPS.Web.Authentication.Abstractions
         /// <param name="config">   The configuration. </param>
         protected HttpContextInspectingAuthenticatorBase(T config)
         {
-            this.config = config;
+            this._config = config;
         }
 
         /// <summary>   Gets the log4net log instance. </summary>
@@ -51,14 +51,14 @@ namespace EPS.Web.Authentication.Abstractions
         /// <value> The configuration. </value>
         HttpContextInspectingAuthenticatorConfigurationElement IHttpContextInspectingAuthenticator.Configuration
         {
-            get { return config; }
+            get { return _config; }
         }
 
         /// <summary>   Gets the specific configuration instance as specified in the generic class definition. </summary>
         /// <value> The configuration. </value>
         public T Configuration
         {
-            get { return config; }
+            get { return _config; }
         }
 
         /// <summary>   Authenticates based on a given HttpContextBase. </summary>
