@@ -18,9 +18,10 @@ namespace EPS.Web
         {
             if (null == response) { throw new ArgumentNullException("response"); }
 
-            response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
-            response.Cache.SetCacheability(HttpCacheability.NoCache);
-            response.Cache.SetExpires(DateTime.Now);
+            var cache = response.Cache;
+            cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
+            cache.SetCacheability(HttpCacheability.NoCache);
+            cache.SetExpires(DateTime.Now);
             response.AddHeader("pragma", "no-cache");
         }
     }
