@@ -17,7 +17,7 @@ namespace EPS.Web.Authentication.Abstractions
             where T : HttpContextInspectingAuthenticationFailureConfigurationSection
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private T config;
+        private readonly T _config;
 
         private HttpContextInspectingAuthenticationFailureHandlerBase()
         { }
@@ -27,7 +27,7 @@ namespace EPS.Web.Authentication.Abstractions
         /// <param name="config">   The configuration. </param>
         protected HttpContextInspectingAuthenticationFailureHandlerBase(T config)
         {
-            this.config = config;
+            this._config = config;
         }
 
         /// <summary>   
@@ -37,7 +37,7 @@ namespace EPS.Web.Authentication.Abstractions
         /// <value> The configuration. </value>
         HttpContextInspectingAuthenticationFailureConfigurationSection IHttpContextInspectingAuthenticationFailureHandler.Configuration
         {
-            get { return config; }
+            get { return _config; }
         }
 
         /// <summary>   Gets the log4net log instance. </summary>
@@ -51,7 +51,7 @@ namespace EPS.Web.Authentication.Abstractions
         /// <value> The configuration. </value>
         public T Configuration
         {
-            get { return config; }
+            get { return _config; }
         }
 
         /// <summary>   Executes the authentication failure action.  Must be implemented in derived classes. </summary>
