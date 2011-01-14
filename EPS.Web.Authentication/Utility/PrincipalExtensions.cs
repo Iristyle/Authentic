@@ -8,7 +8,7 @@ namespace EPS.Web.Authentication.Utility
     /// <summary>   A simple set of extension methods on top of <see cref="T:System.Security.Principal"/> that perform utility functions,
     /// 			such as checking whether the user has an email address. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public static class IPrincipalExtensions
+    public static class PrincipalExtensions
     {
         /// <summary>   An IPrincipal extension method that querys if an 'IPrincipal' has an email address. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
