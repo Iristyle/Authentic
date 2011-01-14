@@ -21,23 +21,23 @@ namespace EPS.Runtime.Caching
         private readonly static Dictionary<string, ThreadSafeCacheManager<T>> existingCaches = new Dictionary<string, ThreadSafeCacheManager<T>>();
 
         //TODO: potentially integrate PerfmonManager
-        private readonly string cacheName = string.Empty;
-        private readonly CacheItemPolicy cachePolicy;
-        private readonly Dictionary<string, ReaderWriterLockSlim> constructionLocks = new Dictionary<string, ReaderWriterLockSlim>();
-        private readonly ReaderWriterLockSlim masterCollectionLock = new ReaderWriterLockSlim();
+        private readonly string _cacheName = string.Empty;
+        private readonly CacheItemPolicy _cachePolicy;
+        private readonly Dictionary<string, ReaderWriterLockSlim> _constructionLocks = new Dictionary<string, ReaderWriterLockSlim>();
+        private readonly ReaderWriterLockSlim _masterCollectionLock = new ReaderWriterLockSlim();
 
         /// <summary>   Finalizer that releases any created ReaderWriterLockSlim instances created during the lifetime of this object. </summary>
         /// <remarks>   ebrown, 1/5/2011. </remarks>
         ~ThreadSafeCacheManager()
         {
-            Parallel.ForEach(constructionLocks, (cl => cl.Value.Dispose()));
-            masterCollectionLock.Dispose();            
+            Parallel.ForEach(_constructionLocks, (cl => cl.Value.Dispose()));
+            _masterCollectionLock.Dispose();            
         }
 
         private ThreadSafeCacheManager(string cacheName, TimeSpan cacheTimeSpan, CacheItemPriority cacheItemPriority)
         {
-            this.cacheName = cacheName;
-            this.cachePolicy = new CacheItemPolicy()
+            this._cacheName = cacheName;
+            this._cachePolicy = new CacheItemPolicy()
             {
                 SlidingExpiration = cacheTimeSpan,
                 Priority = cacheItemPriority,
@@ -130,7 +130,7 @@ namespace EPS.Runtime.Caching
             if (null == fillIfMissing) { throw new ArgumentNullException("fillIfMissing"); }
             if (null == fillIfMissing.Method) { throw new ArgumentException("fillIfMissing.Method is null"); }
 
-            string cacheKey = String.Format(CultureInfo.InvariantCulture, "{0}//{1}", cacheName, key);
+            string cacheKey = String.Format(CultureInfo.InvariantCulture, "{0}//{1}", _cacheName, key);
 
             try
             {
@@ -146,9 +146,9 @@ namespace EPS.Runtime.Caching
             //just let our exception bubble up
             finally
             {
-                if (masterCollectionLock.IsUpgradeableReadLockHeld)
+                if (_masterCollectionLock.IsUpgradeableReadLockHeld)
                 {
-                    masterCollectionLock.ExitUpgradeableReadLock();
+                    _masterCollectionLock.ExitUpgradeableReadLock();
                 }
             }
 
@@ -157,39 +157,39 @@ namespace EPS.Runtime.Caching
         private ReaderWriterLockSlim AcquireKeySpecificLock(string cacheKey)
         {
             ReaderWriterLockSlim keySpecificLock = null;
-            masterCollectionLock.EnterUpgradeableReadLock();
-            if (constructionLocks.ContainsKey(cacheKey))
+            _masterCollectionLock.EnterUpgradeableReadLock();
+            if (_constructionLocks.ContainsKey(cacheKey))
             {
-                keySpecificLock = constructionLocks[cacheKey];
+                keySpecificLock = _constructionLocks[cacheKey];
             }
             else
             {
                 try
                 {
                     //could have multiple threads blocking here
-                    masterCollectionLock.EnterWriteLock();
+                    _masterCollectionLock.EnterWriteLock();
 
                     //did another blocked thread get here first?
-                    if (constructionLocks.ContainsKey(cacheKey))
+                    if (_constructionLocks.ContainsKey(cacheKey))
                     {
-                        keySpecificLock = constructionLocks[cacheKey];
+                        keySpecificLock = _constructionLocks[cacheKey];
                     }
                     //nope, so create a new lock for this particular key while other threads wait
                     else
                     {
                         keySpecificLock = new ReaderWriterLockSlim();
-                        constructionLocks.Add(cacheKey, keySpecificLock);
+                        _constructionLocks.Add(cacheKey, keySpecificLock);
                     }
                 }
                 catch (LockRecursionException ex)
                 {
-                    log.Error(String.Format(CultureInfo.InvariantCulture, "Error getting lock in cache [{0}] for key [{1}]", cacheName, cacheKey), ex);
+                    log.Error(String.Format(CultureInfo.InvariantCulture, "Error getting lock in cache [{0}] for key [{1}]", _cacheName, cacheKey), ex);
                     throw;
                 }
                 finally
                 {
                     //release our write lock on our lock collection
-                    masterCollectionLock.ExitWriteLock();
+                    _masterCollectionLock.ExitWriteLock();
                 }
             }
             return keySpecificLock;
@@ -218,7 +218,7 @@ namespace EPS.Runtime.Caching
                     catch (Exception ex)
                     {
                         log.Error("Item creation function returned a null -- nothing to cache", ex);
-                        throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} failed -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name ?? string.Empty));
+                        throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} failed -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name ?? string.Empty), ex);
                     }
 
                     if (null == cachedItem)
@@ -226,7 +226,7 @@ namespace EPS.Runtime.Caching
                         throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Call to {0} returned, but the item is null -- The user supplied object creation function must return a valid object", fillIfMissing.Method.Name ?? string.Empty));
                     }
 
-                    MemoryCache.Default.Add(cacheKey, cachedItem, cachePolicy);
+                    MemoryCache.Default.Add(cacheKey, cachedItem, _cachePolicy);
                     /*
                     if (config.Utility.Caching.PerformanceMonitoring)
                     {
@@ -246,7 +246,7 @@ namespace EPS.Runtime.Caching
             }
             catch (Exception ex)
             {
-                string msg = String.Format(CultureInfo.InvariantCulture, "Problem retrieving or creating new cached item in cache [{0}] for key [{1}]", cacheName, cacheKey);
+                string msg = String.Format(CultureInfo.InvariantCulture, "Problem retrieving or creating new cached item in cache [{0}] for key [{1}]", _cacheName, cacheKey);
                 log.Error(msg, ex);
                 throw;
             }
