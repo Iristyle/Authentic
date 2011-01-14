@@ -20,6 +20,7 @@ namespace EPS.Web.Routing
         /// <param name="targetUrl">    The target URL to route to. </param>
         /// <returns>   A new Route representative of redirecting the routes. </returns>
         [SuppressMessage("Microsoft.Design", "CA1054:UriPropertiesShouldNotBeStrings", Justification = "These strings may be partial / relative urls or may be prefixed with ~")]
+        [SuppressMessage("Gendarme.Rules.Maintainability", "AvoidUnnecessarySpecializationRule", Justification = "We want to enforce usage against a RouteCollection rather than an ICollection<Route>")]
         public static Route RedirectPermanently(this RouteCollection routes, string url, string targetUrl)
         {
             if (null == routes) { throw new ArgumentNullException("routes"); }
