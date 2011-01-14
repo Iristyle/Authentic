@@ -1,10 +1,12 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
 
 namespace EPS.Web.Authentication
 {
     /// <summary>   The value returned from a <see cref="T:EPS.Web.Authentication.Abstractions.IHttpContextInspectingAuthenticator"/>. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
+    [SuppressMessage("Gendarme.Rules.Maintainability", "AvoidLackOfCohesionOfMethodsRule", Justification = "This is a simple placeholder type used for generating return values from inspectors")]
     public class InspectorAuthenticationResult
     {
         /// <summary>   Initializes a new instance of the InspectorAuthenticationResult class. </summary>
