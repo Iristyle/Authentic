@@ -18,7 +18,9 @@ namespace EPS.Web
             if (null == httpContextBase)
                 throw new ArgumentNullException("httpContextBase");
 
-            return (null == httpContextBase.User || null == httpContextBase.User.Identity ? string.Empty : httpContextBase.User.Identity.Name);
+            var user = httpContextBase.User;
+            var identity = null != user ? user.Identity : null;
+            return (null == identity ? string.Empty : identity.Name ?? string.Empty);
         }
     }
 }
