@@ -38,8 +38,9 @@ namespace EPS.Web.Authentication
         {
             var eventArgs = new SimpleAuthenticationFailureEventArgs(Configuration, context, inspectorResults);
 
-            if (null != AuthenticationFailure)
-                AuthenticationFailure(this, eventArgs);
+            var handler = AuthenticationFailure;
+            if (null != handler)
+                handler(this, eventArgs);
 
             return eventArgs.IPrincipal;
         }
