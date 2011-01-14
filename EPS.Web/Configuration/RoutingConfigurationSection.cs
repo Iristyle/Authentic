@@ -8,7 +8,7 @@ namespace EPS.Web.Configuration
     public class  RoutingConfigurationSection : ConfigurationSection
     {
         /// <summary> Default path in the configuration file </summary>
-        public const string ConfigurationPath = "eps.web/routing";
+        public static readonly string ConfigurationPath = "eps.web/routing";
 
         /// <summary>   Gets the permanent redirects of source to target URL. </summary>
         /// <value> The permanent redirects. </value>
