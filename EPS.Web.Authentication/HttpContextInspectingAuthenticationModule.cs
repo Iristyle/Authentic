@@ -149,39 +149,6 @@ namespace EPS.Web.Authentication
 
             //new AuthenticationFailureEvent(this, (null != inspectors[failureInspector] && null != inspectors[failureInspector].Identity ? inspectors[failureInspector].Identity.Name : string.Empty)).Raise();
             context.User = failureHandler.OnAuthenticationFailure(context, inspectors);
-        }
-        /// <summary>   Executes the post authenticate request action. </summary>
-        /// <remarks>   ebrown, 12/21/2010. </remarks>
-        /// <param name="context">  The context. </param>
-        public override void OnPostAuthenticateRequest(HttpContextBase context)
-        {
-            base.OnPostAuthenticateRequest(context);
-        }
-
-        /// <summary>   Executes the authorize request action. </summary>
-        /// <remarks>   ebrown, 12/21/2010. </remarks>
-        /// <param name="context">  The context. </param>
-        public override void OnAuthorizeRequest(HttpContextBase context)
-        {
-            base.OnAuthorizeRequest(context);
-        }
-
-        /// <summary>   Executes the end request action. </summary>
-        /// <remarks>   ebrown, 12/21/2010. </remarks>
-        /// <param name="context">  The context. </param>
-        public override void OnEndRequest(HttpContextBase context)
-        {
-            base.OnEndRequest(context);
-            //if (Configuration.Enabled && (context.Context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)) //401
-            //    SendAuthenticationHeader();
-        }
-
-        /// <summary>   Executes the post authorize request action. </summary>
-        /// <remarks>   ebrown, 12/21/2010. </remarks>
-        /// <param name="context">  The context. </param>
-        public override void OnPostAuthorizeRequest(HttpContextBase context)
-        {
-            base.OnPostAuthorizeRequest(context);
         }        
     }
 }
