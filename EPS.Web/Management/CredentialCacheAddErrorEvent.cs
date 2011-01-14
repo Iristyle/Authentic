@@ -7,7 +7,7 @@ namespace EPS.Web.Management
     /// <remarks>   ebrown, 11/10/2010. </remarks>
     public class CredentialCacheAddErrorEvent : WebErrorEvent
     {
-        private Exception exception;
+        private readonly Exception _exception;
 
         /// <summary>   Constructor that calls the base constructor with EventCodes.CacheAdd. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
@@ -17,7 +17,7 @@ namespace EPS.Web.Management
         public CredentialCacheAddErrorEvent(object sender, string userName, Exception exception)
             : base(EPS.Web.Properties.ManagementStrings.FailedToAddCredentialIdentifierFor + userName, sender, EventCodes.CacheAdd, exception)
         {
-            this.exception = exception;
+            this._exception = exception;
         }
 
         /// <summary>   Format custom event details.  Calls the base method and then adds the exception on a new line. </summary>
@@ -29,7 +29,7 @@ namespace EPS.Web.Management
             if (null == formatter) { throw new ArgumentNullException("formatter"); }
 
             base.FormatCustomEventDetails(formatter);
-            formatter.AppendLine(exception.ToString());
+            formatter.AppendLine(_exception.ToString());
         }
     }
 }
