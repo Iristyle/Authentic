@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
 using System.Web;
 using EPS.Web.Authentication.Abstractions;
@@ -11,6 +12,7 @@ namespace EPS.Web.Authentication
     /// Additional information for simple authentication failure events. Clients are responsible for filling in the specified IPrincipal. 
     /// </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
+    [SuppressMessage("Gendarme.Rules.Maintainability", "AvoidLackOfCohesionOfMethodsRule", Justification = "This is a simple EventArgs class that should not be difficult to understand")]
     public class SimpleAuthenticationFailureEventArgs : EventArgs
     {
         /// <summary>   Gets the configuration. </summary>
