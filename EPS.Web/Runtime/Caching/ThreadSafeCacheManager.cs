@@ -195,7 +195,7 @@ namespace EPS.Runtime.Caching
             return keySpecificLock;
         }
         
-        private T GetOrFillCacheImpl<T>(Func<T> fillIfMissing, string cacheKey, ReaderWriterLockSlim keySpecificLock) where T : class
+        private T GetOrFillCacheImpl(Func<T> fillIfMissing, string cacheKey, ReaderWriterLockSlim keySpecificLock)
         {
             T cachedItem = default(T);
 
