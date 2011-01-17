@@ -123,7 +123,8 @@ namespace EPS.Runtime.Caching
         /// <param name="key">              The key. </param>
         /// <param name="fillIfMissing">    The delegate used to provide the item for the cache. </param>
         /// <returns>   The item if it exists, or after construction of the instance using the fillIfMissing delegate. </returns>
-        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "Red herring - fillIfMissing is validated")]
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "Red herring - fillIfMissing is validated"),
+        SuppressMessage("Gendarme.Rules.Correctness", "EnsureLocalDisposalRule", Justification = "The undisposed ReaderWriterLockSlim should not be disposed here as disposed of in the finalizer")]
         public T GetOrFillCache(string key, Func<T> fillIfMissing)
         {
             if (null == key) { throw new ArgumentNullException("key"); }
@@ -194,7 +195,8 @@ namespace EPS.Runtime.Caching
             }
             return keySpecificLock;
         }
-        
+
+        [SuppressMessage("Gendarme.Rules.Exceptions", "DoNotSwallowErrorsCatchingNonSpecificExceptionsRule", Justification = "The fillIfMissing function could throw anything, so we have to protect against that")]
         private T GetOrFillCacheImpl(Func<T> fillIfMissing, string cacheKey, ReaderWriterLockSlim keySpecificLock)
         {
             T cachedItem = default(T);
