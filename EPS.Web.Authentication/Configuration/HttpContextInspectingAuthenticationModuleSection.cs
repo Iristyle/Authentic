@@ -130,7 +130,7 @@ namespace EPS.Web.Authentication.Configuration
                 {
                     customFailureConfigurationSection = (HttpContextInspectingAuthenticationFailureConfigurationSection)CurrentConfiguration.GetSection(CustomFailureHandlerConfigurationSectionName);
                 }
-                catch (Exception ex)
+                catch (ConfigurationErrorsException ex)
                 {
                     throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The custom configuration section specified by \"customFailureHandlerConfigurationSection\" [{0}] must exist - check configuration settings", CustomFailureHandlerConfigurationSectionName), ex);
                 }
