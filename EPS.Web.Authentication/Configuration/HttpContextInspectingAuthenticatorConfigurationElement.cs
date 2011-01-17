@@ -141,7 +141,7 @@ namespace EPS.Web.Authentication.Configuration
                 {
                     customConfigurationSection = CurrentConfiguration.GetSection(CustomConfigurationSectionName);
                 }
-                catch (Exception ex)
+                catch (ConfigurationErrorsException ex)
                 {
                     throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The custom configuration section specified by \"configurationSection\" [{0}] must exist - check configuration settings", CustomConfigurationSectionName), ex);
                 }
