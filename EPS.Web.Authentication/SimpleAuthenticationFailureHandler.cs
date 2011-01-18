@@ -21,8 +21,7 @@ namespace EPS.Web.Authentication
 
         /// <summary> The authentication failure handler -- implementors must set the IPrincipal here to something
         /// </summary>   
-        [SuppressMessage("Microsoft.Usage", "CA2211:NonConstantFieldsShouldNotBeVisible", Justification = "Add/remove is thread-safe for events in .NET.")]
-        public static EventHandler<SimpleAuthenticationFailureEventArgs> AuthenticationFailure;
+        public static event EventHandler<SimpleAuthenticationFailureEventArgs> AuthenticationFailure;
         //TODO: 8-9-2010 -- prevent against multiple hooks here
 
         #region IHttpHeaderInspectingAuthenticationFailureHandler Members
