@@ -120,6 +120,11 @@
       <Name>EPS.Web</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\Build\CustomDictionary.xml">
+      <Link>Properties\CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent />
