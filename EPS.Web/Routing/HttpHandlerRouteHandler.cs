@@ -5,7 +5,7 @@ using System.Web.Routing;
 namespace EPS.Web.Routing
 {
     /// <summary>   A custom IRouteHandler class that allows us to plug standard IHttpHandler instances into routing easier. </summary>
-    /// <remarks>   Shamelessly stolen from Haacked. <a href="http://haacked.com/archive/2009/11/04/routehandler-for-http-handlers.aspx"> </remarks>
+    /// <remarks>   Shamelessly stolen from Haacked. <a href="http://haacked.com/archive/2009/11/04/routehandler-for-http-handlers.aspx" /> </remarks>
     public class HttpHandlerRouteHandler<THandler> 
         : IRouteHandler where THandler : IHttpHandler, new()
     {
