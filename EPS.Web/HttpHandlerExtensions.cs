@@ -1,11 +1,12 @@
 using System;
-using System.Web.Routing;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
+using System.Web.Routing;
 
 namespace EPS.Web.Routing
 {
     /// <summary>   A set of extensions on RouteCollection that allows mapping a IHttpHandler that makes it easy to map Http handler extensions. </summary>
-    /// <remarks>   Shamelessly stolen from Haacked. <a href="http://haacked.com/archive/2009/11/04/routehandler-for-http-handlers.aspx"> </remarks>
+    /// <remarks>   Shamelessly stolen from Haacked. <a href="http://haacked.com/archive/2009/11/04/routehandler-for-http-handlers.aspx" /> </remarks>
     public static class HttpHandlerExtensions
     {
         /// <summary>   A RouteCollection extension method that maps a url route to an IHttpHandler implementation. </summary>
@@ -15,6 +16,8 @@ namespace EPS.Web.Routing
         /// <typeparam name="THandler"> Type of the handler implementing IHttpHandler. </typeparam>
         /// <param name="routes">   The routes collection to add to. </param>
         /// <param name="url">      URL to route from to the IHttpHandler. </param>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "This is the API we want"),
+        SuppressMessage("Microsoft.Design", "CA1054:UriPropertiesShouldNotBeStrings", Justification = "Following convention established by .NET framework with System.Web.Routing.Route")]
         public static void MapHttpHandler<THandler>(this RouteCollection routes, string url)
             where THandler : IHttpHandler, new()
         {
@@ -35,6 +38,8 @@ namespace EPS.Web.Routing
         /// <param name="name">         The name, which can be null. </param>
         /// <param name="defaults">     The defaults, which can be null. </param>
         /// <param name="constraints">  The constraints, which can be null. </param>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "This is the API we want"),
+        SuppressMessage("Microsoft.Design", "CA1054:UriPropertiesShouldNotBeStrings", Justification = "Following convention established by .NET framework with System.Web.Routing.Route")]
         public static void MapHttpHandler<THandler>(this RouteCollection routes, string name, string url, object defaults, object constraints)
             where THandler : IHttpHandler, new()
         {
