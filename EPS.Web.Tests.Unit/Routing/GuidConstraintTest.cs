@@ -16,44 +16,41 @@ namespace EPS.Web.Routing.Tests.Unit
             Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", dictionary, RouteDirection.IncomingRequest));
         }
 
+        private static RouteValueDictionary GetGuidStringDictionary(string format)
+        {
+            var dictionary = new RouteValueDictionary();
+            dictionary.Add("parameter", Guid.NewGuid().ToString(format));
+            return dictionary;
+        }
+
         [Fact]
         public void Match_TrueOnValidGuidAsNFormattedString()
         {
-            var dictionary = new RouteValueDictionary();
-            dictionary.Add("parameter", Guid.NewGuid().ToString("N"));
-            Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", dictionary, RouteDirection.IncomingRequest));
+            Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", GetGuidStringDictionary("N"), RouteDirection.IncomingRequest));
         }
 
         [Fact]
         public void Match_TrueOnValidGuidAsDFormattedString()
         {
-            var dictionary = new RouteValueDictionary();
-            dictionary.Add("parameter", Guid.NewGuid().ToString("D"));
-            Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", dictionary, RouteDirection.IncomingRequest));
+            Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", GetGuidStringDictionary("D"), RouteDirection.IncomingRequest));
         }
 
         [Fact]
         public void Match_TrueOnValidGuidAsBFormattedString()
         {
-            var dictionary = new RouteValueDictionary();
-            dictionary.Add("parameter", Guid.NewGuid().ToString("B"));
-            Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", dictionary, RouteDirection.IncomingRequest));
+            Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", GetGuidStringDictionary("B"), RouteDirection.IncomingRequest));
         }
 
         [Fact]
         public void Match_TrueOnValidGuidAsPFormattedString()
         {
-            var dictionary = new RouteValueDictionary();
-            dictionary.Add("parameter", Guid.NewGuid().ToString("N"));
-            Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", dictionary, RouteDirection.IncomingRequest));
+            Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", GetGuidStringDictionary("P"), RouteDirection.IncomingRequest));
         }
 
         [Fact]
         public void Match_TrueOnValidGuidAsXFormattedString()
         {
-            var dictionary = new RouteValueDictionary();
-            dictionary.Add("parameter", Guid.NewGuid().ToString("X"));
-            Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", dictionary, RouteDirection.IncomingRequest));
+            Assert.True(new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "parameter", GetGuidStringDictionary("X"), RouteDirection.IncomingRequest));
         }
 
         [Fact]
@@ -107,41 +104,31 @@ namespace EPS.Web.Routing.Tests.Unit
         [Fact]
         public void Match_ThrowsOnNullHttpContext()
         {
-            var dictionary = new RouteValueDictionary();
-            dictionary.Add("parameter", Guid.NewGuid().ToString());
-            Assert.Throws<ArgumentNullException>(() => new GuidConstraint().Match(null, A.Dummy<Route>(), "parameter", dictionary, RouteDirection.IncomingRequest));
+            Assert.Throws<ArgumentNullException>(() => new GuidConstraint().Match(null, A.Dummy<Route>(), "parameter", GetGuidStringDictionary("D"), RouteDirection.IncomingRequest));
         }
 
         [Fact]
         public void Match_ThrowsOnNullRoute()
         {
-            var dictionary = new RouteValueDictionary();
-            dictionary.Add("parameter", Guid.NewGuid().ToString());
-            Assert.Throws<ArgumentNullException>(() => new GuidConstraint().Match(A.Dummy<HttpContextBase>(), null, "parameter", dictionary, RouteDirection.IncomingRequest));
+            Assert.Throws<ArgumentNullException>(() => new GuidConstraint().Match(A.Dummy<HttpContextBase>(), null, "parameter", GetGuidStringDictionary("D"), RouteDirection.IncomingRequest));
         }
 
         [Fact]
         public void Match_ThrowsOnNullParameterName()
         {
-            var dictionary = new RouteValueDictionary();
-            dictionary.Add("parameter", Guid.NewGuid().ToString());
-            Assert.Throws<ArgumentNullException>(() => new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), null, dictionary, RouteDirection.IncomingRequest));
+            Assert.Throws<ArgumentNullException>(() => new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), null, GetGuidStringDictionary("D"), RouteDirection.IncomingRequest));
         }
 
         [Fact]
-        public void Match_ThrowsOnWhitespaceParameterName()
+        public void Match_ThrowsOnWhiteSpaceParameterName()
         {
-            var dictionary = new RouteValueDictionary();
-            dictionary.Add("parameter", Guid.NewGuid().ToString());
-            Assert.Throws<ArgumentException>(() => new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "\t", dictionary, RouteDirection.IncomingRequest));
+            Assert.Throws<ArgumentException>(() => new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), "\t", GetGuidStringDictionary("D"), RouteDirection.IncomingRequest));
         }
 
         [Fact]
         public void Match_ThrowsOnEmptyParameterName()
         {
-            var dictionary = new RouteValueDictionary();
-            dictionary.Add("parameter", Guid.NewGuid().ToString());
-            Assert.Throws<ArgumentException>(() => new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), string.Empty, dictionary, RouteDirection.IncomingRequest));
+            Assert.Throws<ArgumentException>(() => new GuidConstraint().Match(A.Dummy<HttpContextBase>(), A.Dummy<Route>(), string.Empty, GetGuidStringDictionary("D"), RouteDirection.IncomingRequest));
         }
 
         [Fact]
