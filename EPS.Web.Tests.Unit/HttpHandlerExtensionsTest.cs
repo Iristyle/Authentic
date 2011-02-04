@@ -21,12 +21,18 @@ namespace EPS.Web.Tests.Unit
             }
         }
 
-        [Fact]
-        public void MapHttpHandler_AddsNewRouteToHandler()
+        private static Route GetRouteInsertedToCollection(Action<RouteCollection> insert) //where T: IHttpHandler
         {
             var routes = new RouteCollection();
-            routes.MapHttpHandler<HttpHandlerTest>("url");
+            insert(routes);            
             var insertedRoute = (Route)routes[0];
+            return insertedRoute;
+        }
+        [Fact]
+
+        public void MapHttpHandler_AddsNewRouteToHandler()
+        {
+            var insertedRoute = GetRouteInsertedToCollection(routes => routes.MapHttpHandler<HttpHandlerTest>("url"));
             Assert.True(insertedRoute.RouteHandler.GetType() == typeof(HttpHandlerRouteHandler<HttpHandlerTest>) 
                 && insertedRoute.Url == "url");
         }
@@ -34,11 +40,9 @@ namespace EPS.Web.Tests.Unit
         [Fact]
         public void MapHttpHandler_AddsNewRouteToHandlerWithNullDefaultsAndConstraints()
         {
-            var routes = new RouteCollection();
-            routes.MapHttpHandler<HttpHandlerTest>("name", "url", null, null);
-            var insertedRoute = (Route)routes[0];
-            Assert.True(insertedRoute.RouteHandler.GetType() == typeof(HttpHandlerRouteHandler<HttpHandlerTest>) 
-                && insertedRoute.Url == "url");
+            var insertedRoute = GetRouteInsertedToCollection(routes => routes.MapHttpHandler<HttpHandlerTest>("name", "route-url", null, null));
+            Assert.True(insertedRoute.RouteHandler.GetType() == typeof(HttpHandlerRouteHandler<HttpHandlerTest>)
+                && insertedRoute.Url == "route-url");
         }
 
         [Fact]
