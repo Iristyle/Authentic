@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
 using System.Web;
+using EPS.Utility;
 using EPS.Web.Authentication.Abstractions;
 using EPS.Web.Authentication.Configuration;
 
@@ -36,10 +36,7 @@ namespace EPS.Web.Authentication
             InspectorAuthenticationResult> inspectorResults)
         {
             var eventArgs = new SimpleAuthenticationFailureEventArgs(Configuration, context, inspectorResults);
-
-            var handler = AuthenticationFailure;
-            if (null != handler)
-                handler(this, eventArgs);
+            AuthenticationFailure.SafeInvoke(this, eventArgs);
 
             return eventArgs.IPrincipal;
         }
