@@ -21,13 +21,24 @@ namespace EPS.Web.Routing.Tests.Unit
             }
         }
 
-        [Fact]
-        public void GetHttpHandler_CreatesInstance()
+        private IHttpHandler CreateHandler()
         {
             var routeHandler = new HttpHandlerRouteHandler<TestHandler>();
-            var handler = routeHandler.GetHttpHandler(A.Dummy<RequestContext>());
+            return routeHandler.GetHttpHandler(A.Dummy<RequestContext>());
+        }
 
-            Assert.True(null != handler && handler.GetType() == typeof(TestHandler));
+        [Fact]
+        public void GetHttpHandler_CreatesInstanceOfCorrectType()
+        {
+            var handler = CreateHandler();
+            Assert.IsType<TestHandler>(handler);
+        }
+
+        [Fact]
+        public void GetHttpHandler_CreatesNonNullInstance()
+        {
+            var handler = CreateHandler();
+            Assert.NotNull(handler);
         }
 
         [Fact]
