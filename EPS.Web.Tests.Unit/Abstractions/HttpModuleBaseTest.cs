@@ -10,10 +10,9 @@ namespace EPS.Web.Abstractions.Tests.Unit
 {
     public class HttpModuleBaseTest
     {
-        [Fact]
+        [Fact(Skip = "Write some easy tests against this base")]
         public void TestSuite()
         {
-            throw new NotImplementedException();
         }
     }
 }

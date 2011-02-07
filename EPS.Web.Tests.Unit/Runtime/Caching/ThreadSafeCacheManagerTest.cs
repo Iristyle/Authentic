@@ -14,11 +14,10 @@ namespace EPS.Runtime.Caching.Tests.Unit
     }
     public class ThreadSafeCacheManagerTest : IThreadSafeCacheManagerTest
     {
-        [Fact]
+        [Fact(Skip = "An exhaustive suite of tests needs to be implemented on ThreadSafeCacheManager")]
         public void DoSomething()
         {
             var cacheManager = ThreadSafeCacheManager<object>.Construct("myObjectCache", TimeSpan.MaxValue);            
-            throw new NotImplementedException();
         }
     }
 }

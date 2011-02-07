@@ -10,10 +10,9 @@ namespace EPS.Web.Tests.Unit
 {
     public class HttpBasicAuthHeaderParserTest
     {
-        [Fact]
+        [Fact(Skip = "Critical to nail these -- write some tests that mimic basic auth strings in the header")]
         public void TestSuite()
         {
-            throw new NotImplementedException();
         }
     }
 }

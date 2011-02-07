@@ -10,10 +10,9 @@ namespace EPS.Web.Abstractions.Tests.Unit
 {
     public class HttpContextHelperTest
     {
-        [Fact]
+        [Fact(Skip = "Simple extension methods that should be easy to test")]
         public void TestSuite()
         {
-            throw new NotImplementedException();
         }
     }
 }

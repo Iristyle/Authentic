@@ -10,10 +10,22 @@ namespace EPS.Web.Tests.Unit
 {
     public class WebHelpersTest
     {
-        [Fact]
-        public void TestSuite()
+        [Fact(Skip = "Test the encoding routine")]
+        public void EncodePostString()
+        {            
+        }
+
+        [Fact(Skip = "Test the encoding routine")]
+        public void EncodeUrlParameter()
+        { }
+
+        [Fact(Skip = "Test the url resolution")]
+        public void ResolveServerUrl()
+        { }
+
+        [Fact(Skip = "Test the url resolution")]
+        public void ResolveUrl()
         {
-            throw new NotImplementedException();
         }
     }
 }

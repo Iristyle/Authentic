@@ -10,10 +10,9 @@ namespace EPS.Web.Routing.Tests.Unit
 {
     public class DelegateRouteHandlerTest
     {
-        [Fact]
+        [Fact(Skip = "Demonstrate the usage of the route handler - may require integration tests to demonstrate properly")]
         public void TestSuite()
         {
-            throw new NotImplementedException();
         }
     }
 }

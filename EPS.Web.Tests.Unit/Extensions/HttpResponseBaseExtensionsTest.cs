@@ -10,10 +10,10 @@ namespace EPS.Web.Extensions.Tests.Unit
 {
     public class HttpResponseBaseExtensionsTest
     {
-        [Fact]
+        [Fact(Skip = "Easy extensions against base")]
         public void TestSuite()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
