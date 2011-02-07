@@ -10,10 +10,9 @@ namespace EPS.Web.Routing.Tests.Integration
 {
     public class RouteCollectionExtensionsTest
     {
-        [Fact]
+        [Fact(Skip = "Tests against real state")]
         public void TestSuite()
         {
-            throw new NotImplementedException();
         }
     }
 }

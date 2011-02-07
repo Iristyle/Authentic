@@ -10,10 +10,9 @@ namespace EPS.Web.Tests.Integration
 {
     public class DelegateHttpHandlerTest
     {
-        [Fact]
+        [Fact(Skip = "Test that a real delegat handler gets called by ASP.NET")]
         public void TestSuite()
         {
-            throw new NotImplementedException();
         }
     }
 }

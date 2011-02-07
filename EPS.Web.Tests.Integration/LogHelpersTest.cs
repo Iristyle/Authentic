@@ -10,10 +10,9 @@ namespace EPS.Web.Tests.Integration
 {
     public class LogHelpersTest
     {
-        [Fact]
+        [Fact(Skip = "Flesh out the rest of the tests")]
         public void TestSuite()
         {
-            throw new NotImplementedException();
         }
     }
 }
