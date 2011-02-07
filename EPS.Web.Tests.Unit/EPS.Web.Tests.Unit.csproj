@@ -102,6 +102,10 @@
     <Compile Include="WebHelpersTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EPS.Utility\EPS.Utility.csproj">
+      <Project>{10D51FFF-4F91-4917-82EA-B7426B2652F6}</Project>
+      <Name>EPS.Utility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EPS.Web\EPS.Web.csproj">
       <Project>{41E2BFC8-105F-4927-B43D-644DD25BD8CE}</Project>
       <Name>EPS.Web</Name>
