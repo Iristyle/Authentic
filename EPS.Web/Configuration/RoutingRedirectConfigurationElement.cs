@@ -6,7 +6,7 @@ namespace EPS.Web.Configuration
 {
     /// <summary>   Routing redirect configuration element that provides a source to target mapping. </summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
-    public class RoutingRedirectConfigurationElement : ConfigurationElement
+    public class RoutingRedirectConfigurationElement : ConfigurationElement, IRoutingRedirectConfigurationElement
     {
         /// <summary>   Gets or sets the source URL. </summary>
         /// <value> The source url. </value>

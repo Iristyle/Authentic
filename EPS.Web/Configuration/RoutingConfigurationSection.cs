@@ -5,7 +5,7 @@ namespace EPS.Web.Configuration
 {
     /// <summary>   A configuration section that defines global routing settings. </summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
-    public class  RoutingConfigurationSection : ConfigurationSection
+    public class RoutingConfigurationSection : ConfigurationSection, IRoutingConfigurationSection
     {
         /// <summary> Default path in the configuration file </summary>
         public static readonly string ConfigurationPath = "eps.web/routing";
