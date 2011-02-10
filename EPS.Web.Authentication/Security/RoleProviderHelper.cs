@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -17,15 +16,40 @@ namespace EPS.Web.Authentication.Security
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public static class RoleProviderHelper
     {
-        /// <summary>   Gets or sets the IConfigurationManager instance - intended to be used by IoC containers. </summary>
+        private static bool _configurationManagerSpecified;
+        private static IConfigurationManager _configurationManager = new ConfigurationManagerWrapper();
+
+        /// <summary>   Gets or sets the IConfigurationManager instance - intended to be wired up at application startup before being used. </summary>
+        /// <remarks>   Can only be set once. </remarks>
         /// <value> The configuration manager. </value>
-        public static IConfigurationManager ConfigurationManager { get; private set; }
+        /// <exception cref="InvalidOperationException">    A non-default IConfigurationManager may only be supplied before any methods are
+        ///                                                     called that use configuration information and it may only be set once. </exception>
+        public static IConfigurationManager ConfigurationManager
+        {
+            get
+            {                
+                return _configurationManager;
+            }
+            set
+            {
+                if (!_configurationManagerSpecified)
+                {
+                    _configurationManagerSpecified = true;
+                    _configurationManager = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+        }
 
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly Lazy<Dictionary<string, RoleProvider>> roleProviders = new Lazy<Dictionary<string, RoleProvider>>(() =>
         {
             try
             {
+                _configurationManagerSpecified = true;
                 RoleManagerSection roleManagerConfig = ConfigurationManager.GetSection<RoleManagerSection>("system.web/roleManager");
                 //could also use this
                 //System.Web.Configuration.ProvidersHelper.InstantiateProvider() is an alternative
@@ -60,16 +84,13 @@ namespace EPS.Web.Authentication.Security
             }
         }
 
-        /// <summary>   Gets a role provider by name. </summary>
+        /// <summary>   Gets a role provider by name.  Will load default RoleManagerSection from config unless overriden. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <exception cref="ArgumentException">    Thrown when one or more arguments have unsupported or illegal values. </exception>
-        /// <param name="name">                 The name. </param>
-        /// <param name="configurationManager"> ConfigurationManager instance - can be injected via IoC. </param>
-        /// <returns>   The provider by name. </returns>
-        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
-        public static RoleProvider GetProviderByName(string name, IConfigurationManager configurationManager = null)
-        {
-            ConfigurationManager = configurationManager;
+        /// <param name="name"> The name of the provider. </param>
+        /// <returns>   The specified RoleProvider instance. </returns>
+        public static RoleProvider GetProviderByName(string name)
+        {            
             KeyValuePair<string, RoleProvider> pair = roleProviders.Value.FirstOrDefault(rp => (0 == string.Compare(name, rp.Key, StringComparison.CurrentCulture)));
             if (null == pair.Value)
             {
