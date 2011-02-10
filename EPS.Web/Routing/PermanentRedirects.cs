@@ -1,7 +1,5 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Web.Routing;
-using EPS.Configuration.Abstractions;
 using EPS.Web.Configuration;
 
 namespace EPS.Web.Routing
@@ -15,24 +13,23 @@ namespace EPS.Web.Routing
         /// redirects within the applications RouteCollection. 
         /// </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
-        /// <param name="routeCollection">      The applications RouteCollection. </param>
-        /// <param name="configurationManager"> An optional IConfigurationManager to read settings from.  If left unspecified or null, the
-        ///                                     executing application ConfigurationManager is used. </param>
-        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "This code is only used server-side internally where we control source languages - default params are perfectly acceptable")]
-        public static void Register(RouteCollection routeCollection, IConfigurationManager configurationManager = null)
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
+        /// <param name="routeCollection">  The applications RouteCollection. </param>
+        /// <param name="configuration">    A IRoutingConfigurationSection to read settings from.  This interface is implemented by
+        ///                                 <see cref="T:EPS.Web.RoutingConfigurationSection"/> and can be retrieved by
+        ///                                 <code><![CDATA[new ConfigurationManagerWrapper().GetSection<RoutingConfigurationSection>(RoutingConfigurationSection.ConfigurationPath)]]></code>
+        ///                                 or can be faked for testing purposes. </param>
+        public static void Register(RouteCollection routeCollection, IRoutingConfigurationSection configuration)
         {
-            if (null == configurationManager)
-                configurationManager = new ConfigurationManagerWrapper();
+            if (null == configuration) { throw new ArgumentNullException("configuration"); }
 
-            RoutingConfigurationSection config = configurationManager.GetSection<RoutingConfigurationSection>(RoutingConfigurationSection.ConfigurationPath);
-
-            if (config.Enabled)
+            if (configuration.Enabled)
             {
                 //RouteTable.Routes.RouteExistingFiles = true;
                 //RouteTable.Routes.RedirectPermanently("home/{foo}.aspx", "~/home/{foo}");
                 //http://haacked.com/archive/2008/12/15/redirect-routes-and-other-fun-with-routing-and-lambdas.aspx
                 // The {*} instructs the route to match all content after the first slash (including extra slashes)                
-                foreach (var s in config.PermanentRedirects.GetUrlMap())
+                foreach (var s in configuration.PermanentRedirects.GetUrlMap())
                     routeCollection.RedirectPermanently(s.Key, s.Value);
             }
         }
