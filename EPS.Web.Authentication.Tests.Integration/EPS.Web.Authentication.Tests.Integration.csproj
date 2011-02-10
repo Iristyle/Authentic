@@ -53,6 +53,18 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\lib\xUnit.NET-1.6.1\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\lib\xUnit.NET-1.6.1\xunit.extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.runner.msbuild">
+      <HintPath>..\..\lib\xUnit.NET-1.6.1\xunit.runner.msbuild.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.runner.utility">
+      <HintPath>..\..\lib\xUnit.NET-1.6.1\xunit.runner.utility.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Build\SharedAssemblyVersioning.cs">
