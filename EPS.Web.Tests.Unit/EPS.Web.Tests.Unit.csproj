@@ -89,9 +89,10 @@
     <Compile Include="Extensions\HttpRequestBaseExtensionsTest.cs" />
     <Compile Include="Extensions\HttpResponseBaseExtensionsTest.cs" />
     <Compile Include="HttpBasicAuthHeaderParserTest.cs" />
-    <Compile Include="HttpHandlerExtensionsTest.cs" />
+    <Compile Include="Extensions\HttpHandlerExtensionsTest.cs" />
     <Compile Include="LogHelpersTest.cs" />
     <Compile Include="Management\CredentialCacheAddErrorEventTest.cs" />
+    <Compile Include="MimeTypesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\DelegateRouteHandlerTest.cs" />
     <Compile Include="Routing\GuidConstraintTest.cs" />
@@ -124,10 +125,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <UsingTask AssemblyFile="..\..\..\tools\Gendarme-2.8.0.0\GendarmeMsBuild.dll" TaskName="GendarmeMsBuild.Gendarme"/>
+  <UsingTask AssemblyFile="..\..\..\tools\Gendarme-2.8.0.0\GendarmeMsBuild.dll" TaskName="GendarmeMsBuild.Gendarme" />
   <Target Name="AfterBuild">
-	<Gendarme Condition="$(RunCodeAnalysis)" Assemblies="$(TargetPath)" IntegrateWithVisualStudio="True"
-		GendarmeExeFilename="..\..\..\tools\Gendarme-2.8.0.0\gendarme.exe" 
-		GendarmeConfigFilename="..\Build\gendarme-rules.xml" Ruleset="EPS.Test" />
+    <Gendarme Condition="$(RunCodeAnalysis)" Assemblies="$(TargetPath)" IntegrateWithVisualStudio="True" GendarmeExeFilename="..\..\..\tools\Gendarme-2.8.0.0\gendarme.exe" GendarmeConfigFilename="..\Build\gendarme-rules.xml" Ruleset="EPS.Test" />
   </Target>
 </Project>
