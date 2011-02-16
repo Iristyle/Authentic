@@ -9,7 +9,7 @@ namespace EPS.Web
     {
         //http://www.microsoft.com/technet/prodtechnol/isa/2004/plan/mimetypes.mspx
         private static readonly Dictionary<string, string> mimeTypes = 
-            new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 { "htm", "text/HTML" },
                 { "html", "text/HTML" },
@@ -66,7 +66,7 @@ namespace EPS.Web
         /// <exception cref="ArgumentException">        Thrown when the passed extension or the default value contain only whitespace. </exception>
         /// <param name="extension">    The case insensitive extension - the extension may include preceding periods.  For instance, ".htm" and
         ///                             "htm" are both accepted values. </param>
-        /// <param name="@default">     The default mime type to use if the given extension is not registered in the local mapping. </param>
+        /// <param name="default">     The default mime type to use if the given extension is not registered in the local mapping. </param>
         /// <returns>   The mime type for file extension if registered, otherwise the given default. </returns>
         public static string GetMimeTypeForFileExtension(string extension, string @default)
         {
