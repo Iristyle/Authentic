@@ -16,8 +16,7 @@ namespace EPS.Web.Authentication.Security
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public static class RoleProviderHelper
     {
-        private static bool _configurationManagerSpecified;
-        private static IConfigurationManager _configurationManager = new ConfigurationManagerWrapper();
+        private static Lazy<IConfigurationManager> _configurationManager = new Lazy<IConfigurationManager>(() => new ConfigurationManagerWrapper());
 
         /// <summary>   Gets or sets the IConfigurationManager instance - intended to be wired up at application startup before being used. </summary>
         /// <remarks>   Can only be set once. </remarks>
@@ -27,15 +26,16 @@ namespace EPS.Web.Authentication.Security
         public static IConfigurationManager ConfigurationManager
         {
             get
-            {                
-                return _configurationManager;
+            {
+                return _configurationManager.Value;
             }
             set
             {
-                if (!_configurationManagerSpecified)
+                if (!_configurationManager.IsValueCreated)
                 {
-                    _configurationManagerSpecified = true;
-                    _configurationManager = value;
+                    _configurationManager = new Lazy<IConfigurationManager>(() => value);
+                    //ensure that IsValueCreated set to true
+                    var throwAway = _configurationManager.Value; 
                 }
                 else
                 {
@@ -49,7 +49,6 @@ namespace EPS.Web.Authentication.Security
         {
             try
             {
-                _configurationManagerSpecified = true;
                 RoleManagerSection roleManagerConfig = ConfigurationManager.GetSection<RoleManagerSection>("system.web/roleManager");
                 //could also use this
                 //System.Web.Configuration.ProvidersHelper.InstantiateProvider() is an alternative
