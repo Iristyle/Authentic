@@ -25,5 +25,13 @@ namespace EPS.Web.Configuration
         {
             get { return (RoutingConfigurationSection)Sections["routing"]; }
         }
+
+        /// <summary>   Gets the FileHttpHandlerConfigurationSection. </summary>
+        /// <value> The nested FileHttpHandlerConfigurationSection. </value>
+        [ConfigurationProperty("fileHttpHandler", IsRequired = false)]
+        public FileHttpHandlerConfigurationSection FileHttpHandler
+        {
+            get { return (FileHttpHandlerConfigurationSection)Sections["fileHttpHandler"]; }
+        }
     }
 }
