@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace EPS.Web.Configuration
 {
     /// <summary>   A configuration section that defines global routing settings. </summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
-    public class RoutingConfigurationSection : ConfigurationSection, IRoutingConfigurationSection
+    public class RoutingConfigurationSection : ConfigurationSection, IRoutingConfiguration
     {
         /// <summary> Default path in the configuration file </summary>
         public static readonly string ConfigurationPath = "eps.web/routing";
@@ -29,5 +30,9 @@ namespace EPS.Web.Configuration
 
         //sadly, PostDeserialize wouldn't be called until this type was touched, so we cannot autoRegister through PostDeserialize as it will
         //be too late in the application lifecycle        
+        IDictionary<string, RoutingRedirectConfigurationElement> IRoutingConfiguration.PermanentRedirects
+        {
+            get { return PermanentRedirects; }
+        }
     }
 }
