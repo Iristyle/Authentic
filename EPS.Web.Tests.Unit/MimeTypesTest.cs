@@ -30,9 +30,9 @@ namespace EPS.Web.Tests.Unit
             Assert.Throws<ArgumentNullException>(() => MimeTypes.GetMimeTypeForFileExtension(null));
         }
         [Fact]
-        public void GetMimeTypeForFileExtension_ThrowsOnWhitespaceExtension()
+        public void GetMimeTypeForFileExtension_ThrowsOnWhiteSpaceExtension()
         {
-            Assert.Throws<ArgumentException>(() => MimeTypes.GetMimeTypeForFileExtension(""));
+            Assert.Throws<ArgumentException>(() => MimeTypes.GetMimeTypeForFileExtension(string.Empty));
         }
 
         [Fact]
@@ -42,9 +42,9 @@ namespace EPS.Web.Tests.Unit
         }
 
         [Fact]
-        public void GetMimeTypeForFileExtension_ThrowsOnWhitespaceDefault()
+        public void GetMimeTypeForFileExtension_ThrowsOnWhiteSpaceDefault()
         {
-            Assert.Throws<ArgumentException>(() => MimeTypes.GetMimeTypeForFileExtension(".htm", ""));
+            Assert.Throws<ArgumentException>(() => MimeTypes.GetMimeTypeForFileExtension(".htm", string.Empty));
         }
     }
 }
