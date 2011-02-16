@@ -5,7 +5,7 @@ namespace EPS.Web.Configuration
 {
     /// <summary>   A configuration section that allows us to define settings as they apply to mobile devices. </summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
-    public class MobileConfigurationSection : ConfigurationSection, IMobileConfigurationSection
+    public class MobileConfigurationSection : ConfigurationSection, IMobileConfiguration
     {
         /// <summary> Full configuration path of the MobileConfigurationSection </summary>
         public static readonly string ConfigurationPath = "eps.web/mobile";
