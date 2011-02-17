@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Web.Routing;
 using EPS.Web.Configuration;
 
@@ -19,7 +20,7 @@ namespace EPS.Web.Routing
         ///                                 <see cref="T:EPS.Web.RoutingConfigurationSection"/> and can be retrieved by
         ///                                 <code><![CDATA[new ConfigurationManagerWrapper().GetSection<RoutingConfigurationSection>(RoutingConfigurationSection.ConfigurationPath)]]></code>
         ///                                 or can be faked for testing purposes. </param>
-        public static void Register(RouteCollection routeCollection, IRoutingConfigurationSection configuration)
+        public static void Register(RouteCollection routeCollection, IRoutingConfiguration configuration)
         {
             if (null == configuration) { throw new ArgumentNullException("configuration"); }
 
@@ -29,8 +30,8 @@ namespace EPS.Web.Routing
                 //RouteTable.Routes.RedirectPermanently("home/{foo}.aspx", "~/home/{foo}");
                 //http://haacked.com/archive/2008/12/15/redirect-routes-and-other-fun-with-routing-and-lambdas.aspx
                 // The {*} instructs the route to match all content after the first slash (including extra slashes)                
-                foreach (var s in configuration.PermanentRedirects.GetUrlMap())
-                    routeCollection.RedirectPermanently(s.Key, s.Value);
+                foreach (var s in configuration.PermanentRedirects)
+                    routeCollection.RedirectPermanently(s.Value.SourceUrl, s.Value.TargetUrl);
             }
         }
     }
