@@ -5,8 +5,8 @@ namespace EPS.Web.Configuration
 {
     /// <summary>   Collection of RoutingRedirectConfigurationElements read from config. </summary>
     /// <remarks>   ebrown, 11/10/2010. </remarks>
-    public class RoutingRedirectConfigurationElementCollection : 
-        ConfigurationElementCollection<string, RoutingRedirectConfigurationElement>        
+    public class RoutingRedirectConfigurationElementDictionary : 
+        ConfigurationElementDictionary<string, RoutingRedirectConfigurationElement>        
     {
         /// <summary>   Uses SourceUrl as a key. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>

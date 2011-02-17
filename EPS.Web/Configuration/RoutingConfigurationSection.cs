@@ -14,10 +14,10 @@ namespace EPS.Web.Configuration
         /// <summary>   Gets the permanent redirects of source to target URL. </summary>
         /// <value> The permanent redirects. </value>
         [ConfigurationProperty("permanentRedirects", IsRequired = true)]
-        [ConfigurationCollection(typeof(RoutingRedirectConfigurationElementCollection))]
-        public RoutingRedirectConfigurationElementCollection PermanentRedirects
+        [ConfigurationCollection(typeof(RoutingRedirectConfigurationElementDictionary))]
+        public RoutingRedirectConfigurationElementDictionary PermanentRedirects
         {
-            get { return (RoutingRedirectConfigurationElementCollection)base["permanentRedirects"]; }
+            get { return (RoutingRedirectConfigurationElementDictionary)base["permanentRedirects"]; }
         }
 
         /// <summary>   Gets a value indicating whether permanent redirects are enabled. </summary>

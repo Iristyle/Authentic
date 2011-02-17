@@ -142,10 +142,10 @@ namespace EPS.Web.Authentication.Configuration
         /// <summary>   Gets the collection of defined inspectors. </summary>
         /// <value> The inspectors. </value>
         [ConfigurationProperty("inspectors", IsRequired = true)]
-        [ConfigurationCollection(typeof(HttpContextInspectingAuthenticatorConfigurationElementCollection))]
-        public HttpContextInspectingAuthenticatorConfigurationElementCollection Inspectors
+        [ConfigurationCollection(typeof(HttpContextInspectingAuthenticatorConfigurationElementDictionary))]
+        public HttpContextInspectingAuthenticatorConfigurationElementDictionary Inspectors
         {
-            get { return (HttpContextInspectingAuthenticatorConfigurationElementCollection)base["inspectors"]; }
+            get { return (HttpContextInspectingAuthenticatorConfigurationElementDictionary)base["inspectors"]; }
         }
     }
 }

@@ -13,8 +13,8 @@ namespace EPS.Web.Authentication.Configuration
     //http://www.codeproject.com/KB/dotnet/mysteriesofconfiguration3.aspx
     /// <summary>   Collection of http context inspecting authenticator configuration elements. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public class HttpContextInspectingAuthenticatorConfigurationElementCollection : 
-        ConfigurationElementCollection<string, HttpContextInspectingAuthenticatorConfigurationElement>
+    public class HttpContextInspectingAuthenticatorConfigurationElementDictionary : 
+        ConfigurationElementDictionary<string, HttpContextInspectingAuthenticatorConfigurationElement>
     {
         private static readonly Dictionary<string, HttpContextInspectingAuthenticatorConfigurationElement> derivedElements 
             = new Dictionary<string, HttpContextInspectingAuthenticatorConfigurationElement>();
