@@ -8,7 +8,7 @@ namespace EPS.Web.Handlers.Tests.Unit
     public class StreamWriteStatusTest
     {
         [Fact]
-        public void StreamWriteStatus_EnumDescriptionShortNamesDontOverlap()
+        public void StreamWriteStatus_EnumDescriptionShortNamesDoNotOverlap()
         {
             var enumValues = Enum.GetValues(typeof(StreamWriteStatus));
             var shortNames = enumValues.OfType<StreamWriteStatus>().Select(e => e.ToShortNameString()).ToList();
