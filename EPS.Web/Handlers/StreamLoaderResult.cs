@@ -5,7 +5,7 @@ namespace EPS.Web.Handlers
 {
     /// <summary>   Represents the details of a file returned through the <see cref="T:EPS.Web.Handlers.IFileHttpHandlerStreamLoader"/>. </summary>
     /// <remarks>   ebrown, 2/9/2011. </remarks>
-    public class LoadedStream
+    public class StreamLoaderResult
     {
         /// <summary>   Gets the status of the request. </summary>
         /// <value> The status. </value>
@@ -34,7 +34,6 @@ namespace EPS.Web.Handlers
         /// <summary>   Gets the Uri in the cloud where this file is located if there is no direct stream access. </summary>
         /// <value> The cloud location. </value>
         public Uri CloudLocation { get; private set; }
-
         
         /// <summary>   Gets the actual stream for the file. </summary>
         /// <value> The file stream. </value>
@@ -43,7 +42,7 @@ namespace EPS.Web.Handlers
         /// <summary>
         /// Initializes a new instance of the FileDetails class.
         /// </summary>
-        public LoadedStream(StreamLoadStatus status, string fileName, string contentType, string expectedMD5, long? size, Uri cloudLocation, DateTime? lastWriteTimeUtc, Stream fileStream)
+        public StreamLoaderResult(StreamLoadStatus status, string fileName, string contentType, string expectedMD5, long? size, Uri cloudLocation, DateTime? lastWriteTimeUtc, Stream fileStream)
         {
             Status = status;
             FileName = fileName;
