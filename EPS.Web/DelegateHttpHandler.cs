@@ -26,7 +26,7 @@ namespace EPS.Web
         /// <returns>   true if the <see cref="T:System.Web.IHttpHandler" /> instance is reusable; otherwise, false. Default of false. </returns>
         public new bool IsReusable { get; private set; }
 
-        /// <summary>   Gets the delegate repsonsible for handling the request. </summary>
+        /// <summary>   Gets the delegate responsible for handling the request. </summary>
         /// <value> The http handler action. </value>
         public Action<HttpContextBase> HttpHandlerAction { get; private set; }
 
