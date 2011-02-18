@@ -108,5 +108,13 @@ namespace EPS.Web.Routing.Tests.Unit
             RequestContext requestContext = ProcessFakeRequest("~/Foo3");
             A.CallTo(() => requestContext.HttpContext.Response.AddHeader("Location", "/Bar3")).MustHaveHappened(Repeated.Once);
         }
+
+        [Fact]
+        public void PermanentRedirect_NotRegistered()
+        {
+            RequestContext requestContext = FakeRequestContext("~/NotMapped");
+            RouteData routeData = routes.GetRouteData(requestContext.HttpContext);
+            Assert.Null(routeData);
+        }
     }
 }
