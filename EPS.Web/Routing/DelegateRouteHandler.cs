@@ -1,6 +1,7 @@
 using System;
 using System.Web;
 using System.Web.Routing;
+using EPS.Web.Abstractions;
 
 namespace EPS.Web.Routing
 {
@@ -15,14 +16,14 @@ namespace EPS.Web.Routing
         /// <remarks>   ebrown, 11/10/2010. </remarks>
         /// <param name="action">   The action. </param>
         /// <example>new DelegateRouteHandler(context => GetRedirectHandler(context, targetUrl, true))</example>
-        public DelegateRouteHandler(Func<RequestContext, IHttpHandler> action)
+        public DelegateRouteHandler(Func<RequestContext, HttpHandlerBase> action)
         {
             HttpHandlerAction = action;
         }
 
         /// <summary>   Gets the delegate that processes the RequestContext with an IHttpHandler. </summary>
         /// <value> The delegate. </value>
-        public Func<RequestContext, IHttpHandler> HttpHandlerAction { get; private set; }
+        public Func<RequestContext, HttpHandlerBase> HttpHandlerAction { get; private set; }
 
         /// <summary>   Uses our delegate handler action to return an IHttpHandler to process an incoming RequestContext. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>

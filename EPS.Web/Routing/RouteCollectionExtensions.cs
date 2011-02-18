@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Web;
 using System.Web.Routing;
+using EPS.Web.Abstractions;
 
 namespace EPS.Web.Routing
 {
@@ -30,7 +30,7 @@ namespace EPS.Web.Routing
             return route;
         }
 
-        private static IHttpHandler GetRedirectHandler(RequestContext context, string targetUrl, bool permanently)
+        private static HttpHandlerBase GetRedirectHandler(RequestContext context, string targetUrl, bool permanently)
         {
             if (targetUrl.StartsWith("~/", StringComparison.Ordinal))
             {
