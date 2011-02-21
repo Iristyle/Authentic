@@ -69,6 +69,10 @@
       <Link>Properties\SharedAssemblyVersioning.cs</Link>
     </Compile>
     <Compile Include="Abstractions\HttpContextHelper.cs" />
+    <Compile Include="Configuration\IFileHttpHandlerConfiguration.cs" />
+    <Compile Include="Configuration\IMobileConfiguration.cs" />
+    <Compile Include="Configuration\IRoutingConfiguration.cs" />
+    <Compile Include="Configuration\RoutingRedirectConfigurationElementDictionary.cs" />
     <Compile Include="EncodeType.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -82,6 +86,18 @@
     <Compile Include="Configuration\RoutingRedirectConfigurationElementCollection.cs" />
     <Compile Include="Configuration\WebConfigurationSectionGroup.cs" />
     <Compile Include="Cookies\CookieHelper.cs" />
+    <Compile Include="Handlers\StreamLoaderResult.cs" />
+    <Compile Include="Handlers\FileHttpHandler.cs" />
+    <Compile Include="Configuration\FileHttpHandlerConfigurationSection.cs" />
+    <Compile Include="Handlers\StreamWriteStatus.cs" />
+    <Compile Include="Handlers\ResponseStreamWriter.cs" />
+    <Compile Include="Handlers\IFileHttpHandlerStatusLog.cs" />
+    <Compile Include="Handlers\HttpResponseType.cs" />
+    <Compile Include="HttpExceptionErrorCodes.cs" />
+    <Compile Include="Handlers\RangeRequestHelpers.cs" />
+    <Compile Include="Handlers\IFileHttpHandlerStreamLoader.cs" />
+    <Compile Include="Handlers\StreamLoadStatus.cs" />
+    <Compile Include="RangeRequest.cs" />
     <Compile Include="HttpBasicAuthHeaderParser.cs" />
     <Compile Include="Extensions\HttpContextBaseExtensions.cs" />
     <Compile Include="Extensions\HttpRequestBaseExtensions.cs" />
@@ -99,6 +115,7 @@
     <Compile Include="Management\EventCodes.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MimeTypes.cs" />
     <Compile Include="MultipartNames.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DelegateHttpHandler.cs" />
@@ -108,7 +125,7 @@
       <DependentUpon>ManagementStrings.resx</DependentUpon>
     </Compile>
     <Compile Include="Routing\DelegateRouteHandler.cs" />
-    <Compile Include="HttpHandlerExtensions.cs" />
+    <Compile Include="Extensions\HttpHandlerExtensions.cs" />
     <Compile Include="Routing\GuidConstraint.cs" />
     <Compile Include="Routing\HttpHandlerRouteHandler.cs" />
     <Compile Include="Routing\PermanentRedirects.cs" />
