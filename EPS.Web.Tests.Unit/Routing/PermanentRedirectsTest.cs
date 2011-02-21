@@ -46,9 +46,7 @@ namespace EPS.Web.Routing.Tests.Unit
         public void PermanentRedirect_Registered_UsesDelegateRouteHandler()
         {
             //this doesn't prove anything about the right redirect location, just that we are using DelegateRouteHandler
-            RequestContext requestContext = FakeRequestContext("~/Foo");
-            RouteData routeData = routes.GetRouteData(requestContext.HttpContext);
-
+            RouteData routeData = GetRouteDataForFakeRequest("~/Foo");
             Assert.IsType<DelegateRouteHandler>(routeData.RouteHandler);
         }
 
@@ -60,6 +58,13 @@ namespace EPS.Web.Routing.Tests.Unit
             RouteData routeData = routes.GetRouteData(requestContext.HttpContext);
             
             Assert.IsType<DelegateHttpHandler>(routeData.RouteHandler.GetHttpHandler(requestContext));
+        }
+
+        private RouteData GetRouteDataForFakeRequest(string url)
+        {
+            RequestContext requestContext = FakeRequestContext(url);
+            RouteData routeData = routes.GetRouteData(requestContext.HttpContext);
+            return routeData;
         }
 
         private RequestContext ProcessFakeRequest(string url)
@@ -112,8 +117,7 @@ namespace EPS.Web.Routing.Tests.Unit
         [Fact]
         public void PermanentRedirect_NotRegistered()
         {
-            RequestContext requestContext = FakeRequestContext("~/NotMapped");
-            RouteData routeData = routes.GetRouteData(requestContext.HttpContext);
+            RouteData routeData = GetRouteDataForFakeRequest("~/NotMapped");
             Assert.Null(routeData);
         }
     }
