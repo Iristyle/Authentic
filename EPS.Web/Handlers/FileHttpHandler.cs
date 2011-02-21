@@ -51,9 +51,10 @@ namespace EPS.Web.Handlers
 
         /// <summary>   Initializes a new instance of the FileHttpHandler class. </summary>
         /// <remarks>   ebrown, 2/9/2011. </remarks>
-        /// <param name="configuration">    The configuration. </param>
-        /// <param name="streamLoader">     . </param>
-        /// <param name="statusLogger">     . </param>
+        /// <exception cref="ArgumentNullException">    Thrown when the configuration, streamLoader or statusLogger are null. </exception>
+        /// <param name="configuration">    The configuration used to control the behavior of the FileHttpHandler. </param>
+        /// <param name="streamLoader">     The class responsible for loading a FileStream / Cloud URI given a HttpRequestBase. </param>
+        /// <param name="statusLogger">     The class responsible for logging status information as requests are processed by the handler. </param>
         public FileHttpHandler(IFileHttpHandlerConfiguration configuration, 
             IFileHttpHandlerStreamLoader streamLoader, 
             IFileHttpHandlerStatusLog statusLogger)
