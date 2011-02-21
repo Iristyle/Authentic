@@ -46,6 +46,9 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\Autofac-2.4.4.705\NET40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="FakeItEasy">
       <HintPath>..\..\lib\FakeItEasy-1.5.3929.153\FakeItEasy.dll</HintPath>
     </Reference>
@@ -89,7 +92,7 @@
     <Compile Include="Extensions\HttpContextBaseExtensionsTest.cs" />
     <Compile Include="Extensions\HttpRequestBaseExtensionsTest.cs" />
     <Compile Include="Extensions\HttpResponseBaseExtensionsTest.cs" />
-    <Compile Include="Handlers\FileHttpHandlerTests.cs" />
+    <Compile Include="Handlers\FileHttpHandlerTest.cs" />
     <Compile Include="Handlers\RangeRequestHelpersTest.cs" />
     <Compile Include="Handlers\StreamWriteStatusTest.cs" />
     <Compile Include="HttpBasicAuthHeaderParserTest.cs" />
