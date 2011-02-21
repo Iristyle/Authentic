@@ -72,6 +72,7 @@
     <Compile Include="Configuration\IFileHttpHandlerConfiguration.cs" />
     <Compile Include="Configuration\IMobileConfiguration.cs" />
     <Compile Include="Configuration\IRoutingConfiguration.cs" />
+    <Compile Include="Configuration\IRoutingRedirectConfigurationElement.cs" />
     <Compile Include="Configuration\RoutingRedirectConfigurationElementDictionary.cs" />
     <Compile Include="EncodeType.cs">
       <SubType>Code</SubType>
@@ -83,7 +84,6 @@
     <Compile Include="Configuration\MobileConfigurationSection.cs" />
     <Compile Include="Configuration\RoutingConfigurationSection.cs" />
     <Compile Include="Configuration\RoutingRedirectConfigurationElement.cs" />
-    <Compile Include="Configuration\RoutingRedirectConfigurationElementCollection.cs" />
     <Compile Include="Configuration\WebConfigurationSectionGroup.cs" />
     <Compile Include="Cookies\CookieHelper.cs" />
     <Compile Include="Handlers\StreamLoaderResult.cs" />
