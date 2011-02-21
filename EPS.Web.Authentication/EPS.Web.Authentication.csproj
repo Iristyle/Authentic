@@ -98,7 +98,7 @@
     <Compile Include="Basic\Configuration\AuthenticationHeaderInspectorConfigurationElement.cs" />
     <Compile Include="Configuration\HttpContextInspectingAuthenticationModuleSection.cs" />
     <Compile Include="Configuration\HttpContextInspectingAuthenticatorConfigurationElement.cs" />
-    <Compile Include="Configuration\HttpContextInspectingAuthenticatorConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\HttpContextInspectingAuthenticatorConfigurationElementDictionary.cs" />
     <Compile Include="Basic\IBasicAuthPrincipalBuilder.cs" />
     <Compile Include="Basic\IBasicAuthPrincipalBuilderFactory.cs" />
     <Compile Include="Configuration\AuthenticationConfigurationSectionGroup.cs" />
