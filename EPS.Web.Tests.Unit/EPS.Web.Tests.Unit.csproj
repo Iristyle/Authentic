@@ -94,6 +94,7 @@
     <Compile Include="Extensions\HttpResponseBaseExtensionsTest.cs" />
     <Compile Include="Handlers\FileHttpHandlerTest.cs" />
     <Compile Include="Handlers\RangeRequestHelpersTest.cs" />
+    <Compile Include="Handlers\ResponseStreamWriterTest.cs" />
     <Compile Include="Handlers\StreamWriteStatusTest.cs" />
     <Compile Include="HttpBasicAuthHeaderParserTest.cs" />
     <Compile Include="Extensions\HttpHandlerExtensionsTest.cs" />
