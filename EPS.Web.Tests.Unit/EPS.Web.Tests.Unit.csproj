@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Build\Shared.Test.targets" />
   <PropertyGroup>
     <ProjectGuid>{4708D2B7-0B95-4A12-8121-F58A701E746F}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -8,7 +9,6 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <Import Project="..\Build\Shared.Test.targets" />
   <ItemGroup>
     <Reference Include="Autofac">
       <HintPath>..\..\lib\Autofac-2.4.4.705\NET40\Autofac.dll</HintPath>
@@ -77,4 +77,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\Build\Shared.Test.tasks" />
 </Project>
