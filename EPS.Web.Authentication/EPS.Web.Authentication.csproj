@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\Build\Shared.targets" />
   <PropertyGroup>
     <ProjectGuid>{E5EA4024-EB71-462D-A3D4-447182A000D6}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -78,7 +77,9 @@
       <Name>EPS.Web</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\Build\Shared.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\Build\Shared.tasks" />
   <PropertyGroup>
     <PostBuildEvent />
   </PropertyGroup>
@@ -89,5 +90,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\Build\Shared.tasks" />
 </Project>

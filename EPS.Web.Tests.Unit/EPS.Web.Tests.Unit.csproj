@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\Build\Shared.Test.targets" />
   <PropertyGroup>
     <ProjectGuid>{4708D2B7-0B95-4A12-8121-F58A701E746F}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -69,7 +68,9 @@
       <Name>EPS.Web</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\Build\Shared.Test.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\Build\Shared.Test.tasks" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -77,5 +78,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\Build\Shared.Test.tasks" />
 </Project>
