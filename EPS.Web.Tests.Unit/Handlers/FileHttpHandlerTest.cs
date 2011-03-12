@@ -105,7 +105,7 @@ namespace EPS.Web.Handlers.Tests.Unit
         {
             var url = "http://delete.test.com";
             HttpResponseBase response = ProcessRequestOfHttpMethod(HttpMethodNames.Delete, url);
-            A.CallTo(() => response.Redirect(url, false)).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => response.Redirect(url, false)).MustHaveHappened(Repeated.Exactly.Once);
        }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace EPS.Web.Handlers.Tests.Unit
         {
             var url = "http://options.test.com";
             HttpResponseBase response = ProcessRequestOfHttpMethod(HttpMethodNames.Options, url);
-            A.CallTo(() => response.Redirect(url, false)).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => response.Redirect(url, false)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace EPS.Web.Handlers.Tests.Unit
         {
             var url = "http://post.test.com";
             HttpResponseBase response = ProcessRequestOfHttpMethod(HttpMethodNames.Post, url);
-            A.CallTo(() => response.Redirect(url, false)).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => response.Redirect(url, false)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace EPS.Web.Handlers.Tests.Unit
         {
             var url = "http://put.test.com";
             HttpResponseBase response = ProcessRequestOfHttpMethod(HttpMethodNames.Put, url);
-            A.CallTo(() => response.Redirect(url, false)).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => response.Redirect(url, false)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -165,7 +165,7 @@ namespace EPS.Web.Handlers.Tests.Unit
         {
             var url = "http://trace.test.com";
             HttpResponseBase response = ProcessRequestOfHttpMethod(HttpMethodNames.Trace, url);
-            A.CallTo(() => response.Redirect(url, false)).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => response.Redirect(url, false)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact(Skip = "This set of tests is a super high priority")]

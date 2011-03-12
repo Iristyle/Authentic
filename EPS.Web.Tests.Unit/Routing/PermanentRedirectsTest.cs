@@ -82,7 +82,7 @@ namespace EPS.Web.Routing.Tests.Unit
         public void PermanentRedirect_Registered_WritesLocationToHeader()
         {
             RequestContext requestContext = ProcessFakeRequest("~/Foo");
-            A.CallTo(() => requestContext.HttpContext.Response.AddHeader("Location", "Bar")).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => requestContext.HttpContext.Response.AddHeader("Location", "Bar")).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -104,14 +104,14 @@ namespace EPS.Web.Routing.Tests.Unit
         {
             //TODO: this is a bug - Location should not have a ~/ -- site relative urls only work in IIS, not a regular browser
             RequestContext requestContext = ProcessFakeRequest("~/Foo2");
-            A.CallTo(() => requestContext.HttpContext.Response.AddHeader("Location", "/Bar2")).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => requestContext.HttpContext.Response.AddHeader("Location", "/Bar2")).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void PermanentRedirect_Registered_WritesLocationToHeaderForSiteRelativeTarget()
         {
             RequestContext requestContext = ProcessFakeRequest("~/Foo3");
-            A.CallTo(() => requestContext.HttpContext.Response.AddHeader("Location", "/Bar3")).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => requestContext.HttpContext.Response.AddHeader("Location", "/Bar3")).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
