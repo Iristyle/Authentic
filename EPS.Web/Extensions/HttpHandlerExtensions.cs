@@ -47,7 +47,7 @@ namespace EPS.Web.Routing
         /// <param name="defaults">     The defaults, which can be null. </param>
         /// <param name="constraints">  The constraints, which can be null. </param>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "This is the API we want"),
-        SuppressMessage("Microsoft.Design", "CA1054:UriPropertiesShouldNotBeStrings", Justification = "Following convention established by .NET framework with System.Web.Routing.Route")]
+        SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", Justification = "Following convention established by .NET framework with System.Web.Routing.Route")]
         public static void MapHttpHandler<THandler>(this RouteCollection routes, string name, string url, object defaults, object constraints)
             where THandler : IHttpHandler, new()
         {
