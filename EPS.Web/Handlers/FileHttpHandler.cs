@@ -6,10 +6,10 @@ using System.Net;
 using System.Threading;
 using System.Web;
 using System.Web.SessionState;
+using Common.Logging;
 using EPS.Text;
 using EPS.Web.Abstractions;
 using EPS.Web.Configuration;
-using log4net;
 
 namespace EPS.Web.Handlers
 {
@@ -18,7 +18,7 @@ namespace EPS.Web.Handlers
     public class FileHttpHandler : HttpHandlerBase, IReadOnlySessionState
     {
         private Stopwatch stopwatch = new Stopwatch();
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();
         private readonly IFileHttpHandlerConfiguration _configuration;
         private readonly IFileHttpHandlerStreamLoader _streamLoader;
         private readonly IFileHttpHandlerStatusLog _statusLogger;

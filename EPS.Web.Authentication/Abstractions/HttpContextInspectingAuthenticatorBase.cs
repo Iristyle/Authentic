@@ -1,7 +1,7 @@
 using System;
 using System.Web;
+using Common.Logging;
 using EPS.Web.Authentication.Configuration;
-using log4net;
 
 namespace EPS.Web.Authentication.Abstractions
 {
@@ -12,7 +12,7 @@ namespace EPS.Web.Authentication.Abstractions
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public abstract class HttpContextInspectingAuthenticatorBase<T> : IHttpContextInspectingAuthenticator<T> where T : HttpContextInspectingAuthenticatorConfigurationElement
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);        
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();        
         private readonly T _config;
         
         private HttpContextInspectingAuthenticatorBase()

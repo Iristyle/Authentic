@@ -5,10 +5,10 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
+using Common.Logging;
 using EPS.Web.Abstractions;
 using EPS.Web.Authentication.Abstractions;
 using EPS.Web.Authentication.Configuration;
-using log4net;
 
 namespace EPS.Web.Authentication
 {
@@ -21,7 +21,7 @@ namespace EPS.Web.Authentication
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public class HttpContextInspectingAuthenticationModule : HttpModuleBase
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();
         private HttpContextInspectingAuthenticationModuleSection configuration;
 
         /// <summary>   

@@ -6,8 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Security.Principal;
 using System.Web;
+using Common.Logging;
 using EPS.Text;
-using log4net;
 
 namespace EPS.Web.Handlers
 {
@@ -18,7 +18,7 @@ namespace EPS.Web.Handlers
     /// <remarks>   ebrown, 2/15/2011. </remarks>
     public class ResponseStreamWriter
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();
         private HttpResponseBase _response;
         private long _bufferSizeBytes;
 

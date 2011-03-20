@@ -4,10 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
+using Common.Logging;
 using EPS.Conversions;
 using EPS.Text;
 using EPS.Web.Configuration;
-using log4net;
 
 namespace EPS.Web
 {
@@ -16,7 +16,7 @@ namespace EPS.Web
     /// </summary>
     public static class HttpRequestBaseExtensions
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
         /// <summary>   
         /// Determines whether the current browser is a mobile device (by built-in User-Agent sniffing) OR whether it has been configured as

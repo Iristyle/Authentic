@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
 using System.Text;
-using log4net;
+using Common.Logging;
 
 namespace EPS.Web
 {
@@ -11,7 +11,7 @@ namespace EPS.Web
     /// <remarks>   ebrown, 11/10/2010. </remarks>
     public static class HttpBasicAuthHeaderParser
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
         /// <summary>   Try to extract HTTP basic auth credentials from header. </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>

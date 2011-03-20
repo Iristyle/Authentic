@@ -1,6 +1,6 @@
 using System;
+using Common.Logging;
 using EPS.Web.Authentication.Configuration;
-using log4net;
 
 namespace EPS.Web.Authentication.Abstractions
 {
@@ -22,7 +22,7 @@ namespace EPS.Web.Authentication.Abstractions
         IHttpContextInspectingAuthenticatorFactory<T>
         where T : HttpContextInspectingAuthenticatorConfigurationElement
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
         /// <summary>   Gets the log4net log instance. </summary>
         /// <value> The log. </value>

@@ -7,8 +7,8 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Configuration;
 using System.Web.Security;
+using Common.Logging;
 using EPS.Configuration.Abstractions;
-using log4net;
 
 namespace EPS.Web.Authentication.Security
 {
@@ -44,7 +44,7 @@ namespace EPS.Web.Authentication.Security
             }
         }
 
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();
         private static readonly Lazy<Dictionary<string, RoleProvider>> roleProviders = new Lazy<Dictionary<string, RoleProvider>>(() =>
         {
             try

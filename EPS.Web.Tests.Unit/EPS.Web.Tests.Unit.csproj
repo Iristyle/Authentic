@@ -13,10 +13,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Autofac-2.4.5.724\NET40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.10.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\log4net-1.2.10.1 .NET 4 Client Profile\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />

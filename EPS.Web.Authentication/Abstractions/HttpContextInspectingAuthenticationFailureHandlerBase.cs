@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Web;
+using Common.Logging;
 using EPS.Web.Authentication.Configuration;
-using log4net;
 
 namespace EPS.Web.Authentication.Abstractions
 {
@@ -16,7 +15,7 @@ namespace EPS.Web.Authentication.Abstractions
             IHttpContextInspectingAuthenticationFailureHandler<T>
             where T : HttpContextInspectingAuthenticationFailureConfigurationSection
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();
         private readonly T _config;
 
         private HttpContextInspectingAuthenticationFailureHandlerBase()

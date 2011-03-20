@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Threading;
 using System.Threading.Tasks;
-using log4net;
+using Common.Logging;
 
 namespace EPS.Runtime.Caching
 {
@@ -16,7 +16,7 @@ namespace EPS.Runtime.Caching
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Instances of this class are intended to be shared across multiple threads, so implementing IDisposable is not an option.  Instead we can use a finalizer to clean up our ReaderWriterLockSlim instances.")]
     public class ThreadSafeCacheManager<T> where T : class
     {        
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetCurrentClassLogger();
         //our static shared list of constructed wrappers... reuse ones constructed with the same type and name
         private readonly static Dictionary<string, ThreadSafeCacheManager<T>> existingCaches = new Dictionary<string, ThreadSafeCacheManager<T>>();
 
