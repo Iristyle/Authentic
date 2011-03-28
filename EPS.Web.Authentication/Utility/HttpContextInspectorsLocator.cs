@@ -11,18 +11,18 @@ namespace EPS.Web.Authentication
 	/// <remarks>   ebrown, 1/3/2011. </remarks>
 	public static class HttpContextInspectorsLocator
 	{
-		private static ConcurrentDictionary<HttpContextInspectingAuthenticatorConfigurationElement, IHttpContextInspectingAuthenticatorFactory> factoryInstances
-			= new ConcurrentDictionary<HttpContextInspectingAuthenticatorConfigurationElement, IHttpContextInspectingAuthenticatorFactory>();
+		private static ConcurrentDictionary<IHttpContextInspectingAuthenticatorConfigurationElement, IHttpContextInspectingAuthenticatorFactory> factoryInstances
+			= new ConcurrentDictionary<IHttpContextInspectingAuthenticatorConfigurationElement, IHttpContextInspectingAuthenticatorFactory>();
 
-		private static ConcurrentDictionary<HttpContextInspectingAuthenticationModuleSection, IHttpContextInspectingAuthenticationFailureHandlerFactory> failureFactoryInstances
-			= new ConcurrentDictionary<HttpContextInspectingAuthenticationModuleSection, IHttpContextInspectingAuthenticationFailureHandlerFactory>();
+		private static ConcurrentDictionary<IHttpContextInspectingAuthenticationModuleSection, IHttpContextInspectingAuthenticationFailureHandlerFactory> failureFactoryInstances
+			= new ConcurrentDictionary<IHttpContextInspectingAuthenticationModuleSection, IHttpContextInspectingAuthenticationFailureHandlerFactory>();
 
 		/// <summary>   Gets an actual inspector instance based on configuration values. </summary>
 		/// <remarks>   ebrown, 1/3/2011. </remarks>
 		/// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
 		/// <param name="configuration">    The configuration specifying a factory. </param>
 		/// <returns>   An inspector instance as specified in config. </returns>
-		public static IHttpContextInspectingAuthenticator Construct(HttpContextInspectingAuthenticatorConfigurationElement configuration)
+		public static IHttpContextInspectingAuthenticator Construct(IHttpContextInspectingAuthenticatorConfigurationElement configuration)
 		{
 			if (null == configuration) { throw new ArgumentNullException("configuration"); }
 
@@ -49,11 +49,11 @@ namespace EPS.Web.Authentication
 		/// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
 		/// <param name="inspectors">   The inspectors. </param>
 		/// <returns>   An enumerator that allows foreach to be used on the configured inspectors. </returns>
-		public static IEnumerable<IHttpContextInspectingAuthenticator> Construct(HttpContextInspectingAuthenticatorConfigurationElementDictionary inspectors)
+        public static IEnumerable<IHttpContextInspectingAuthenticator> Construct(IDictionary<string, IHttpContextInspectingAuthenticatorConfigurationElement> inspectors)
 		{
 			if (null == inspectors) { throw new ArgumentNullException("inspectors"); }
 
-			return inspectors.OfType<HttpContextInspectingAuthenticatorConfigurationElement>().Select(i => Construct(i));
+			return inspectors.OfType<IHttpContextInspectingAuthenticatorConfigurationElement>().Select(i => Construct(i));
 		}
 
 		/// <summary>   Gets the failure handler. </summary>

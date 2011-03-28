@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -29,7 +30,9 @@ namespace EPS.Web.Authentication.Configuration
 
     /// <summary>   The top-level ConfigurationSection used to setup the Http context inspecting authenticators. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public class HttpContextInspectingAuthenticationModuleSection : ConfigurationSection
+    public class HttpContextInspectingAuthenticationModuleSection : 
+        ConfigurationSection, 
+        IHttpContextInspectingAuthenticationModuleSection
     {
         private HttpContextInspectingAuthenticationFailureConfigurationSection customFailureConfigurationSection;
 
@@ -120,7 +123,7 @@ namespace EPS.Web.Authentication.Configuration
         /// <returns>   The custom failure handler configuration section. </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "customFailureHandlerConfigurationSection", Justification = "Name of configuration element / attribute"), 
         SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is not suitable for a property as configuration is inspected and exceptions may be thrown")]
-        public HttpContextInspectingAuthenticationFailureConfigurationSection GetCustomFailureHandlerConfigurationSection()
+        public IHttpContextInspectingAuthenticationFailureConfigurationSection GetCustomFailureHandlerConfigurationSection()
         {
             //TOOD: 5-5-2010 -- unfortunately this defers this error until runtime rather than config parse time
             //see if we can fix that
@@ -143,9 +146,9 @@ namespace EPS.Web.Authentication.Configuration
         /// <value> The inspectors. </value>
         [ConfigurationProperty("inspectors", IsRequired = true)]
         [ConfigurationCollection(typeof(HttpContextInspectingAuthenticatorConfigurationElementDictionary))]
-        public HttpContextInspectingAuthenticatorConfigurationElementDictionary Inspectors
+        public IDictionary<string, IHttpContextInspectingAuthenticatorConfigurationElement> Inspectors
         {
-            get { return (HttpContextInspectingAuthenticatorConfigurationElementDictionary)base["inspectors"]; }
+            get { return (IDictionary<string, IHttpContextInspectingAuthenticatorConfigurationElement>)base["inspectors"]; }
         }
     }
 }

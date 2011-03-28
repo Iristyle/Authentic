@@ -30,6 +30,7 @@
     <Compile Include="Basic\Configuration\IAuthenticationFailureHandlerConfigurationSection.cs" />
     <Compile Include="Basic\Configuration\IAuthenticationHeaderInspectorConfigurationElement.cs" />
     <Compile Include="Configuration\IHttpContextInspectingAuthenticationFailureConfigurationSection.cs" />
+    <Compile Include="Configuration\IHttpContextInspectingAuthenticationModuleSection.cs" />
     <Compile Include="Configuration\IHttpContextInspectingAuthenticatorConfigurationElement.cs" />
     <Compile Include="Configuration\IRedirectOnAuthenticationFailureHandlerConfigurationSection.cs" />
     <Compile Include="Configuration\ISimpleAuthenticationFailureHandlerConfigurationSection.cs" />
