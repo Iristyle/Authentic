@@ -16,7 +16,7 @@ namespace EPS.Web.Authentication.Abstractions
         /// </summary>
         /// <param name="config">   The configuration. </param>
         /// <returns>   An instance of a failure handler. </returns>
-        IHttpContextInspectingAuthenticationFailureHandler Construct(HttpContextInspectingAuthenticationFailureConfigurationSection config);
+        IHttpContextInspectingAuthenticationFailureHandler Construct(IHttpContextInspectingAuthenticationFailureConfigurationSection config);
     }
 
     /// <summary>   
@@ -27,7 +27,7 @@ namespace EPS.Web.Authentication.Abstractions
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public interface IHttpContextInspectingAuthenticationFailureHandlerFactory<T> : 
         IHttpContextInspectingAuthenticationFailureHandlerFactory
-        where T : HttpContextInspectingAuthenticationFailureConfigurationSection
+        where T : class, IHttpContextInspectingAuthenticationFailureConfigurationSection
     {
         /// <summary>   
         /// Constructs a generic IHttpContextInspectingAuthenticationFailureHandler, which allows passing along the specific type of
@@ -37,5 +37,4 @@ namespace EPS.Web.Authentication.Abstractions
         /// <returns>   An instance of a failure handler. </returns>
         IHttpContextInspectingAuthenticationFailureHandler<T> Construct(T config);
     }
-
 }

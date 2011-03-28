@@ -27,6 +27,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Basic\Configuration\IAuthenticationFailureHandlerConfigurationSection.cs" />
+    <Compile Include="Basic\Configuration\IAuthenticationHeaderInspectorConfigurationElement.cs" />
+    <Compile Include="Configuration\IHttpContextInspectingAuthenticationFailureConfigurationSection.cs" />
+    <Compile Include="Configuration\IHttpContextInspectingAuthenticatorConfigurationElement.cs" />
+    <Compile Include="Configuration\IRedirectOnAuthenticationFailureHandlerConfigurationSection.cs" />
+    <Compile Include="Configuration\ISimpleAuthenticationFailureHandlerConfigurationSection.cs" />
+    <Compile Include="Digest\AuthenticationFailureHandler.cs" />
+    <Compile Include="Digest\AuthenticationFailureHandlerFactory.cs" />
+    <Compile Include="Digest\AuthenticationInspectingAuthenticator.cs" />
+    <Compile Include="Digest\AuthenticationInspectingAuthenticatorFactory.cs" />
+    <Compile Include="Digest\Configuration\AuthenticationFailureHandlerConfigurationSection.cs" />
+    <Compile Include="Digest\Configuration\AuthenticationHeaderInspectorConfigurationElement.cs" />
+    <Compile Include="Digest\Configuration\IAuthenticationFailureHandlerConfigurationSection.cs" />
+    <Compile Include="Digest\Configuration\IAuthenticationHeaderInspectorConfigurationElement.cs" />
+    <Compile Include="Digest\IDigestAuthPrincipalBuilder.cs" />
+    <Compile Include="Digest\IDigestAuthPrincipalBuilderFactory.cs" />
+    <Compile Include="Digest\NonceCache.cs" />
+    <Compile Include="Digest\Opaque.cs" />
     <Compile Include="Utility\HttpContextInspectorsLocator.cs" />
     <Compile Include="SimpleAuthenticationFailureEventArgs.cs" />
     <Compile Include="SimpleAuthenticationFailureHandler.cs" />
@@ -73,6 +91,7 @@
       <Name>EPS.Web</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\Build\Shared.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\Build\SharedPostBuild.targets" />

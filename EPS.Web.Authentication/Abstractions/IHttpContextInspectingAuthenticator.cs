@@ -25,7 +25,7 @@ namespace EPS.Web.Authentication.Abstractions
         /// cref="EPS.Web.Authentication.Abstractions.IHttpContextInspectingAuthenticator{T}"/>. 
         /// </summary>
         /// <value> The configuration. </value>
-        HttpContextInspectingAuthenticatorConfigurationElement Configuration { get; }
+        IHttpContextInspectingAuthenticatorConfigurationElement Configuration { get; }
     }
     
     /// <summary>   
@@ -34,7 +34,7 @@ namespace EPS.Web.Authentication.Abstractions
     /// </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public interface IHttpContextInspectingAuthenticator<out T> : IHttpContextInspectingAuthenticator
-        where T : HttpContextInspectingAuthenticatorConfigurationElement
+        where T : class, IHttpContextInspectingAuthenticatorConfigurationElement
     {
         /// <summary>   Gets the specialized configuration -- hides Configuration from IHttpContextInspectingAuthenticator. </summary>
         /// <value> The configuration. </value>

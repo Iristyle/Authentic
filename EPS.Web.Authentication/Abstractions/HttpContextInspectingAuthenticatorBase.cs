@@ -10,7 +10,9 @@ namespace EPS.Web.Authentication.Abstractions
     /// EPS.Web.Authentication.Abstractions.IHttpContextInspectingAuthenticator{T}"/>. 
     /// </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public abstract class HttpContextInspectingAuthenticatorBase<T> : IHttpContextInspectingAuthenticator<T> where T : HttpContextInspectingAuthenticatorConfigurationElement
+    public abstract class HttpContextInspectingAuthenticatorBase<T> : 
+        IHttpContextInspectingAuthenticator<T> where T :
+        class, IHttpContextInspectingAuthenticatorConfigurationElement
     {
         private static readonly ILog log = LogManager.GetCurrentClassLogger();        
         private readonly T _config;
@@ -37,7 +39,7 @@ namespace EPS.Web.Authentication.Abstractions
         /// <value> The name. </value>
         public string Name
         {
-            get { return ((HttpContextInspectingAuthenticatorConfigurationElement)Configuration).Name; }
+            get { return Configuration.Name; }
         }
 
         /*
@@ -49,7 +51,7 @@ namespace EPS.Web.Authentication.Abstractions
 
         /// <summary>   Gets the base configuration instance -- intended to be used by infrastructure. </summary>
         /// <value> The configuration. </value>
-        HttpContextInspectingAuthenticatorConfigurationElement IHttpContextInspectingAuthenticator.Configuration
+        IHttpContextInspectingAuthenticatorConfigurationElement IHttpContextInspectingAuthenticator.Configuration
         {
             get { return _config; }
         }

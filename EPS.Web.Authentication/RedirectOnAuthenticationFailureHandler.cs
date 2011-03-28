@@ -10,12 +10,12 @@ namespace EPS.Web.Authentication
     /// <summary>   A very simple authentication failure handler that redirects to a preconfigured url. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public class RedirectOnAuthenticationFailureHandler :
-           HttpContextInspectingAuthenticationFailureHandlerBase<RedirectOnAuthenticationFailureHandlerConfigurationSection>
+           HttpContextInspectingAuthenticationFailureHandlerBase<IRedirectOnAuthenticationFailureHandlerConfigurationSection>
     {
         /// <summary>   Constructs an instance of a RedirectOnAuthenticationFailureHandler. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <param name="config">   The configuration. </param>
-        public RedirectOnAuthenticationFailureHandler(RedirectOnAuthenticationFailureHandlerConfigurationSection config)
+        public RedirectOnAuthenticationFailureHandler(IRedirectOnAuthenticationFailureHandlerConfigurationSection config)
             : base(config) { }
 
         #region IHttpHeaderInspectingAuthenticationFailureHandler Members

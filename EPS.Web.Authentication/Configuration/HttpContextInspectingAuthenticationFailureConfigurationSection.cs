@@ -5,7 +5,9 @@ namespace EPS.Web.Authentication.Configuration
 {
     /// <summary>   Http context inspecting authentication failure configuration section. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public class HttpContextInspectingAuthenticationFailureConfigurationSection : ConfigurationSection
+    public class HttpContextInspectingAuthenticationFailureConfigurationSection : 
+        ConfigurationSection, 
+        IHttpContextInspectingAuthenticationFailureConfigurationSection
     {
         /// <summary>   Sets the <see cref="T:System.Configuration.ConfigurationElement" /> object to its initial state.
         /// 			Necessary to mimic the deserialization process from the collection of these guys. </summary>
@@ -47,7 +49,7 @@ namespace EPS.Web.Authentication.Configuration
             return true;
         }
 
-        /// <summary>   Gets or sets a value indicating whether the require SSL. </summary>
+        /// <summary>   Gets or sets a value indicating whether SSL is required. </summary>
         /// <value> true if require SSL, false if not. </value>
         [ConfigurationProperty("requireSsl", DefaultValue = false, IsRequired = false)]
         public bool RequireSsl

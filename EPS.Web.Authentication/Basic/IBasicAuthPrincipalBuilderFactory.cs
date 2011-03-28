@@ -11,6 +11,6 @@ namespace EPS.Web.Authentication.Basic
         /// <summary>   Constructs the class instance which can build an IPrincipal from incoming HTTP context. </summary>
         /// <param name="config">   The configuration. </param>
         /// <returns>   The IBasicAuthPrincipalBuilder instance. </returns>
-        IBasicAuthPrincipalBuilder Construct(AuthenticationHeaderInspectorConfigurationElement config);
+        IBasicAuthPrincipalBuilder Construct(IAuthenticationHeaderInspectorConfigurationElement config);
     }
 }

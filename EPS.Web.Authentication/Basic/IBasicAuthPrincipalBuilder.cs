@@ -20,7 +20,7 @@ namespace EPS.Web.Authentication.Basic
         /// EPS.Web.Authentication.Basic.IBasicAuthPrincipalBuilderFactory"/> to use. 
         /// </summary>
         /// <value> The configuration. </value>
-        AuthenticationHeaderInspectorConfigurationElement Configuration { get; }
+        IAuthenticationHeaderInspectorConfigurationElement Configuration { get; }
         
         /// <summary>   Construct an IPrincipal given a username and password (context through in for good measure). </summary>
         /// <param name="context">  The context. </param>

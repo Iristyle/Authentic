@@ -11,7 +11,7 @@ namespace EPS.Web.Authentication.Abstractions
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public abstract class HttpContextInspectingAuthenticationFailureHandlerFactoryBase<T> :
            IHttpContextInspectingAuthenticationFailureHandlerFactory<T>
-           where T : HttpContextInspectingAuthenticationFailureConfigurationSection
+           where T : class, IHttpContextInspectingAuthenticationFailureConfigurationSection
     {
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
@@ -36,7 +36,7 @@ namespace EPS.Web.Authentication.Abstractions
         /// </summary>
         /// <param name="config">   The configuration used to guide construction of the failure handler. </param>
         /// <returns>   An instance of a failure handler. </returns>
-        public IHttpContextInspectingAuthenticationFailureHandler Construct(HttpContextInspectingAuthenticationFailureConfigurationSection config)
+        public IHttpContextInspectingAuthenticationFailureHandler Construct(IHttpContextInspectingAuthenticationFailureConfigurationSection config)
         {
             return Construct((T)config);
         }

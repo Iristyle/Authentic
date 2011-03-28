@@ -17,7 +17,7 @@ namespace EPS.Web.Authentication
     {
         /// <summary>   Gets the configuration. </summary>
         /// <value> The configuration. </value>
-        public SimpleAuthenticationFailureHandlerConfigurationSection Config { get; private set; }
+        public ISimpleAuthenticationFailureHandlerConfigurationSection Config { get; private set; }
         
         /// <summary>   Gets the http context base. </summary>
         /// <value> The http context base. </value>
@@ -39,7 +39,7 @@ namespace EPS.Web.Authentication
         /// <param name="config">           The configuration. </param>
         /// <param name="httpContext">      The HttpContext for the given request. </param>
         /// <param name="inspectorResults"> The set of failed inspector results. </param>
-        public SimpleAuthenticationFailureEventArgs(SimpleAuthenticationFailureHandlerConfigurationSection config, HttpContextBase httpContext, Dictionary<IHttpContextInspectingAuthenticator, InspectorAuthenticationResult> inspectorResults)
+        public SimpleAuthenticationFailureEventArgs(ISimpleAuthenticationFailureHandlerConfigurationSection config, HttpContextBase httpContext, Dictionary<IHttpContextInspectingAuthenticator, InspectorAuthenticationResult> inspectorResults)
         {
             Config = config;
             HttpContextBase = httpContext;

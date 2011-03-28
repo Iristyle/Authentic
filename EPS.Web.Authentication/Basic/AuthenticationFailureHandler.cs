@@ -12,12 +12,12 @@ namespace EPS.Web.Authentication.Basic
     /// <summary>   A failure handler that sends out a basic authentication WWW-Authenticate header if authentication fails. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public class AuthenticationFailureHandler : 
-        HttpContextInspectingAuthenticationFailureHandlerBase<AuthenticationFailureHandlerConfigurationSection>
+        HttpContextInspectingAuthenticationFailureHandlerBase<IAuthenticationFailureHandlerConfigurationSection>
     {
         /// <summary>   Initializes a new instance of the AuthenticationFailureHandler class given configuration values. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <param name="config">   The configuration. </param>
-        public AuthenticationFailureHandler(AuthenticationFailureHandlerConfigurationSection config)
+        public AuthenticationFailureHandler(IAuthenticationFailureHandlerConfigurationSection config)
             : base(config) {}
 
         #region IHttpHeaderInspectingAuthenticationFailureHandler Members

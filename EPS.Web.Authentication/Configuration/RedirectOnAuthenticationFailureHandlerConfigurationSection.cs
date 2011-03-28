@@ -8,7 +8,9 @@ namespace EPS.Web.Authentication.Configuration
     /// <see cref="T:EPS.Web.Authentication.RedirectOnAuthenticationFailureHandler"/>. 
     /// </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public class RedirectOnAuthenticationFailureHandlerConfigurationSection : HttpContextInspectingAuthenticationFailureConfigurationSection
+    public class RedirectOnAuthenticationFailureHandlerConfigurationSection :
+        HttpContextInspectingAuthenticationFailureConfigurationSection, 
+        IRedirectOnAuthenticationFailureHandlerConfigurationSection
     {
         /// <summary>   Gets or sets URI for the redirect on a failed request. </summary>
         /// <value> The redirect uri. </value>

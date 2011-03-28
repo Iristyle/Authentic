@@ -20,7 +20,7 @@ namespace EPS.Web.Authentication.Abstractions
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public abstract class HttpContextInspectingAuthenticatorFactoryBase<T> :
         IHttpContextInspectingAuthenticatorFactory<T>
-        where T : HttpContextInspectingAuthenticatorConfigurationElement
+            where T : class, IHttpContextInspectingAuthenticatorConfigurationElement
     {
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
@@ -55,7 +55,7 @@ namespace EPS.Web.Authentication.Abstractions
         /// </summary>
         /// <param name="config">   The configuration. </param>
         /// <returns>   An instance of an Http context inspector / authenticator. </returns>
-        public IHttpContextInspectingAuthenticator Construct(HttpContextInspectingAuthenticatorConfigurationElement config)
+        public IHttpContextInspectingAuthenticator Construct(IHttpContextInspectingAuthenticatorConfigurationElement config)
         {
             return Construct((T)config);
         }

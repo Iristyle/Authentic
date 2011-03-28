@@ -10,7 +10,7 @@ namespace EPS.Web.Authentication.Abstractions
         /// <summary>   Constructs the http context inspecting authenticator. </summary>
         /// <param name="config">   The configuration. </param>
         /// <returns>   An authenticator instance. </returns>
-        IHttpContextInspectingAuthenticator Construct(HttpContextInspectingAuthenticatorConfigurationElement config);
+        IHttpContextInspectingAuthenticator Construct(IHttpContextInspectingAuthenticatorConfigurationElement config);
     }
 
     /// <summary>   
@@ -18,8 +18,9 @@ namespace EPS.Web.Authentication.Abstractions
     /// configuration type. 
     /// </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public interface IHttpContextInspectingAuthenticatorFactory<T> : IHttpContextInspectingAuthenticatorFactory
-        where T : HttpContextInspectingAuthenticatorConfigurationElement
+    public interface IHttpContextInspectingAuthenticatorFactory<T> : 
+        IHttpContextInspectingAuthenticatorFactory
+            where T : class, IHttpContextInspectingAuthenticatorConfigurationElement
     {
         /// <summary>   Constructs the http context inspecting authenticator. </summary>
         /// <param name="config">   The specialized configuration as specified in the class definition. </param>

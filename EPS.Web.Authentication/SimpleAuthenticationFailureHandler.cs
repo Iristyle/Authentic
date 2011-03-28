@@ -11,12 +11,12 @@ namespace EPS.Web.Authentication
     /// <summary>   A very simple authentication failure handler that allows for clients to simply hook a failure event. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public class SimpleAuthenticationFailureHandler :
-               HttpContextInspectingAuthenticationFailureHandlerBase<SimpleAuthenticationFailureHandlerConfigurationSection>
+               HttpContextInspectingAuthenticationFailureHandlerBase<ISimpleAuthenticationFailureHandlerConfigurationSection>
     {
         /// <summary>   Constructor an instance of the failure handler given the configuration. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <param name="config">   The configuration (empty). </param>
-        public SimpleAuthenticationFailureHandler(SimpleAuthenticationFailureHandlerConfigurationSection config)
+        public SimpleAuthenticationFailureHandler(ISimpleAuthenticationFailureHandlerConfigurationSection config)
             : base(config) { }
 
         /// <summary> The authentication failure handler -- implementors must set the IPrincipal here to something

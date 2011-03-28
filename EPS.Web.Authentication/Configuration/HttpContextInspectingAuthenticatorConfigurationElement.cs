@@ -10,7 +10,9 @@ namespace EPS.Web.Authentication.Configuration
 {
     /// <summary>   The basic configuration definition for a HttpContextBase inspecting authenticator configuration element. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public class HttpContextInspectingAuthenticatorConfigurationElement : ConfigurationElement
+    public class HttpContextInspectingAuthenticatorConfigurationElement : 
+        ConfigurationElement, 
+        IHttpContextInspectingAuthenticatorConfigurationElement
     {
         //private IHttpContextInspectingAuthenticatorFactory<HttpContextInspectingAuthenticatorConfigurationElement> factoryInstance = null;
         private ConfigurationSection customConfigurationSection;        
@@ -125,6 +127,7 @@ namespace EPS.Web.Authentication.Configuration
             get { return (string)this["customConfigurationSection"]; }
         }
 
+        //TODO: 3-28-2011 -- consider moving this out to its own class
         /// <summary>   Gets the custom configuration section. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <exception cref="ConfigurationErrorsException"> Thrown when there are configuration errors. </exception>

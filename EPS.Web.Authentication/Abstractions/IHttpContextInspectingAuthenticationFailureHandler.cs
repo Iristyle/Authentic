@@ -18,7 +18,7 @@ namespace EPS.Web.Authentication.Abstractions
         
         /// <summary>   Gets the configuration. </summary>
         /// <value> The configuration. </value>
-        HttpContextInspectingAuthenticationFailureConfigurationSection Configuration { get; }
+        IHttpContextInspectingAuthenticationFailureConfigurationSection Configuration { get; }
     }
 
     /// <summary>   
@@ -27,7 +27,7 @@ namespace EPS.Web.Authentication.Abstractions
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public interface IHttpContextInspectingAuthenticationFailureHandler<T>
         : IHttpContextInspectingAuthenticationFailureHandler
-        where T : HttpContextInspectingAuthenticationFailureConfigurationSection
+        where T : class, IHttpContextInspectingAuthenticationFailureConfigurationSection
     {
         /// <summary>   Executes the authentication failure action. </summary>
         /// <param name="context">          The context. </param>
