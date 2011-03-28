@@ -36,23 +36,31 @@ namespace EPS.Web
 
         /// <summary>   Extracts and decodes the username / password credentials from the "Basic" HTTP header (as captured in authHeader). </summary>
         /// <remarks>   ebrown, 11/10/2010. </remarks>
-        /// <exception cref="ArgumentException">    Thrown when one or more arguments have unsupported or illegal values. </exception>
-        /// <exception cref="Exception">            Thrown when exception. </exception>
+        /// <exception cref="ArgumentNullException">    Thrown when the authHeader argument is null. </exception>
+        /// <exception cref="ArgumentException">        Thrown when one or more arguments have unsupported or illegal values. </exception>
+        /// <exception cref="Exception">                Thrown when exception. </exception>
         /// <param name="authHeader">   The incoming authorization header as a string. </param>
         /// <returns>   A NetworkCredential object that wraps up the credentials. </returns>
         public static NetworkCredential ExtractCredentialsFromHeader(string authHeader)
         {
             try
             {
+                if (null == authHeader)
+                {
+                    throw new ArgumentNullException("authHeader");
+                }
+
                 if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Basic", StringComparison.OrdinalIgnoreCase))
+                {
                     throw new ArgumentException("AuthHeader cannot be null or empty OR does not start with Basic", "authHeader");
+                }
                 
                 // that's the right encoding -- use the auth header with "basic" stripped out
                 string userPass = Encoding.GetEncoding("iso-8859-1").GetString(Convert.FromBase64String(authHeader.Substring(6).Trim()));                
                 if (string.IsNullOrEmpty(userPass))
                     throw new ArgumentException("Authorization header did not contain a base 64 encoded user:pass");                    
 
-                string[] credentials = userPass.Split(new char[] { ':' }, 2);
+                string[] credentials = userPass.Split(new [] { ':' }, 2);
                 log.Info(String.Format(CultureInfo.InvariantCulture, "Authorization header contains user [{0}] / pass [{1}] selected", 
                     credentials[0] ?? "* EMPTY *", credentials[1] ?? "* EMPTY *"));
                 return new NetworkCredential(credentials[0], credentials[1]);
