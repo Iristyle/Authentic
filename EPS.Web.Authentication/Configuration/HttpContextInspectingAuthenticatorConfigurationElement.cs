@@ -15,7 +15,7 @@ namespace EPS.Web.Authentication.Configuration
         IHttpContextInspectingAuthenticatorConfigurationElement
     {
         //private IHttpContextInspectingAuthenticatorFactory<HttpContextInspectingAuthenticatorConfigurationElement> factoryInstance = null;
-        private ConfigurationSection customConfigurationSection;        
+        //private ConfigurationSection customConfigurationSection;        
 
         /// <summary>   Sets the <see cref="T:System.Configuration.ConfigurationElement" /> object to its initial state.
         /// 			Necessary to mimic the deserialization process from the collection of these guys. </summary>
@@ -128,6 +128,7 @@ namespace EPS.Web.Authentication.Configuration
         }
 
         //TODO: 3-28-2011 -- consider moving this out to its own class
+        /*
         /// <summary>   Gets the custom configuration section. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <exception cref="ConfigurationErrorsException"> Thrown when there are configuration errors. </exception>
@@ -152,6 +153,7 @@ namespace EPS.Web.Authentication.Configuration
 
             return customConfigurationSection;
         }
+        */
 
         /*
         [ConfigurationProperty("cachingEnabled", DefaultValue = true)]
