@@ -8,6 +8,8 @@ using EPS.Text;
 
 namespace EPS.Web
 {
+    /// <summary>   A class that can take a HTTP digest auth header string and parse it into a DigestHeader object. </summary>
+    /// <remarks>   ebrown, 3/28/2011. </remarks>
     public static class HttpDigestAuthHeaderParser
     {
         private static readonly ILog log = LogManager.GetCurrentClassLogger();
