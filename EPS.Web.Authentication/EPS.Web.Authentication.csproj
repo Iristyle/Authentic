@@ -78,6 +78,7 @@
     <Compile Include="HttpContextInspectingAuthenticationModule.cs" />
     <Compile Include="Abstractions\IHttpContextInspectingAuthenticator.cs" />
     <Compile Include="Abstractions\IHttpContextInspectingAuthenticatorFactory.cs" />
+    <Compile Include="Utility\MembershipProviderLocator.cs" />
     <Compile Include="Utility\PrincipalExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\RoleProviderHelper.cs" />

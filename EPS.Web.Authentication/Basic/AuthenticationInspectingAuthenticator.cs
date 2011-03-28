@@ -1,13 +1,12 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
 using System.Security.Principal;
 using System.Web;
-using System.Web.Security;
 using EPS.Web.Authentication.Abstractions;
 using EPS.Web.Authentication.Basic.Configuration;
 using EPS.Web.Authentication.Security;
+using EPS.Web.Authentication.Utility;
 using EPS.Web.Management;
 
 namespace EPS.Web.Authentication.Basic
@@ -50,7 +49,7 @@ namespace EPS.Web.Authentication.Basic
                     return new InspectorAuthenticationResult(false, null, "No basic credentials found in HTTP header");
                 }
 
-                var membershipProvider = GetMembershipProvider();
+                var membershipProvider = MembershipProviderLocator.GetProvider(Configuration.ProviderName);
 
                 //either we don't need to validate, or the user specified a validator
                 if (null == membershipProvider || membershipProvider.ValidateUser(credentials.UserName, credentials.Password))
@@ -94,37 +93,6 @@ namespace EPS.Web.Authentication.Basic
                 return new FixedProviderRolePrincipal(RoleProviderHelper.GetProviderByName(Configuration.RoleProviderName), id);
 
             return new GenericPrincipal(id, null);
-        }
-
-        /// <summary>   Gets the membership provider defined in configuration, or null if not specified. </summary>
-        /// <remarks>   ebrown, 1/3/2011. </remarks>
-        /// <exception cref="ArgumentOutOfRangeException">  Thrown when one or more arguments are outside the required range. </exception>
-        /// <returns>   The membership provider that is used to validate incoming credentials. </returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is not suitable for a property as configuration is inspected and exceptions may be thrown")]
-        public MembershipProvider GetMembershipProvider()
-        {
-            if (string.IsNullOrWhiteSpace(Configuration.ProviderName))
-            {
-                return null;
-            }
-
-            if (string.Equals(Configuration.ProviderName, "default", StringComparison.OrdinalIgnoreCase))
-            {
-                MembershipProvider currentProvider = Membership.Provider;
-                Log.InfoFormat(CultureInfo.InvariantCulture, "Default provider of [{0}] selected", (null != currentProvider ? currentProvider.Name.IfMissing("N/A") : "N/A"));
-                return currentProvider;
-            }
-            else
-            {
-                MembershipProvider provider = Membership.Providers[Configuration.ProviderName];
-                if (provider == null)
-                {
-                    throw new ArgumentOutOfRangeException(String.Format(CultureInfo.InvariantCulture, "Provider {0} specified in configuration not found", Configuration.ProviderName));
-                }
-
-                Log.InfoFormat(CultureInfo.InvariantCulture, "Custom provider of [{0}] specified in configuration selected", provider.Name.IfMissing("*No Name*"));
-                return provider;
-            }
         }
     }
 }
