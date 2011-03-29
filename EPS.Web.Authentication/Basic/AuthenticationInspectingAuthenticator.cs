@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Net;
 using System.Security.Principal;
 using System.Web;
+using EPS.Web.Abstractions;
 using EPS.Web.Authentication.Abstractions;
 using EPS.Web.Authentication.Basic.Configuration;
 using EPS.Web.Authentication.Security;
@@ -83,7 +84,7 @@ namespace EPS.Web.Authentication.Basic
             //if configuration specifies a plug-in principal builder, then use what's specified
             //this allows use to accept basic auth credentials, but return custom principal objects
             //i.e. MKM username /password -> OnyxPrincipal!
-            IBasicAuthPrincipalBuilder principalBuilder = Configuration.GetPrincipalBuilder();
+            IPrincipalBuilder principalBuilder = Configuration.GetPrincipalBuilder();
             if (null != principalBuilder)
                 return principalBuilder.ConstructPrincipal(context, username, password);
 

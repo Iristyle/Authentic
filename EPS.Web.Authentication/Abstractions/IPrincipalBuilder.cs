@@ -1,15 +1,13 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Security.Principal;
 using System.Web;
-using EPS.Web.Authentication.Basic.Configuration;
+using EPS.Web.Authentication.Configuration;
 
-namespace EPS.Web.Authentication.Basic
+namespace EPS.Web.Abstractions
 {
-    /// <summary>   Interface that defines the operations of a basic authorization principal builder. </summary>
+    /// <summary>   Interface that defines the operations of a principal builder. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    [SuppressMessage("Gendarme.Rules.Naming", "AvoidRedundancyInTypeNameRule", Justification = "This interface might be implemented by third parties")]
-    public interface IBasicAuthPrincipalBuilder
+    public interface IPrincipalBuilder
     {
         /// <summary>   Gets the human-friendly name. </summary>
         /// <value> The name. </value>
@@ -17,10 +15,10 @@ namespace EPS.Web.Authentication.Basic
 
         /// <summary>   
         /// Gets the configuration defining the <see cref="T:System.Web.Security.MembershipProvider"/> and <see cref="T:
-        /// EPS.Web.Authentication.Basic.IBasicAuthPrincipalBuilderFactory"/> to use. 
+        /// EPS.Web.Abstractions.IPrincipalBuilderFactory"/> to use. 
         /// </summary>
         /// <value> The configuration. </value>
-        IAuthenticationHeaderInspectorConfigurationElement Configuration { get; }
+        IHttpContextInspectingAuthenticatorConfigurationElement Configuration { get; }
         
         /// <summary>   Construct an IPrincipal given a username and password (context through in for good measure). </summary>
         /// <param name="context">  The context. </param>

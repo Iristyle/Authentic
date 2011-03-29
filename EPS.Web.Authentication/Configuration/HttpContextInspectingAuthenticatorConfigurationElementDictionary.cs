@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml;
 using EPS.Configuration;
 using EPS.Reflection;
+using EPS.Web.Abstractions;
 using EPS.Web.Authentication.Abstractions;
 
 namespace EPS.Web.Authentication.Configuration
@@ -63,6 +64,27 @@ namespace EPS.Web.Authentication.Configuration
                 //just create an instance and see what happens ;0
                 Activator.CreateInstance(factoryType);
 
+                //principalBuilderFactory is not required, but we can validate it if specified
+                string principalBuilderFactoryTypeName = reader.GetAttribute("principalBuilderFactory");
+                if (!string.IsNullOrWhiteSpace(principalBuilderFactoryTypeName))
+                {
+                    Type principalBuilderFactoryType = Type.GetType(principalBuilderFactoryTypeName, true, true);
+                    if (null != principalBuilderFactoryType)
+                    {
+                        Type principalBuilderFactoryInterface = typeof(IPrincipalBuilderFactory);
+                        if (!principalBuilderFactoryInterface.IsAssignableFrom(principalBuilderFactoryType))
+                        {
+                            throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, 
+                                "The principal builder factory type specified [{0}] must implement interface {1} - check configuration settings", 
+                                principalBuilderFactoryTypeName ?? string.Empty, principalBuilderFactoryInterface.Name));
+                        }
+
+                        //this automatically throws when there's no default parameterless constructor
+                        //just create an instance and see what happens ;0
+                        Activator.CreateInstance(principalBuilderFactoryType);
+                    }
+                }
+
                 //Step 1 -- create the *real* configuration elementName type we need here, caching it, 
                 //let the config system deserialize the same xml chunk
                 //and it will pop in a standard HttpContextInspectingAuthenticatorConfigurationElement
@@ -71,7 +93,7 @@ namespace EPS.Web.Authentication.Configuration
                 var configElement = (HttpContextInspectingAuthenticatorConfigurationElement)specializedConfigurationElementType
                     .GetConstructor(Type.EmptyTypes).Invoke(null);
                 configElement.Init();
-                configElement.DeserializeElement(reader, false);                
+                configElement.DeserializeElement(reader, false);
                 derivedElements.Add(configElement.Name, configElement);
             }
             return base.OnDeserializeUnrecognizedElement(elementName, reader);

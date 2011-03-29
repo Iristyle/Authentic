@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Xml;
 using EPS.Reflection;
+using EPS.Web.Abstractions;
 using EPS.Web.Authentication.Abstractions;
 
 namespace EPS.Web.Authentication.Configuration
@@ -14,6 +15,8 @@ namespace EPS.Web.Authentication.Configuration
         ConfigurationElement, 
         IHttpContextInspectingAuthenticatorConfigurationElement
     {
+        private IPrincipalBuilderFactory principalBuilderFactoryInstance;
+
         //private IHttpContextInspectingAuthenticatorFactory<HttpContextInspectingAuthenticatorConfigurationElement> factoryInstance = null;
         //private ConfigurationSection customConfigurationSection;        
 
@@ -42,7 +45,8 @@ namespace EPS.Web.Authentication.Configuration
 
         /// <summary>   Called after deserialization has completed, verifying specified configuration information. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
-        /// <exception cref="ConfigurationErrorsException"> Thrown when configurationerrors. </exception>
+        /// <exception cref="ConfigurationErrorsException"> Thrown when the Factory or PrincipalBuilderFactory are improperly configured. </exception>        
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "principalBuilderFactory", Justification = "Name of configuration element / attribute")]
         protected override void PostDeserialize()
         {
             base.PostDeserialize();
@@ -63,6 +67,26 @@ namespace EPS.Web.Authentication.Configuration
             if (null == c)
             {
                 throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The factory type specified [{0}] must have a parameterless constructor - check configuration settings", Factory ?? string.Empty));
+            }
+
+            if (!string.IsNullOrEmpty(PrincipalBuilderFactory))
+            {
+                var type = Type.GetType(PrincipalBuilderFactory);
+                if (null == type)
+                {
+                    throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The principalBuilderFactory type name specified [{0}] cannot be found - check configuration settings", PrincipalBuilderFactory ?? string.Empty));
+                }
+
+                if (!typeof(IPrincipalBuilderFactory).IsAssignableFrom(type))
+                {
+                    throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The principalBuilderFactory type name specified [{0}] must implement interface {1} - check configuration settings", PrincipalBuilderFactory ?? string.Empty, typeof(IPrincipalBuilderFactory).Name));
+                }
+
+                var constructor = type.GetConstructor(Type.EmptyTypes);
+                if (null == constructor)
+                {
+                    throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The principalBuilderFactory type name specified [{0}] must have a parameterless constructor - check configuration settings", PrincipalBuilderFactory ?? string.Empty));
+                }
             }
         }
 
@@ -125,6 +149,55 @@ namespace EPS.Web.Authentication.Configuration
         public string CustomConfigurationSectionName
         {
             get { return (string)this["customConfigurationSection"]; }
+        }
+
+        /// <summary>   
+        /// Get or sets the name of the MembershipProvider to be used.  By default no membership provider is used as it may be just as costly as
+        /// extracting a principal. If a simpler membership provider exists that can provide a faster validation of user credentials than a full
+        /// IPrincipal extraction, then it makes sense to use a membershipProvider.  Specify 'default' to use the default configured
+        /// MembershipProvider for the system. 
+        /// </summary>
+        /// <value> The name of the provider. </value>
+        [ConfigurationProperty("providerName", DefaultValue = "")]
+        public string ProviderName
+        {
+            get { return (string)this["providerName"]; }
+            set { base["providerName"] = value; }
+        }
+
+        /// <summary>   Gets or sets the principal builder factory Type name. </summary>
+        /// <value> 
+        /// The FullName for the type of the principal builder factory -- i.e. the class that implements <see cref="T:
+        /// EPS.Web.Abstractions.IPrincipalBuilderFactory"/>. 
+        /// </value>
+        [ConfigurationProperty("principalBuilderFactory", DefaultValue = "")]
+        public string PrincipalBuilderFactory
+        {
+            get { return (string)this["principalBuilderFactory"]; }
+            set { this["principalBuilderFactory"] = value; }
+        }
+
+        /// <summary>   
+        /// Gets the principal builder factory instance implementing <see cref="T:
+        /// EPS.Web.Abstractions.IPrincipalBuilderFactory"/>, and uses that to create instances of <see cref="T:
+        /// EPS.Web.Abstractions.IPrincipalBuilder"/> given the specified configuration. 
+        /// </summary>
+        /// <remarks>   ebrown, 1/3/2011. </remarks>
+        /// <returns>   The principal builder instance or null if the PrincipalBuilderFactory property is not properly configured. </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is not suitable for a property as it returns new IBasicAuthPrincipalBuilder instances each time")]
+        public IPrincipalBuilder GetPrincipalBuilder()
+        {
+            if (string.IsNullOrEmpty(PrincipalBuilderFactory))
+            {
+                return null;
+            }
+
+            if (null == principalBuilderFactoryInstance)
+            {
+                principalBuilderFactoryInstance = Activator.CreateInstance(Type.GetType(PrincipalBuilderFactory)) as IPrincipalBuilderFactory;
+            }
+
+            return principalBuilderFactoryInstance.Construct(this);
         }
 
         //TODO: 3-28-2011 -- consider moving this out to its own class
