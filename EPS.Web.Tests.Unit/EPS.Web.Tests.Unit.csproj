@@ -31,6 +31,7 @@
     <Compile Include="Abstractions\HttpHandlerFactoryBaseTest.cs" />
     <Compile Include="Abstractions\HttpModuleBaseTest.cs" />
     <Compile Include="Cookies\CookieHelperTest.cs" />
+    <Compile Include="DigestQualityOfProtectionTypesTest.cs" />
     <Compile Include="Extensions\HttpContextBaseExtensionsTest.cs" />
     <Compile Include="Extensions\HttpRequestBaseExtensionsTest.cs" />
     <Compile Include="Extensions\HttpResponseBaseExtensionsTest.cs" />
@@ -40,6 +41,7 @@
     <Compile Include="Handlers\StreamWriteStatusTest.cs" />
     <Compile Include="HttpBasicAuthHeaderParserTest.cs" />
     <Compile Include="Extensions\HttpHandlerExtensionsTest.cs" />
+    <Compile Include="HttpDigestAuthHeaderParserTest.cs" />
     <Compile Include="HttpHeaderFieldsTest.cs" />
     <Compile Include="HttpMethodNamesTest.cs" />
     <Compile Include="LogHelpersTest.cs" />
