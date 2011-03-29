@@ -13,6 +13,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -20,8 +21,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Digest\AuthenticationInspectingAuthenticatorTest.cs" />
     <Compile Include="HttpContextInspectingAuthenticationModuleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\MembershipProviderLocatorTest.cs" />
+    <Compile Include="Utility\ProviderCollectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EPS.Web.Authentication\EPS.Web.Authentication.csproj">
@@ -35,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abstractions\" />
+    <Folder Include="Basic\" />
   </ItemGroup>
   <Import Project="..\Build\Shared.Test.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
