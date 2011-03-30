@@ -14,7 +14,7 @@ namespace EPS.Web.Tests.Unit
         public void TryExtractDigestHeader_ReturnsFalseWithNullDigestHeaderInstance_OnNullString()
         {
             DigestHeader digestHeader;
-            bool status = HttpDigestAuthHeaderParser.TryExtractDigestHeader(null, out digestHeader);
+            bool status = HttpDigestAuthHeaderParser.TryExtractDigestHeader(HttpMethodNames.Get, null, out digestHeader);
             Assert.True(status == false && null == digestHeader);
         }
 
@@ -22,31 +22,38 @@ namespace EPS.Web.Tests.Unit
         public void TryExtractDigestHeader_ReturnsFalseWithNullDigestHeaderInstance_OnEmptyString()
         {
             DigestHeader digestHeader;
-            bool status = HttpDigestAuthHeaderParser.TryExtractDigestHeader(string.Empty, out digestHeader);
+            bool status = HttpDigestAuthHeaderParser.TryExtractDigestHeader(HttpMethodNames.Get, string.Empty, out digestHeader);
             Assert.True(status == false && null == digestHeader);
         }
 
         [Fact]
         public void ExtractDigestHeader_ThrowsOnNullString()
         {
-            Assert.Throws<ArgumentNullException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader(null));
+            Assert.Throws<ArgumentNullException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader(HttpMethodNames.Get, null));
+        }
+
+        [Fact]
+        public void ExtractDigestHeader_ThrowsOnInvalidHttpMethodName()
+        {
+            Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader((HttpMethodNames)80, string.Empty));
         }
 
         [Fact]
         public void ExtractDigestHeader_ThrowsOnEmptyString()
         {
-            Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader(string.Empty));
+            Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader(HttpMethodNames.Get, string.Empty));
         }
 
         [Fact]
         public void ExtractDigestHeader_ThrowsOnBasicAuthTypeString()
         {
-            Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader(@"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="));
+            Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader(HttpMethodNames.Get, @"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="));
         }
 
         [Fact]
         public void ExtractDigestHeader_ParsesCompleteHeaderCorrectly()
         {
+            HttpMethodNames verb = HttpMethodNames.Get;
             string header = @"Digest username=""Mufasa"",
                      realm=""testrealm@host.com"",
                      nonce=""dcd98b7102dd2f0e8b11d0f600bfb0c093"",
@@ -59,6 +66,7 @@ namespace EPS.Web.Tests.Unit
 
             DigestHeader expectedHeader = new DigestHeader()
             {
+                Verb = verb,
                 ClientNonce = "0a4f113b",
                 Nonce = "dcd98b7102dd2f0e8b11d0f600bfb0c093",
                 Opaque = "5ccc069c403ebaf9f0171e9517f40e41",
@@ -70,7 +78,7 @@ namespace EPS.Web.Tests.Unit
                 UserName = "Mufasa"
             };
 
-            Assert.Equal(expectedHeader, HttpDigestAuthHeaderParser.ExtractDigestHeader(header), comparer);
+            Assert.Equal(expectedHeader, HttpDigestAuthHeaderParser.ExtractDigestHeader(verb, header), comparer);
         }
 
         [Fact(Skip = "Need to write some more advanced parsing tests as the above example is entirely insufficient")]

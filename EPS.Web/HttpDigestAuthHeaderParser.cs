@@ -16,17 +16,18 @@ namespace EPS.Web
 
         /// <summary>   Try to extract HTTP digest auth header from a given string. </summary>
         /// <remarks>   ebrown, 3/28/2011. </remarks>
+        /// <param name="verb">         The HTTP verb. </param>
         /// <param name="authHeader">   The incoming authorization header. </param>
         /// <param name="header">       [out] The header if it exists, otherwise null. </param>
         /// <returns>   true if it succeeds in extracting a header, false if it fails. </returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Intent is to eat any exceptions that may occur")]
-        public static bool TryExtractDigestHeader(string authHeader, out DigestHeader header)
+        public static bool TryExtractDigestHeader(HttpMethodNames verb, string authHeader, out DigestHeader header)
         {
             header = null;
 
             try
             {
-                header = ExtractDigestHeader(authHeader);
+                header = ExtractDigestHeader(verb, authHeader);
                 return true;
             }
             catch (Exception)
@@ -35,21 +36,20 @@ namespace EPS.Web
             return false;
         }
 
-        /// <summary>   Extracts a HTTP digest auth header from a given string. </summary>
+        /// <summary>   Extracts a HTTP digest auth header from a given string, assigning the given HTTP verb. </summary>
         /// <remarks>   ebrown, 3/28/2011. </remarks>
         /// <exception cref="ArgumentNullException">    Thrown when the authHeader argument is null. </exception>
         /// <exception cref="ArgumentException">        Thrown when one or more arguments have unsupported or illegal values. </exception>
         /// <exception cref="Exception">                Thrown when exception. </exception>
+        /// <param name="verb">         The HTTP verb. </param>
         /// <param name="authHeader">   The incoming authorization header. </param>
         /// <returns>   A new DigestHeader instance containing the relevant values as parsed from the header. </returns>
-        public static DigestHeader ExtractDigestHeader(string authHeader)
+        public static DigestHeader ExtractDigestHeader(HttpMethodNames verb, string authHeader)
         {
             try
             {
-                if (null == authHeader)
-                {
-                    throw new ArgumentNullException("authHeader");
-                }
+                if (null == authHeader) { throw new ArgumentNullException("authHeader"); }
+                if (!Enum.IsDefined(typeof(HttpMethodNames), verb)) { throw new ArgumentException("The verb specified is not valid", "verb"); }
                 
                 if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Digest", StringComparison.OrdinalIgnoreCase))
                 {
@@ -75,6 +75,7 @@ namespace EPS.Web
                 //parse the values, supplying defaults as necessary
                 var header = new DigestHeader()
                     {
+                        Verb = verb,
                         ClientNonce = headerDictionary.GetValueOrDefault("cnonce", string.Empty),
                         Nonce = headerDictionary.GetValueOrDefault("nonce", string.Empty),
                         Opaque = headerDictionary.GetValueOrDefault("opaque", string.Empty),
