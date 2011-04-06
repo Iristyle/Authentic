@@ -59,11 +59,14 @@ namespace EPS.Web
             if (DigestQualityOfProtectionType.AuthenticationWithIntegrity == QualityOfProtection) { throw new NotImplementedException("auth-int is not currently supported"); }
             if (!Enum.IsDefined(typeof(HttpMethodNames), Verb)) { throw new ArgumentOutOfRangeException("The verb specified is not valid"); }
 
+
             var encoding = Encoding.GetEncoding("ISO-8859-1");
             var algorithm = MD5.Create();
 
             //client to server opaque must match
             if (Opaque != opaque) { return false; }
+            //client to server realm must match
+            if (realm != Realm) { return false; }
 
             //valid for auth, auth-int and unspecified
             string hash1 = HashHelpers.SafeHash(algorithm, 

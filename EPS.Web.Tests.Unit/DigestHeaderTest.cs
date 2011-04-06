@@ -53,6 +53,31 @@ namespace EPS.Web.Tests.Unit
         }
 
         [Fact]
+        public void MatchesCredentials_ReturnsFalseOnMismatchedRealm()
+        {
+            //sample from http://en.wikipedia.org/wiki/Digest_access_authentication
+            string nonce = "dcd98b7102dd2f0e8b11d0f600bfb0c093",
+                opaque = "5ccc069c403ebaf9f0171e9517f40e41";
+
+            var header = new DigestHeader()
+            {
+                Verb = HttpMethodNames.Get,
+                UserName = "Mufasa",
+                Realm = "testrealm@host.com",
+                Nonce = nonce,
+                Uri = "/dir/index.html",
+                QualityOfProtection = DigestQualityOfProtectionType.Authentication,
+                RequestCounter = 1,
+                ClientNonce = "0a4f113b",
+                Opaque = opaque,
+                Response = "6629fae49393a05397450978507c4ef1"
+            };
+
+            //this would work, except for the fact that the realms don't match (and accordingly the responses shouldn't)
+            Assert.False(header.MatchesCredentials("bad@test.com", nonce, opaque, "Circle Of Life"));
+        }
+
+        [Fact]
         public void MatchesCredentials_ReturnsTrueOnMatchedResponseWithAuthenticationQualityOfProtection()
         {
             //sample from http://en.wikipedia.org/wiki/Digest_access_authentication
