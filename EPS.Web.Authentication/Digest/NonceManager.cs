@@ -9,46 +9,39 @@ namespace EPS.Web.Authentication.Digest
     /// </summary>
     public static class NonceManager
     {
+        internal static Func<DateTime> Now = () => { return DateTime.UtcNow; };
         private static Encoding encoding = Encoding.ASCII;
-        private static Lazy<PrivateHashEncoder> privateHashEncoder = new Lazy<PrivateHashEncoder>(() =>
-            {
-                if (null == PrivateHashEncoder.Current) { throw new InvalidOperationException("PrivateHashEncoder.Current has not been properly initialized"); }
-                var privateHashEncoder = PrivateHashEncoder.Current();
-                if (null == privateHashEncoder) { throw new InvalidOperationException("PrivateHashEncoder.Current has not been properly initialized"); }
-                return privateHashEncoder;                
-            });
 
         /// <summary>   
         /// Generates a base64 encoded nonce combining the current time, and another hashed value that contains a hash of the time, ip address
         /// and a private key. Milliseconds:PrivateHash where PrivateHash = Milliseconds:IP:PrivateKey
         /// </summary>
         /// <remarks>   ebrown, 4/6/2011. </remarks>
-        /// <exception cref="InvalidOperationException">    Thrown when the PrivateHashEncoder.Current has not been properly initialized. </exception>
         /// <exception cref="ArgumentNullException">        Thrown when one or more required arguments are null. </exception>
         /// <exception cref="ArgumentException">            Thrown when one or more arguments have unsupported or illegal values. </exception>
         /// <param name="ipAddress">    The IP address. </param>
         /// <returns>   A base64 nonce value representing time:privateValue. </returns>
-        public static string Generate(string ipAddress)
+        public static string Generate(string ipAddress, PrivateHashEncoder privateHashEncoder)
         {
             if (null == ipAddress) { throw new ArgumentNullException("ipRange"); }
             if (string.IsNullOrWhiteSpace(ipAddress)) { throw new ArgumentException("must not be empty", "ipRange"); };
+            if (null == privateHashEncoder) { throw new ArgumentNullException("privateHashEncoder"); }
 
-            string dateTimeInMilliSecondsString = Math.Truncate((DateTime.UtcNow - DateTime.MinValue)
-                .TotalMilliseconds).ToString(CultureInfo.InvariantCulture);
-            string privateHash = privateHashEncoder.Value.Encode(dateTimeInMilliSecondsString, ipAddress);
+            string dateTimeInMilliSecondsString = (Now() - DateTime.MinValue)
+                .TotalMilliseconds.ToString(CultureInfo.InvariantCulture);
+            string privateHash = privateHashEncoder.Encode(dateTimeInMilliSecondsString, ipAddress);
             return Convert.ToBase64String(encoding.GetBytes(
                 string.Format(CultureInfo.InvariantCulture, "{0}:{1}", dateTimeInMilliSecondsString, privateHash)));
         }
 
         /// <summary>   Given a nonce value, determines if it correctly applies to the given IP address. </summary>
         /// <remarks>   ebrown, 4/6/2011. </remarks>
-        /// <exception cref="InvalidOperationException">    Thrown when the PrivateHashEncoder.Current has not been properly initialized. </exception>
         /// <exception cref="ArgumentNullException">        Thrown when one or more required arguments are null. </exception>
         /// <exception cref="ArgumentException">            Thrown when one or more arguments have unsupported or illegal values. </exception>
         /// <param name="nonce">        The nonce. </param>
         /// <param name="ipAddress">    The IP address. </param>
         /// <returns>   true if it succeeds, false if it fails. </returns>
-        public static bool Validate(string nonce, string ipAddress)
+        public static bool Validate(string nonce, string ipAddress, PrivateHashEncoder privateHashEncoder)
         {
             if (null == nonce) { throw new ArgumentNullException("nonce"); }
             if (string.IsNullOrWhiteSpace(nonce)) { throw new ArgumentException("must not be empty", "nonce"); };
@@ -56,8 +49,10 @@ namespace EPS.Web.Authentication.Digest
             if (null == ipAddress) { throw new ArgumentNullException("ipRange"); }
             if (string.IsNullOrWhiteSpace(ipAddress)) { throw new ArgumentException("must not be empty", "ipRange"); };
 
+            if (null == privateHashEncoder) { throw new ArgumentNullException("privateHashEncoder"); }
+
             string[] decodedParts = GetDecodedParts(nonce);
-            string md5EncodedString = privateHashEncoder.Value.Encode(decodedParts[0], ipAddress);
+            string md5EncodedString = privateHashEncoder.Encode(decodedParts[0], ipAddress);
             return string.CompareOrdinal(decodedParts[1], md5EncodedString) == 0;
         }
 
@@ -75,7 +70,7 @@ namespace EPS.Web.Authentication.Digest
 
             string[] decodedParts = GetDecodedParts(nonce);
             DateTime dateTimeFromNonce = NonceTimeStampParser.Parse(decodedParts[0]);
-            return (dateTimeFromNonce + staleTimeOut) < DateTime.UtcNow;
+            return (dateTimeFromNonce + staleTimeOut) < Now();
         }
 
         private static string[] GetDecodedParts(string nonce)

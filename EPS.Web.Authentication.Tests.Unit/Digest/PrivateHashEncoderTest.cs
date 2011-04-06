@@ -52,13 +52,6 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
             Assert.Throws<ArgumentException>(() => standardEncoder.Encode(milliseconds, string.Empty));
         }
 
-        [Fact]
-        public void Current_PreventsDoubleInitialization()
-        {
-            PrivateHashEncoder.Current = () => standardEncoder;
-            Assert.Throws<NotSupportedException>(() => PrivateHashEncoder.Current = () => new PrivateHashEncoder("blah"));
-        }
-
         [Fact(Skip="Provide some tests that show that all the values are used in the resultant hash")]
         public void Encode_UsesAllSuppliedValues()
         {

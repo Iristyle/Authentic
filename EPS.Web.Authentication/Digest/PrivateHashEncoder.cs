@@ -14,22 +14,6 @@ namespace EPS.Web.Authentication.Digest
     {
         private readonly string privateKey;
         private readonly HashAlgorithm algorithm = MD5.Create();
-        private static Func<PrivateHashEncoder> current;
-
-        /// <summary> The current PrivateHashEncoder that can be used by  </summary>
-        public static Func<PrivateHashEncoder> Current
-        {
-            get { return current; }
-            set
-            {
-                if (null != current)
-                {
-                    throw new NotSupportedException("Current may only be set once per application");
-                }
-
-                current = value;
-            }
-        }
 
         /// <summary>   Constructor. </summary>
         /// <remarks>   ebrown, 4/6/2011. </remarks>

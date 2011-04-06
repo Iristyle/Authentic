@@ -1,120 +1,114 @@
 ﻿using System;
 using Xunit;
-using Xunit.Extensions;
+using System.Threading;
 
 namespace EPS.Web.Authentication.Digest.Tests.Unit
 {
-    public class NonceManagerInitializationTest
-    {
-        [Fact]
-        public void Generate_ThrowsWhenPrivateHashEncoderNotInitialized()
-        {
-            Assert.Throws<InvalidOperationException>(() => NonceManager.Generate("127.0.0.1"));
-        }
-
-        [Fact]
-        public void Validate_ThrowsWhenPrivateHashEncoderNotInitialized()
-        {
-            //this is a valid nonce conforming to our standards
-            Assert.Throws<InvalidOperationException>(() => NonceManager.Validate("NjM0MzM4ODg3Nzc1MzEuMzpmZDIxNzllOTUzMDY2ODc2YWQyYjY1NmVmZGJkYTc4MQ==", "127.0.0.1"));
-        }
-    }
-
-    public class NonceManagerInvalidPrivateHashEncoderTest
-    {
-        static NonceManagerInvalidPrivateHashEncoderTest()
-        {
-            PrivateHashEncoder.Current = () => null;        		
-        }
-
-        [Fact]
-        public void Generate_ThrowsWhenPrivateHashEncoderNotInitialized()
-        {
-            Assert.Throws<InvalidOperationException>(() => NonceManager.Generate("127.0.0.1"));
-        }
-
-        [Fact]
-        public void Validate_ThrowsWhenPrivateHashEncoderNotInitialized()
-        {
-            Assert.Throws<InvalidOperationException>(() => NonceManager.Validate("NjM0MzM4ODg3Nzc1MzEuMzpmZDIxNzllOTUzMDY2ODc2YWQyYjY1NmVmZGJkYTc4MQ==", "127.0.0.1"));
-        }
-    }
-
-
     public class NonceManagerTest
     {
         private static string key = "MyPrivateKey";
         private static string validNonce = "NjM0MzM4ODg3Nzc1MzEuMzpmZDIxNzllOTUzMDY2ODc2YWQyYjY1NmVmZGJkYTc4MQ==";
         private static string ipAddress = "192.168.16.1";
+        private PrivateHashEncoder privateHashEncoder;
 
-        static NonceManagerTest()
+        public NonceManagerTest()
         {
-            PrivateHashEncoder.Current = () => new PrivateHashEncoder(key);
+            privateHashEncoder = new PrivateHashEncoder(key);
+        }
+
+        [Fact]
+        public void Generate_ThrowsOnNullPrivateHashEncoderNotInitialized()
+        {
+            Assert.Throws<ArgumentNullException>(() => NonceManager.Generate("127.0.0.1", null));
+        }
+
+        [Fact]
+        public void Validate_ThrowsOnNullPrivateHashEncoderNotInitialized()
+        {
+            //this is a valid nonce conforming to our standards
+            Assert.Throws<ArgumentNullException>(() => NonceManager.Validate("NjM0MzM4ODg3Nzc1MzEuMzpmZDIxNzllOTUzMDY2ODc2YWQyYjY1NmVmZGJkYTc4MQ==", "127.0.0.1", null));
         }
 
         [Fact]
         public void Generate_ThrowsOnNullIpAddress()
         {
-            Assert.Throws<ArgumentNullException>(() => NonceManager.Generate(null));
+            Assert.Throws<ArgumentNullException>(() => NonceManager.Generate(null, privateHashEncoder));
         }
 
         [Fact]
         public void Generate_ThrowsOnEmptyIpAddress()
         {
-            Assert.Throws<ArgumentException>(() => NonceManager.Generate(string.Empty));
+            Assert.Throws<ArgumentException>(() => NonceManager.Generate(string.Empty, privateHashEncoder));
         }
 
-        [Fact, FreezeClock]
+        [Fact]
         public void Generate_CanRoundtripThroughValidate()
         {
-            string nonce = NonceManager.Generate(ipAddress);
-            Assert.True(NonceManager.Validate(nonce, ipAddress));
+            DateTime now = DateTime.UtcNow;
+            NonceManager.Now = () => now;
+
+            string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+            bool match = NonceManager.Validate(nonce, ipAddress, privateHashEncoder);
+            NonceManager.Now = () => { return DateTime.UtcNow; };
+
+            Assert.True(match);
         }
 
-        [Fact, FreezeClock]
+        [Fact]
         public void Generate_ProducesSameNonceAtFrozenTime()
         {
-            string firstNonce = NonceManager.Generate(ipAddress);
-            string secondNonce = NonceManager.Generate(ipAddress);
-            Assert.Same(firstNonce, secondNonce);
+            DateTime now = DateTime.UtcNow;
+            NonceManager.Now = () => now;
+
+            string firstNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+            string secondNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+
+            NonceManager.Now = () => { return DateTime.UtcNow; };
+            Assert.Equal(firstNonce, secondNonce);
         }
 
         [Fact]
         public void Generate_ProducesDifferentNoncesOverTime()
-        {
-            string firstNonce = NonceManager.Generate(ipAddress);
-            string secondNonce = NonceManager.Generate(ipAddress);
+        {            
+            string firstNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+
+            NonceManager.Now = () => DateTime.UtcNow.AddHours(1);
+
+            string secondNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+
+            NonceManager.Now = () => { return DateTime.UtcNow; };
+
             Assert.NotEqual(firstNonce, secondNonce);
         }
 
         [Fact]
         public void Validate_ThrowsOnNullIpAddress()
         {
-            Assert.Throws<ArgumentNullException>(() => NonceManager.Validate(validNonce, null));
+            Assert.Throws<ArgumentNullException>(() => NonceManager.Validate(validNonce, null, privateHashEncoder));
         }
 
         [Fact]
         public void Validate_ThrowsOnEmptyIpAddress()
         {
-            Assert.Throws<ArgumentException>(() => NonceManager.Validate(validNonce, string.Empty));
+            Assert.Throws<ArgumentException>(() => NonceManager.Validate(validNonce, string.Empty, privateHashEncoder));
         }
 
         [Fact]
         public void Validate_ThrowsOnNullNonce()
         {
-            Assert.Throws<ArgumentNullException>(() => NonceManager.Validate(null, ipAddress));
+            Assert.Throws<ArgumentNullException>(() => NonceManager.Validate(null, ipAddress, privateHashEncoder));
         }
 
         [Fact]
         public void Validate_ThrowsOnEmptyNonce()
         {
-            Assert.Throws<ArgumentException>(() => NonceManager.Validate(string.Empty, ipAddress));
+            Assert.Throws<ArgumentException>(() => NonceManager.Validate(string.Empty, ipAddress, privateHashEncoder));
         }
 
         [Fact]
         public void Validate_MatchesPreCalculatedNonce()
         {
-            Assert.True(NonceManager.Validate(validNonce, ipAddress));
+            Assert.True(NonceManager.Validate(validNonce, ipAddress, privateHashEncoder));
         }
 
         [Fact]
@@ -129,17 +123,25 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
             Assert.Throws<ArgumentException>(() => NonceManager.IsStale(string.Empty, TimeSpan.FromSeconds(30)));
         }
 
-        [Fact, FreezeClock]
+        [Fact]
         public void IsStale_FalseOnCurrentNonce()
         {
-            string nonce = NonceManager.Generate(ipAddress);
-            Assert.False(NonceManager.IsStale(nonce, TimeSpan.FromSeconds(20)));
+            DateTime now = DateTime.UtcNow;
+            NonceManager.Now = () => now;
+
+            string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+            bool stale = NonceManager.IsStale(nonce, TimeSpan.FromSeconds(1));
+
+            NonceManager.Now = () => { return DateTime.UtcNow; };
+
+            Assert.False(stale);
         }
 
         [Fact]
         public void IsStale_TrueOnZeroSeconds()
         {
-            string nonce = NonceManager.Generate(ipAddress);
+            string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+            Thread.Sleep(2);
             Assert.True(NonceManager.IsStale(nonce, TimeSpan.FromSeconds(0)));
         }
 

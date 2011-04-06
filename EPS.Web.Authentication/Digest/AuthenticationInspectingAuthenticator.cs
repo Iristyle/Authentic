@@ -20,11 +20,15 @@ namespace EPS.Web.Authentication.Digest
     public class AuthenticationInspectingAuthenticator : 
         HttpContextInspectingAuthenticatorBase<IAuthenticationHeaderInspectorConfigurationElement>
     {
+        PrivateHashEncoder privateHashEncoder;
         /// <summary>   Initializes a new instance of the AuthenticationInspectingAuthenticator class. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
         /// <param name="config">   The configuration. </param>
         public AuthenticationInspectingAuthenticator(IAuthenticationHeaderInspectorConfigurationElement config) 
-            : base(config) {}
+            : base(config) 
+        {
+            privateHashEncoder = new PrivateHashEncoder(config.PrivateKey);
+        }
         
         /// <summary>   Authenticates a HttpContextBase given a specified MembershipProvider. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>
@@ -58,7 +62,11 @@ namespace EPS.Web.Authentication.Digest
 
                 string userPassword = membershipProvider.GetUser(digestHeader.UserName, false).GetPassword();
 
-                if (digestHeader.MatchesCredentials(Configuration.Realm, NonceCache.Current(), Opaque.Current(), userPassword))
+                //three things validate this digest request -- that the nonce matches the given address, that its not stale
+                //and that the credentials match the given realm / opaque / password
+                if (NonceManager.Validate(digestHeader.Nonce, context.Request.UserHostAddress, privateHashEncoder) &&
+                    !NonceManager.IsStale(digestHeader.Nonce, Configuration.NonceValidDuration) &&
+                    digestHeader.MatchesCredentials(Configuration.Realm, Opaque.Current(), userPassword))
                 {
                     if (null != membershipProvider)
                     {
