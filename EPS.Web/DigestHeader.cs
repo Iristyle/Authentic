@@ -47,14 +47,12 @@ namespace EPS.Web
         /// <exception cref="NotImplementedException">  Thrown when the current DigestHeader is set to 'auth-int', which is presently
         ///                                             unsupported. </exception>
         /// <param name="realm">    The realm. </param>
-        /// <param name="nonce">    The nonce. </param>
         /// <param name="opaque">   The opaque. </param>
         /// <param name="password"> The password. </param>
         /// <returns>   true if it succeeds, false if it fails. </returns>
-        public bool MatchesCredentials(string realm, string nonce, string opaque, string password)
+        public bool MatchesCredentials(string realm, string opaque, string password)
         {
             if (null == realm) { throw new ArgumentNullException("realm"); }
-            if (null == nonce) { throw new ArgumentNullException("nonce"); }
             if (null == password) { throw new ArgumentNullException("password");  }
             if (DigestQualityOfProtectionType.AuthenticationWithIntegrity == QualityOfProtection) { throw new NotImplementedException("auth-int is not currently supported"); }
             if (!Enum.IsDefined(typeof(HttpMethodNames), Verb)) { throw new ArgumentOutOfRangeException("The verb specified is not valid"); }
@@ -78,12 +76,12 @@ namespace EPS.Web
             if (QualityOfProtection == DigestQualityOfProtectionType.Authentication)
             {
                 return Response == HashHelpers.SafeHash(algorithm, 
-                    encoding.GetBytes(string.Format("{0}:{1}:{2:00000000.##}:{3}:{4}:{5}", hash1, nonce, 
+                    encoding.GetBytes(string.Format("{0}:{1}:{2:00000000.##}:{3}:{4}:{5}", hash1, Nonce, 
                     RequestCounter, ClientNonce, QualityOfProtection.ToEnumValueString(), hash2)));
             }
 
             return Response == HashHelpers.SafeHash(algorithm, 
-                    encoding.GetBytes(string.Format("{0}:{1}:{2}", hash1, nonce, hash2)));
+                    encoding.GetBytes(string.Format("{0}:{1}:{2}", hash1, Nonce, hash2)));
         }
     }
 }
