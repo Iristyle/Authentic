@@ -22,6 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Digest\AuthenticationInspectingAuthenticatorTest.cs" />
+    <Compile Include="Digest\NonceManagerTest.cs" />
     <Compile Include="Digest\NonceTimeStampParserTest.cs" />
     <Compile Include="Digest\PrivateHashEncoderTest.cs" />
     <Compile Include="HttpContextInspectingAuthenticationModuleTest.cs" />
