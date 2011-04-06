@@ -68,8 +68,8 @@ namespace EPS.Web
                 var headerDictionary = keyValuePairs.Split(',')
                     .Select(pair =>
                     {
-                        var splits = pair.Split('=');
-                        return new { Key = splits[0].Trim().Trim('\"'), Value = splits[1].Trim().Trim('\"') };
+                        var firstEqualIndex = pair.IndexOf('=');
+                        return new { Key = pair.Substring(0, firstEqualIndex).Trim().Trim('\"'), Value = pair.Substring(firstEqualIndex + 1).Trim().Trim('\"') };
                     }).ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.CurrentCultureIgnoreCase);
 
                 //parse the values, supplying defaults as necessary

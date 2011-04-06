@@ -56,7 +56,7 @@ namespace EPS.Web.Tests.Unit
             HttpMethodNames verb = HttpMethodNames.Get;
             string header = @"Digest username=""Mufasa"",
                      realm=""testrealm@host.com"",
-                     nonce=""dcd98b7102dd2f0e8b11d0f600bfb0c093"",
+                     nonce=""QWxhZGRpbjpvcGVuIHNlc2FtZQ=="",
                      uri=""/dir/index.html"",
                      qop=auth,
                      nc=00000001,
@@ -68,7 +68,7 @@ namespace EPS.Web.Tests.Unit
             {
                 Verb = verb,
                 ClientNonce = "0a4f113b",
-                Nonce = "dcd98b7102dd2f0e8b11d0f600bfb0c093",
+                Nonce = "QWxhZGRpbjpvcGVuIHNlc2FtZQ==",
                 Opaque = "5ccc069c403ebaf9f0171e9517f40e41",
                 QualityOfProtection = DigestQualityOfProtectionType.Authentication,
                 Realm = "testrealm@host.com",
