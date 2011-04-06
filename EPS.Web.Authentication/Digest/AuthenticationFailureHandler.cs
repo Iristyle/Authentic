@@ -23,6 +23,16 @@ namespace EPS.Web.Authentication.Digest
         public AuthenticationFailureHandler(IAuthenticationFailureHandlerConfigurationSection config)
             : base(config) 
         {
+            //TODO: 4-6-2011 -- find a better way to hook up the validation logic here so that it matches up with the config class
+            if (null == config) { throw new ArgumentNullException("config"); }
+            if (null == config.PrivateKey) { throw new ArgumentNullException("PrivateKey", "config"); }
+            if (null == config.Realm) { throw new ArgumentNullException("Realm", "config"); }
+            if (string.IsNullOrWhiteSpace(config.PrivateKey)) { throw new ArgumentException("PrivateKey must not be whitespace", "config"); }
+            if (config.PrivateKey.Length < 8) { throw new ArgumentException("PrivateKey must be at least 8 characters", "config"); }
+            if (string.IsNullOrWhiteSpace(config.Realm)) { throw new ArgumentException("Realm must not be whitespace", "config"); }
+            if (config.NonceValidDuration < TimeSpan.FromSeconds(20)) { throw new ArgumentException("NonceValidDuration must be at least 20 seconds", "config"); }
+            if (config.NonceValidDuration > TimeSpan.FromMinutes(60)) { throw new ArgumentException("NonceValidDuration must be less than 60 minutes", "config"); }
+
             privateHashEncoder = new PrivateHashEncoder(config.PrivateKey);
         }
 

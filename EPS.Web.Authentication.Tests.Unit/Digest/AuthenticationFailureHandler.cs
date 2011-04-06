@@ -1,17 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Web;
 using EPS.Web.Authentication.Abstractions;
 using EPS.Web.Authentication.Digest.Configuration;
 using FakeItEasy;
 using Xunit;
-using System.Collections.Specialized;
 
 namespace EPS.Web.Authentication.Digest.Tests.Unit
 {
     public class AuthenticationFailureHandlerTest
     {
+        class MockConfiguration : IAuthenticationFailureHandlerConfigurationSection
+        {
+            public string Realm { get; set; }
+            public string PrivateKey { get; set; }
+            public TimeSpan NonceValidDuration { get; set; }
+            public bool RequireSsl { get; set; }
+        }
+
         [Fake] HttpContextBase context;
         [Fake] IAuthenticationFailureHandlerConfigurationSection configuration;
         string privateKey = "MyPrivateKey";
@@ -30,7 +38,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
             A.CallTo(() => context.ApplicationInstance).Returns(null);
             A.CallTo(() => configuration.Realm).Returns(realm);
             A.CallTo(() => configuration.PrivateKey).Returns(privateKey);
-            A.CallTo(() => configuration.NonceValidDuration).Returns(TimeSpan.FromSeconds(3));
+            A.CallTo(() => configuration.NonceValidDuration).Returns(TimeSpan.FromSeconds(30));
             privateHashEncoder = new PrivateHashEncoder(privateKey);
             failureHandler = new AuthenticationFailureHandler(configuration);
         }
@@ -47,6 +55,60 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
             NonceManager.Now = () => { return DateTime.UtcNow; };
         }
 
+        [Fact]
+        public void Constructor_ThrowsOnNullConfiguration()
+        {
+            Assert.Throws<ArgumentNullException>(() => new AuthenticationFailureHandler(null));
+        }
+
+        [Fact]
+        public void Constructor_ThrowsOnNullPrivateKey()
+        {
+            var configuration = new MockConfiguration() { PrivateKey = null, NonceValidDuration = TimeSpan.FromMinutes(10), Realm = "realm", RequireSsl = false };
+            Assert.Throws<ArgumentNullException>(() => new AuthenticationFailureHandler(configuration));
+        }
+
+        [Fact]
+        public void Constructor_ThrowsOnEmptyPrivateKey()
+        {
+            var configuration = new MockConfiguration() { PrivateKey = string.Empty, NonceValidDuration = TimeSpan.FromMinutes(10), Realm = "realm", RequireSsl = false };
+            Assert.Throws<ArgumentException>(() => new AuthenticationFailureHandler(configuration));
+        }
+
+        [Fact]
+        public void Constructor_ThrowsOnPrivateKeyTooShort()
+        {
+            var configuration = new MockConfiguration() { PrivateKey = "1234567", NonceValidDuration = TimeSpan.FromMinutes(10), Realm = "realm", RequireSsl = false };
+            Assert.Throws<ArgumentException>(() => new AuthenticationFailureHandler(configuration));
+        }
+
+        [Fact]
+        public void Constructor_ThrowsOnNullRealm()
+        {
+            var configuration = new MockConfiguration() { PrivateKey = "12345678", NonceValidDuration = TimeSpan.FromMinutes(10), Realm = null, RequireSsl = false };
+            Assert.Throws<ArgumentNullException>(() => new AuthenticationFailureHandler(configuration));
+        }
+
+        [Fact]
+        public void Constructor_ThrowsOnEmptyRealm()
+        {
+            var configuration = new MockConfiguration() { PrivateKey = "12345678", NonceValidDuration = TimeSpan.FromMinutes(10), Realm = string.Empty, RequireSsl = false };
+            Assert.Throws<ArgumentException>(() => new AuthenticationFailureHandler(configuration));
+        }
+
+        [Fact]
+        public void Constructor_ThrowsOnTimespanTooShort()
+        {
+            var configuration = new MockConfiguration() { PrivateKey = "12345678", NonceValidDuration = TimeSpan.FromSeconds(19), Realm = "realm", RequireSsl = false };
+            Assert.Throws<ArgumentException>(() => new AuthenticationFailureHandler(configuration));
+        }
+
+        [Fact]
+        public void Constructor_ThrowsOnTimeSpanTooLong()
+        {
+            var configuration = new MockConfiguration() { PrivateKey = "12345678", NonceValidDuration = TimeSpan.FromMinutes(61), Realm = "realm", RequireSsl = false };
+            Assert.Throws<ArgumentException>(() => new AuthenticationFailureHandler(configuration));
+        }
 
         [Fact]
         public void OnAuthenticationFailure_ThrowsOnNullContext()
