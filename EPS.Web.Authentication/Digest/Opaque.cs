@@ -11,6 +11,6 @@ namespace EPS.Web.Authentication.Digest
     {
         //TODO: 4-6-2011 opaque utilization / tracking is not currently implemented
         /// <summary> A user-replaceable opaque value used during digest authentication. </summary>
-        public static Func<string> Current = () => "1234123412345678";
+        public static Func<string> Current = () => "5ccc069c403ebaf9f0171e9517f40e41";
     }
 }
