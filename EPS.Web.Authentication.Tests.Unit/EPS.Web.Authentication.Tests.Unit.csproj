@@ -21,6 +21,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Digest\AuthenticationFailureHandler.cs" />
     <Compile Include="Digest\AuthenticationInspectingAuthenticatorTest.cs" />
     <Compile Include="Digest\NonceManagerTest.cs" />
     <Compile Include="Digest\NonceTimeStampParserTest.cs" />
