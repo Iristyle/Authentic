@@ -10,14 +10,12 @@ namespace EPS.Web.Authentication.Tests.Unit
 {
     public class HttpContextInspectingAuthenticationModuleTest
     {
+        [Fake]
         private readonly HttpContextBase httpContext = A.Fake<HttpContextBase>();
-        private readonly HttpRequestBase httpRequest = A.Fake<HttpRequestBase>();
-        private readonly HttpResponseBase httpResponse = A.Fake<HttpResponseBase>();
 
         public HttpContextInspectingAuthenticationModuleTest()
         {
-            A.CallTo(() => httpContext.Request).Returns(httpRequest);
-            A.CallTo(() => httpContext.Response).Returns(httpResponse);
+            Fake.InitializeFixture(this);
         }
 
         [Fact(Skip = "Ensure that request context was processed")]
