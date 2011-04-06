@@ -36,6 +36,12 @@ namespace EPS.Web.Authentication.Basic
 
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             context.Response.AddHeader("WWW-Authenticate", String.Format(CultureInfo.InvariantCulture, "Basic realm=\"{0}\"", Configuration.Realm));
+
+            //this is a guard since we can't effectively mock CompleteRequest in tests
+            if (null != context.ApplicationInstance)
+            {
+                context.ApplicationInstance.CompleteRequest();
+            }
             context.ApplicationInstance.CompleteRequest();
 
             return null;
