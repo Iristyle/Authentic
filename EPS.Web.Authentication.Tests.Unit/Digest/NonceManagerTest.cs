@@ -16,6 +16,18 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
             privateHashEncoder = new PrivateHashEncoder(key);
         }
 
+        private void FreezeNonceClock()
+        {
+            //freeze the clock 
+            DateTime now = DateTime.UtcNow;
+            NonceManager.Now = () => now;
+        }
+
+        private void ThawNonceClock()
+        {
+            NonceManager.Now = () => { return DateTime.UtcNow; };
+        }
+
         [Fact]
         public void Generate_ThrowsOnNullPrivateHashEncoderNotInitialized()
         {
@@ -44,12 +56,12 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
         [Fact]
         public void Generate_CanRoundtripThroughValidate()
         {
-            DateTime now = DateTime.UtcNow;
-            NonceManager.Now = () => now;
+            FreezeNonceClock();
 
             string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
             bool match = NonceManager.Validate(nonce, ipAddress, privateHashEncoder);
-            NonceManager.Now = () => { return DateTime.UtcNow; };
+
+            ThawNonceClock();
 
             Assert.True(match);
         }
@@ -57,13 +69,12 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
         [Fact]
         public void Generate_ProducesSameNonceAtFrozenTime()
         {
-            DateTime now = DateTime.UtcNow;
-            NonceManager.Now = () => now;
+            FreezeNonceClock();
 
             string firstNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
             string secondNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
 
-            NonceManager.Now = () => { return DateTime.UtcNow; };
+            ThawNonceClock();
             Assert.Equal(firstNonce, secondNonce);
         }
 
@@ -76,7 +87,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 
             string secondNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
 
-            NonceManager.Now = () => { return DateTime.UtcNow; };
+            ThawNonceClock();
 
             Assert.NotEqual(firstNonce, secondNonce);
         }
@@ -126,13 +137,12 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
         [Fact]
         public void IsStale_FalseOnCurrentNonce()
         {
-            DateTime now = DateTime.UtcNow;
-            NonceManager.Now = () => now;
+            FreezeNonceClock();
 
             string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
             bool stale = NonceManager.IsStale(nonce, TimeSpan.FromSeconds(1));
 
-            NonceManager.Now = () => { return DateTime.UtcNow; };
+            ThawNonceClock();
 
             Assert.False(stale);
         }
