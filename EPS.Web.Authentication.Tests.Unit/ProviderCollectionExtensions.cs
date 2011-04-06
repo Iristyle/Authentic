@@ -4,7 +4,7 @@ using System.Configuration.Provider;
 using System.Reflection;
 using System.Web.Security;
 
-namespace EPS.Web.Authentication.Utility.Tests.Unit
+namespace EPS.Web.Authentication
 {
     //some nice hacks ;0
     //http://owlsayswoot.therandomist.com/2010/07/28/mocking-membership-provider/

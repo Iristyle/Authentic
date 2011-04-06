@@ -25,7 +25,7 @@
     <Compile Include="HttpContextInspectingAuthenticationModuleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\MembershipProviderLocatorTest.cs" />
-    <Compile Include="Utility\ProviderCollectionExtensions.cs" />
+    <Compile Include="ProviderCollectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EPS.Web.Authentication\EPS.Web.Authentication.csproj">
