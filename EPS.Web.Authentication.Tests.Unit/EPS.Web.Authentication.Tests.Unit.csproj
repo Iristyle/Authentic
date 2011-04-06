@@ -22,6 +22,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Digest\AuthenticationInspectingAuthenticatorTest.cs" />
+    <Compile Include="Digest\NonceTimeStampParserTest.cs" />
+    <Compile Include="Digest\PrivateHashEncoderTest.cs" />
     <Compile Include="HttpContextInspectingAuthenticationModuleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\MembershipProviderLocatorTest.cs" />

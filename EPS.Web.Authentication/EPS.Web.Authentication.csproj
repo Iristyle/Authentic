@@ -42,8 +42,10 @@
     <Compile Include="Digest\Configuration\AuthenticationHeaderInspectorConfigurationElement.cs" />
     <Compile Include="Digest\Configuration\IAuthenticationFailureHandlerConfigurationSection.cs" />
     <Compile Include="Digest\Configuration\IAuthenticationHeaderInspectorConfigurationElement.cs" />
-    <Compile Include="Digest\NonceCache.cs" />
+    <Compile Include="Digest\NonceManager.cs" />
+    <Compile Include="Digest\NonceTimeStampParser.cs" />
     <Compile Include="Digest\Opaque.cs" />
+    <Compile Include="Digest\PrivateHashEncoder.cs" />
     <Compile Include="Utility\HttpContextInspectorsLocator.cs" />
     <Compile Include="SimpleAuthenticationFailureEventArgs.cs" />
     <Compile Include="SimpleAuthenticationFailureHandler.cs" />
