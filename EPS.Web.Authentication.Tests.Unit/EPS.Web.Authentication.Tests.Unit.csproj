@@ -9,6 +9,9 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentValidation, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\FluentValidation-2.0\FluentValidation\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -21,6 +24,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\HttpContextInspectingAuthenticatorConfigurationElementValidatorTest.cs" />
     <Compile Include="Digest\AuthenticationFailureHandlerTest.cs" />
     <Compile Include="Digest\AuthenticationFailureHandlerFactoryTest.cs" />
     <Compile Include="Digest\AuthenticationInspectingAuthenticatorFactoryTest.cs" />
@@ -29,11 +33,16 @@
     <Compile Include="Digest\NonceTimeStampParserTest.cs" />
     <Compile Include="Digest\PrivateHashEncoderTest.cs" />
     <Compile Include="HttpContextInspectingAuthenticationModuleTest.cs" />
+    <Compile Include="PrincipleBuilderCacheTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\MembershipProviderLocatorTest.cs" />
     <Compile Include="ProviderCollectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EPS.Utility\EPS.Utility.csproj">
+      <Project>{10D51FFF-4F91-4917-82EA-B7426B2652F6}</Project>
+      <Name>EPS.Utility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EPS.Web.Authentication\EPS.Web.Authentication.csproj">
       <Project>{E5EA4024-EB71-462D-A3D4-447182A000D6}</Project>
       <Name>EPS.Web.Authentication</Name>

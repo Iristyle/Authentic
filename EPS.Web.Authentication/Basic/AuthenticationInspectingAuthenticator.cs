@@ -84,7 +84,7 @@ namespace EPS.Web.Authentication.Basic
             //if configuration specifies a plug-in principal builder, then use what's specified
             //this allows use to accept basic auth credentials, but return custom principal objects
             //i.e. MKM username /password -> OnyxPrincipal!
-            IPrincipalBuilder principalBuilder = Configuration.GetPrincipalBuilder();
+            IPrincipalBuilder principalBuilder = PrincipalBuilderCache.Resolve(Configuration);
             if (null != principalBuilder)
                 return principalBuilder.ConstructPrincipal(context, username, password);
 

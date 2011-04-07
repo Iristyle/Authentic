@@ -9,6 +9,9 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentValidation">
+      <HintPath>..\..\lib\FluentValidation-2.0\FluentValidation\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -29,11 +32,13 @@
   <ItemGroup>
     <Compile Include="Basic\Configuration\IAuthenticationFailureHandlerConfigurationSection.cs" />
     <Compile Include="Basic\Configuration\IAuthenticationHeaderInspectorConfigurationElement.cs" />
+    <Compile Include="Configuration\HttpContextInspectingAuthenticatorConfigurationElementValidator.cs" />
     <Compile Include="Configuration\IHttpContextInspectingAuthenticationFailureConfigurationSection.cs" />
     <Compile Include="Configuration\IHttpContextInspectingAuthenticationModuleSection.cs" />
     <Compile Include="Configuration\IHttpContextInspectingAuthenticatorConfigurationElement.cs" />
     <Compile Include="Configuration\IRedirectOnAuthenticationFailureHandlerConfigurationSection.cs" />
     <Compile Include="Configuration\ISimpleAuthenticationFailureHandlerConfigurationSection.cs" />
+    <Compile Include="PrincipalBuilderCache.cs" />
     <Compile Include="Digest\AuthenticationFailureHandler.cs" />
     <Compile Include="Digest\AuthenticationFailureHandlerFactory.cs" />
     <Compile Include="Digest\AuthenticationInspectingAuthenticator.cs" />

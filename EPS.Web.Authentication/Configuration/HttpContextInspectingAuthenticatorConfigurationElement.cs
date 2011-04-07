@@ -1,11 +1,8 @@
 using System;
 using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+using System.Linq;
 using System.Xml;
-using EPS.Reflection;
-using EPS.Web.Abstractions;
-using EPS.Web.Authentication.Abstractions;
 
 namespace EPS.Web.Authentication.Configuration
 {
@@ -15,8 +12,6 @@ namespace EPS.Web.Authentication.Configuration
         ConfigurationElement, 
         IHttpContextInspectingAuthenticatorConfigurationElement
     {
-        private IPrincipalBuilderFactory principalBuilderFactoryInstance;
-
         //private IHttpContextInspectingAuthenticatorFactory<HttpContextInspectingAuthenticatorConfigurationElement> factoryInstance = null;
         //private ConfigurationSection customConfigurationSection;        
 
@@ -51,42 +46,12 @@ namespace EPS.Web.Authentication.Configuration
         {
             base.PostDeserialize();
 
-            //simple verification of info supplied in config -- not used for anything (yet)
-            var t = Type.GetType(Factory);
-            if (null == t)
+            //our validator has some more in-depth checks than the validation attributes provide
+            var results = new HttpContextInspectingAuthenticatorConfigurationElementValidator().Validate(this);
+            if (!results.IsValid)
             {
-                throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The factory type specified [{0}] cannot be found - check configuration settings", Factory ?? string.Empty));
-            }
-
-            if (!typeof(IHttpContextInspectingAuthenticatorFactory<>).IsGenericInterfaceAssignableFrom(t))
-            {
-                throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The factory type specified [{0}] must implement interface {1} - check configuration settings", Factory ?? string.Empty, typeof(IHttpContextInspectingAuthenticatorFactory<>).Name));
-            }
-
-            var c = t.GetConstructor(Type.EmptyTypes);
-            if (null == c)
-            {
-                throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The factory type specified [{0}] must have a parameterless constructor - check configuration settings", Factory ?? string.Empty));
-            }
-
-            if (!string.IsNullOrEmpty(PrincipalBuilderFactory))
-            {
-                var type = Type.GetType(PrincipalBuilderFactory);
-                if (null == type)
-                {
-                    throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The principalBuilderFactory type name specified [{0}] cannot be found - check configuration settings", PrincipalBuilderFactory ?? string.Empty));
-                }
-
-                if (!typeof(IPrincipalBuilderFactory).IsAssignableFrom(type))
-                {
-                    throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The principalBuilderFactory type name specified [{0}] must implement interface {1} - check configuration settings", PrincipalBuilderFactory ?? string.Empty, typeof(IPrincipalBuilderFactory).Name));
-                }
-
-                var constructor = type.GetConstructor(Type.EmptyTypes);
-                if (null == constructor)
-                {
-                    throw new ConfigurationErrorsException(String.Format(CultureInfo.CurrentCulture, "The principalBuilderFactory type name specified [{0}] must have a parameterless constructor - check configuration settings", PrincipalBuilderFactory ?? string.Empty));
-                }
+                throw new ConfigurationErrorsException(string.Join(Environment.NewLine,
+                    results.Errors.Select(failure => failure.ErrorMessage)));
             }
         }
 
@@ -149,6 +114,7 @@ namespace EPS.Web.Authentication.Configuration
         public string CustomConfigurationSectionName
         {
             get { return (string)this["customConfigurationSection"]; }
+            set { this["customConfigurationSection"] = value; }
         }
 
         /// <summary>   
@@ -175,29 +141,6 @@ namespace EPS.Web.Authentication.Configuration
         {
             get { return (string)this["principalBuilderFactory"]; }
             set { this["principalBuilderFactory"] = value; }
-        }
-
-        /// <summary>   
-        /// Gets the principal builder factory instance implementing <see cref="T:
-        /// EPS.Web.Abstractions.IPrincipalBuilderFactory"/>, and uses that to create instances of <see cref="T:
-        /// EPS.Web.Abstractions.IPrincipalBuilder"/> given the specified configuration. 
-        /// </summary>
-        /// <remarks>   ebrown, 1/3/2011. </remarks>
-        /// <returns>   The principal builder instance or null if the PrincipalBuilderFactory property is not properly configured. </returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is not suitable for a property as it returns new IBasicAuthPrincipalBuilder instances each time")]
-        public IPrincipalBuilder GetPrincipalBuilder()
-        {
-            if (string.IsNullOrEmpty(PrincipalBuilderFactory))
-            {
-                return null;
-            }
-
-            if (null == principalBuilderFactoryInstance)
-            {
-                principalBuilderFactoryInstance = Activator.CreateInstance(Type.GetType(PrincipalBuilderFactory)) as IPrincipalBuilderFactory;
-            }
-
-            return principalBuilderFactoryInstance.Construct(this);
         }
 
         //TODO: 3-28-2011 -- consider moving this out to its own class
