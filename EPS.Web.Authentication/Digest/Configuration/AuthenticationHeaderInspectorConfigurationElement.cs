@@ -21,7 +21,7 @@ namespace EPS.Web.Authentication.Digest.Configuration
             var provider = MembershipProviderLocator.GetProvider(this.ProviderName);
             if (null != provider && !provider.EnablePasswordRetrieval)
             {
-                throw new ConfigurationErrorsException("Provider " + this.ProviderName + " must support password retrieval to be used with Digest authentication");
+                throw new ConfigurationErrorsException(String.Format("Provider {0} must support password retrieval to be used with Digest authentication", this.ProviderName));
             }
         }
 
@@ -34,7 +34,6 @@ namespace EPS.Web.Authentication.Digest.Configuration
             get { return (string)this["realm"]; }
             set { base["realm"] = value; }
         }
-
 
         /// <summary>   Gets or sets the Private Key value used when generating nonce values.  Minimum length of 8 characters. </summary>
         /// <value> The private key. </value>
