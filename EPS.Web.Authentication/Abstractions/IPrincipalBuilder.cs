@@ -18,7 +18,7 @@ namespace EPS.Web.Abstractions
         /// EPS.Web.Abstractions.IPrincipalBuilderFactory"/> to use. 
         /// </summary>
         /// <value> The configuration. </value>
-        IHttpContextInspectingAuthenticatorConfigurationElement Configuration { get; }
+        IAuthenticatorConfiguration Configuration { get; }
         
         /// <summary>   Construct an IPrincipal given a username and password (context through in for good measure). </summary>
         /// <param name="context">  The context. </param>

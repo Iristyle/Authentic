@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using EPS.Web.Authentication.Configuration;
 
 namespace EPS.Web.Abstractions
@@ -9,7 +8,7 @@ namespace EPS.Web.Abstractions
     {
         /// <summary>   Constructs the class instance which can build an IPrincipal from incoming HTTP context. </summary>
         /// <param name="config">   The configuration. </param>
-        /// <returns>   The IPrincipalBuilder instance. </returns>
-        IPrincipalBuilder Construct(IHttpContextInspectingAuthenticatorConfigurationElement config);
+        /// <returns>   The <see cref="T:EPS.Web.Abstractions.IPrincipalBuilder"/> instance. </returns>
+        IPrincipalBuilder Construct(IAuthenticatorConfiguration config);
     }
 }

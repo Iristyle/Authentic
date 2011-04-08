@@ -9,7 +9,8 @@ namespace EPS.Web.Authentication.Digest
     {
         /// <summary>   Parses a string based nonce timestamp into a DateTime. </summary>
         /// <remarks>   ebrown, 4/6/2011. </remarks>
-        /// <exception cref="ArgumentException">    Thrown when one or more arguments have unsupported or illegal values. </exception>
+        /// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
+        /// <exception cref="ArgumentException">        Thrown when one or more arguments have unsupported or illegal values. </exception>
         /// <param name="nonceTimeStamp">   The nonce time stamp. </param>
         /// <returns>   A Utc based DateTime represenation of a given nonce string. </returns>
         public static DateTime Parse(string nonceTimeStamp)

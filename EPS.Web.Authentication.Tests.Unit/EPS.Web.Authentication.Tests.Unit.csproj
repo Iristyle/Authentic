@@ -24,16 +24,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\HttpContextInspectingAuthenticatorConfigurationElementValidatorTest.cs" />
-    <Compile Include="Digest\AuthenticationFailureHandlerTest.cs" />
-    <Compile Include="Digest\AuthenticationFailureHandlerFactoryTest.cs" />
-    <Compile Include="Digest\AuthenticationInspectingAuthenticatorFactoryTest.cs" />
-    <Compile Include="Digest\AuthenticationInspectingAuthenticatorTest.cs" />
+    <Compile Include="Configuration\FailureHandlerConfigurationSectionLocatorTest.cs" />
+    <Compile Include="Configuration\AuthenticatorConfigurationValidatorTest.cs" />
+    <Compile Include="Digest\DigestFailureHandlerTest.cs" />
+    <Compile Include="Digest\DigestFailureHandlerFactoryTest.cs" />
+    <Compile Include="Digest\DigestAuthenticatorFactoryTest.cs" />
+    <Compile Include="Digest\DigestAuthenticatorTest.cs" />
     <Compile Include="Digest\NonceManagerTest.cs" />
     <Compile Include="Digest\NonceTimeStampParserTest.cs" />
     <Compile Include="Digest\PrivateHashEncoderTest.cs" />
-    <Compile Include="HttpContextInspectingAuthenticationModuleTest.cs" />
-    <Compile Include="PrincipleBuilderCacheTest.cs" />
+    <Compile Include="HttpAuthenticationModuleTest.cs" />
+    <Compile Include="HttpContextInspectorsLocatorTest.cs" />
+    <Compile Include="PrincipalBuilderLocatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\MembershipProviderLocatorTest.cs" />
     <Compile Include="ProviderCollectionExtensions.cs" />
