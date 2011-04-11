@@ -28,6 +28,16 @@ namespace EPS.Web.Authentication
         /// <summary> Event queue for all listeners interested in Configure events. </summary>
         public static event EventHandler<HttpAuthenticationModuleConfigureEventArgs> Configure;
 
+        /// <summary>
+        /// Initializes a new instance of the HttpAuthenticationModule class.  Makes a call to the static Configure EventHandler to 
+        /// configure the instance.
+        /// </summary>
+        public HttpAuthenticationModule()
+        {
+            //allow for code-based configuration
+            Configure.SafeInvoke(this, new HttpAuthenticationModuleConfigureEventArgs(this));
+        }
+
         /// <summary>   
         /// This property is intended to be set only once by an IoC container (or manually in tests). After an initial set, the property becomes
         /// read-only and throws exceptions. 
@@ -71,9 +81,6 @@ namespace EPS.Web.Authentication
         {
             //this shouldn't ever happen
             if (null == context) { throw new ArgumentNullException("context"); }
-
-            //allow for code-based configuration
-            Configure.SafeInvoke(this, new HttpAuthenticationModuleConfigureEventArgs(this));
 
             // check if module is enabled
             if (!Configuration.Enabled)
