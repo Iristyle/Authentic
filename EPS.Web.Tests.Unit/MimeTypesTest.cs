@@ -11,6 +11,12 @@ namespace EPS.Web.Tests.Unit
             Assert.Same("text/HTML", MimeTypes.GetMimeTypeForFileExtension(".htm"));
         }
 
+		[Fact]
+		public void GetMimeTypeForFileExtension_ReturnsExpectedMimeTypeForJpg()
+		{
+			Assert.Same("image/jpeg", MimeTypes.GetMimeTypeForFileExtension(".jpg"));
+		}
+
         [Fact]
         public void GetMimeTypeForFileExtension_ReturnsDefaultOfApplicationOctetStreamForUnregisteredMimeType()
         {

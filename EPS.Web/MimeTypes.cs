@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 namespace EPS.Web
 {
-    /// <summary>   A class that maintains a mapping of file extensions to . </summary>
+    /// <summary>   A class that maintains a mapping of file extensions to mime types. </summary>
     /// <remarks>   ebrown, 2/9/2011. </remarks>
     public static class MimeTypes
     {
         //http://www.microsoft.com/technet/prodtechnol/isa/2004/plan/mimetypes.mspx
+		//http://www.webmaster-toolkit.com/mime-types.shtml
         private static readonly Dictionary<string, string> mimeTypes = 
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
@@ -40,7 +41,13 @@ namespace EPS.Web
                 { "pdt", "application/pdf" },
                 { "exe", "application/octet-stream" },
                 { "dll", "application/octet-stream" },
-                { "bin", "application/octet-stream" }
+                { "bin", "application/octet-stream" },
+				{ "png", "image/png" },
+				{ "jpg", "image/jpeg" },
+				{ "jpeg", "image/jpeg" },
+				{ "bmp", "image/bmp" },
+				{ "gif", "image/gif" },
+
             };
 
         /// <summary>   
