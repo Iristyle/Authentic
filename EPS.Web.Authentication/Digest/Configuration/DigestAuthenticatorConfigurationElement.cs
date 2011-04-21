@@ -14,6 +14,9 @@ namespace EPS.Web.Authentication.Digest.Configuration
 		AuthenticatorConfigurationElement,
 		IDigestAuthenticatorConfiguration
 	{
+		/// <summary>	Called after deserialization has completed, verifying specified configuration information. </summary>
+		/// <remarks>	ebrown, 4/21/2011. </remarks>
+		/// <exception cref="ConfigurationErrorsException">	Thrown when the Factory or PrincipalBuilderFactory are improperly configured. </exception>
 		protected override void PostDeserialize()
 		{
 			base.PostDeserialize();

@@ -3,7 +3,9 @@ using EPS.Web.Authentication.Configuration;
 
 namespace EPS.Web.Authentication.Basic.Configuration
 {
-    public class BasicFailureHandlerConfiguration :
+	/// <summary>	The configuration class responsible for managing the settings for the basic challenge on failure handler. </summary>
+	/// <remarks>	ebrown, 4/21/2011. </remarks>
+	public class BasicFailureHandlerConfiguration :
             FailureHandlerConfiguration, IBasicFailureHandlerConfiguration
     {
         /// <summary>
