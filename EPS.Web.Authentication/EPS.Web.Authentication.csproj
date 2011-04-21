@@ -34,8 +34,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Basic\Configuration\BasicFailureHandlerConfiguration.cs" />
-    <Compile Include="Basic\Configuration\IBasicFailureHandlerConfiguration.cs" />
     <Compile Include="Basic\Configuration\IBasicAuthenticatorConfiguration.cs" />
+    <Compile Include="Basic\Configuration\IBasicFailureHandlerConfiguration.cs" />
     <Compile Include="Configuration\FailureHandlerConfigurationSectionLocator.cs" />
     <Compile Include="Configuration\FailureHandlerConfiguration.cs" />
     <Compile Include="Configuration\ModuleConfiguration.cs" />
@@ -45,7 +45,6 @@
     <Compile Include="Configuration\IModuleConfiguration.cs" />
     <Compile Include="Configuration\IAuthenticatorConfiguration.cs" />
     <Compile Include="Configuration\IRedirectFailureHandlerConfiguration.cs" />
-    <Compile Include="Configuration\ISimpleFailureHandlerConfiguration.cs" />
     <Compile Include="Configuration\RedirectFailureHandlerConfiguration.cs" />
     <Compile Include="Digest\Configuration\DigestFailureHandlerConfiguration.cs" />
     <Compile Include="Digest\Configuration\DigestAuthenticatorConfiguration.cs" />
@@ -60,7 +59,7 @@
     <Compile Include="Digest\Configuration\IDigestFailureHandlerConfiguration.cs" />
     <Compile Include="Digest\Configuration\IDigestAuthenticatorConfiguration.cs" />
     <Compile Include="Digest\NonceManager.cs" />
-    <Compile Include="Digest\NonceTimeStampParser.cs" />
+    <Compile Include="Digest\NonceTimestampParser.cs" />
     <Compile Include="Digest\Opaque.cs" />
     <Compile Include="Digest\PrivateHashEncoder.cs" />
     <Compile Include="Configuration\HttpContextInspectorsLocator.cs" />

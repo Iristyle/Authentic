@@ -7,6 +7,6 @@ namespace EPS.Web.Authentication.Configuration
     /// <remarks>   ebrown, 1/3/2011. </remarks>
     public class SimpleFailureHandlerConfigurationSection : 
         FailureHandlerConfigurationSection,
-        ISimpleFailureHandlerConfiguration
+        IFailureHandlerConfiguration
     { }
 }

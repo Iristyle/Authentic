@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
 using System.Security.Principal;
@@ -11,7 +12,8 @@ namespace EPS.Web.Authentication.Basic
 {
     /// <summary>   A failure handler that sends out a basic authentication WWW-Authenticate header if authentication fails. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public class BasicFailureHandler : 
+	[SuppressMessage("Gendarme.Rules.Naming", "AvoidRedundancyInTypeNameRule", Justification = "Redundancy in type name is to avoid naming clashes / make class name more clear")]
+	public class BasicFailureHandler : 
         FailureHandlerBase<IBasicFailureHandlerConfiguration>
     {
         /// <summary>   Initializes a new instance of the BasicFailureHandler class given configuration values. </summary>
