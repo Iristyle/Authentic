@@ -30,15 +30,16 @@ namespace EPS.Web.Authentication.Digest
 		{
 			//TODO: 4-6-2011 -- find a better way to hook up the validation logic here so that it matches up with the config class
 			if (null == config) { throw new ArgumentNullException("config"); }
-			if (null == config.PrivateKey) { throw new ArgumentNullException("config", "IDigestAuthenticatorConfiguration.PrivateKey is null"); }
+			string configPrivateKey = config.PrivateKey;
+			if (null == configPrivateKey) { throw new ArgumentNullException("config", "IDigestAuthenticatorConfiguration.PrivateKey is null"); }
 			if (null == config.Realm) { throw new ArgumentNullException("config", "IDigestAuthenticatorConfiguration.Realm is null"); }
-			if (string.IsNullOrWhiteSpace(config.PrivateKey)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.PrivateKey must not be whitespace", "config"); }
-			if (config.PrivateKey.Length < 8) { throw new ArgumentException("IDigestAuthenticatorConfiguration.PrivateKey must be at least 8 characters", "config"); }
+			if (string.IsNullOrWhiteSpace(configPrivateKey)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.PrivateKey must not be whitespace", "config"); }
+			if (configPrivateKey.Length < 8) { throw new ArgumentException("IDigestAuthenticatorConfiguration.PrivateKey must be at least 8 characters", "config"); }
 			if (string.IsNullOrWhiteSpace(config.Realm)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.Realm must not be whitespace", "config"); }
 			if (config.NonceValidDuration < TimeSpan.FromSeconds(20)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.NonceValidDuration must be at least 20 seconds", "config"); }
 			if (config.NonceValidDuration > TimeSpan.FromMinutes(60)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.NonceValidDuration must be less than 60 minutes", "config"); }
 
-			privateHashEncoder = new PrivateHashEncoder(config.PrivateKey);
+			privateHashEncoder = new PrivateHashEncoder(configPrivateKey);
 		}
 
 		/// <summary>   Authenticates a HttpContextBase given a specified MembershipProvider. </summary>
