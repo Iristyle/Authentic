@@ -103,7 +103,11 @@ namespace EPS.Web.Authentication
 			{
 				log.ErrorFormat(CultureInfo.InvariantCulture, "All inspector configurations require SSL, but request is not secure");
 				context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-				context.ApplicationInstance.CompleteRequest();
+				var application = context.ApplicationInstance;
+				if (null != application)
+				{
+					application.CompleteRequest();
+				}
 			}
 
 			//try each of our inspectors in configured order - if one is successful and creates an IPrincipal, return
@@ -164,7 +168,11 @@ namespace EPS.Web.Authentication
 			{
 				log.ErrorFormat(CultureInfo.InvariantCulture, "Inspector configuration requires SSL, but request is not secure");
 				context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-				context.ApplicationInstance.CompleteRequest();
+				var application = context.ApplicationInstance;
+				if (null != application)
+				{
+					application.CompleteRequest();
+				}
 				return;
 			}
 
