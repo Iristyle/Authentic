@@ -9,8 +9,6 @@ using EPS.Web.Authentication.Digest.Configuration;
 using FakeItEasy;
 using Xunit;
 
-#pragma warning disable 0649 // for [Fake]
-
 namespace EPS.Web.Authentication.Digest.Tests.Unit
 {
 	public class DigestFailureHandlerTest
@@ -23,30 +21,27 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 			public bool RequireSsl { get; set; }
 		}
 
-		[Fake]
-		HttpContextBase context;
-		[Fake]
-		IDigestFailureHandlerConfiguration configuration;
-
 		string realm = "test@test.com";
 		string ipAddress = "127.0.0.1";
+		string secretKey = "MyPrivateKey";
 		PrivateHashEncoder privateHashEncoder;
-		DigestFailureHandler failureHandler;
 
 		Dictionary<IAuthenticator, AuthenticationResult> inspectorResults
 			= new Dictionary<IAuthenticator, AuthenticationResult>();
 
 		public DigestFailureHandlerTest()
 		{
-			string secretKey = "MyPrivateKey";
-			Fake.InitializeFixture(this);
-			//our classes guard against a null .ApplicationInstance
-			A.CallTo(() => context.ApplicationInstance).Returns(null);
-			A.CallTo(() => configuration.Realm).Returns(realm);
-			A.CallTo(() => configuration.PrivateKey).Returns(secretKey);
-			A.CallTo(() => configuration.NonceValidDuration).Returns(TimeSpan.FromSeconds(30));
 			privateHashEncoder = new PrivateHashEncoder(secretKey);
-			failureHandler = new DigestFailureHandler(configuration);
+		}
+
+		private IDigestFailureHandlerConfiguration GetConfig()
+		{
+			return new DigestFailureHandlerConfiguration(realm, secretKey, TimeSpan.FromSeconds(30));
+		}
+
+		private DigestFailureHandler GetFailureHandler()
+		{
+			return new DigestFailureHandler(GetConfig());
 		}
 
 		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
@@ -121,7 +116,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		[Fact]
 		public void OnAuthenticationFailure_ThrowsOnNullContext()
 		{
-			var failureHandler = new DigestFailureHandler(configuration);
+			var failureHandler = GetFailureHandler();
 			Assert.Throws<ArgumentNullException>(() => failureHandler.OnAuthenticationFailure(null, inspectorResults));
 		}
 
@@ -129,14 +124,17 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		public void OnAuthenticationFailure_GeneratesCorrectHeaderForNewRequest()
 		{
 			FreezeNonceClock();
+			HttpContextBase context = A.Fake<HttpContextBase>();
 			A.CallTo(() => context.Request.HttpMethod).Returns("GET");
 			A.CallTo(() => context.Request.UserHostAddress).Returns(ipAddress);
+			A.CallTo(() => context.ApplicationInstance).Returns(null); //implementations guard against a null Application
 
 			//record the values from the AddHeader call and make sure they match our expectations
 			string headerName = string.Empty, headerValue = string.Empty;
 			A.CallTo(() => context.Response.AddHeader(A<string>.Ignored, A<string>.Ignored))
 				.Invokes(call => { headerName = (string)call.Arguments[0]; headerValue = (string)call.Arguments[1]; });
 
+			var failureHandler = GetFailureHandler();
 			failureHandler.OnAuthenticationFailure(context, inspectorResults);
 
 			string expectedHeader = String.Format(CultureInfo.InvariantCulture,
@@ -150,12 +148,17 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		}
 
 		[Fact]
+		//[SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "It's a test")]
 		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		public void OnAuthenticationFailure_RecognizesAndReportsStaleNonce()
 		{
+			HttpContextBase context = A.Fake<HttpContextBase>();
+			var failureHandler = GetFailureHandler();
+
 			string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
 			A.CallTo(() => context.Request.HttpMethod).Returns("GET");
 			A.CallTo(() => context.Request.UserHostAddress).Returns(ipAddress);
+			A.CallTo(() => context.ApplicationInstance).Returns(null); //implementations guard against a null Application
 
 			var headers = new NameValueCollection() { { "Authorization", string.Format(CultureInfo.InvariantCulture,
 @"Digest username=""Mufasa"",realm=""testrealm@host.com"",
@@ -168,7 +171,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 
 			//jump ahead just outside the reach of our configuration
 			DateTime now = DateTime.UtcNow;
-			NonceManager.Now = () => now + configuration.NonceValidDuration.Add(TimeSpan.FromSeconds(1));
+			NonceManager.Now = () => now + failureHandler.Configuration.NonceValidDuration.Add(TimeSpan.FromSeconds(1));
 
 			//record the values from the AddHeader call and make sure they match our expectations
 			string headerName = string.Empty, headerValue = string.Empty;
