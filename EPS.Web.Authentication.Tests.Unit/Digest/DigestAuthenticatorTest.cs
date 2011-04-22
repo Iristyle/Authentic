@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
@@ -8,6 +10,8 @@ using EPS.Web.Authentication.Configuration;
 using EPS.Web.Authentication.Digest.Configuration;
 using FakeItEasy;
 using Xunit;
+
+#pragma warning disable 0649 // for [Fake]
 
 namespace EPS.Web.Authentication.Digest.Tests.Unit
 {
@@ -52,8 +56,8 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		HttpContextBase context;
 		[Fake]
 		IPrincipalBuilder principalBuilder;
-		string privateKey = "MyPrivateKey";
 		PrivateHashEncoder privateHashEncoder;
+		private bool disposed;
 
 		public DigestAuthenticatorTest()
 		{
@@ -73,14 +77,28 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 			A.CallTo(() => principalBuilder.ConstructPrincipal(A<HttpContextBase>.Ignored, A<string>.Ignored, A<string>.Ignored))
 				.ReturnsLazily(call => new GenericPrincipal(new GenericIdentity(call.GetArgument<string>("userName")), new[] { "roles" }));
 
-			privateHashEncoder = new PrivateHashEncoder(privateKey);
+			privateHashEncoder = new PrivateHashEncoder("MyPrivateKey");
 
 			Opaque.Current = () => "5ccc069c403ebaf9f0171e9517f40e41";
 		}
 
 		public void Dispose()
 		{
-			Membership.Providers.RemoveMembershipProvider("Fake");
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					Membership.Providers.RemoveMembershipProvider("Fake");
+				}
+
+				disposed = true;
+			}
 		}
 
 		[Fact]
@@ -146,6 +164,8 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		}
 
 		[Fact]
+		[SuppressMessage("Gendarme.Rules.BadPractice", "PreferTryParseRule", Justification = "We know our hard coded value is appropriate")]
+		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		public void Authenticate_TrueOnValidMembership()
 		{
 			string ipAddress = "127.0.0.1";
@@ -157,12 +177,12 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 			string response = "dc950f2d7c24037a6c775bcc9198b6f8";
 			//939e7578ed9e3c518a452acee763bce9:NjM0Mzc3MjI2OTIwMDA6Yjg3ZWZlODM0Mjc1NThjZGVlZWVkYjRjNTI1MzFjMzM=:00000001:0a4f113b:auth:39aff3a2bab6126f332b942af96d3366
 
-			NonceManager.Now = () => DateTime.Parse("4/6/2011 9:38:12 PM");
+			NonceManager.Now = () => DateTime.Parse("4/6/2011 9:38:12 PM", CultureInfo.CurrentCulture);
 
 			string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
 			//this should generate very specific nonce "NjM0Mzc3MjI2OTIwMDA6Yjg3ZWZlODM0Mjc1NThjZGVlZWVkYjRjNTI1MzFjMzM="
 
-			var headers = new NameValueCollection() { { "Authorization", string.Format(
+			var headers = new NameValueCollection() { { "Authorization", string.Format(CultureInfo.InvariantCulture,
 @"Digest username=""Mufasa"",realm=""{0}"",
                      nonce=""{1}"",
                      uri=""/dir/index.html"",qop=auth,nc=00000001,cnonce=""0a4f113b"",
@@ -191,7 +211,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 
 			var inspector = new DigestAuthenticator(configuration);
 
-			var headers = new NameValueCollection() { { "Authorization", string.Format(
+			var headers = new NameValueCollection() { { "Authorization", string.Format(CultureInfo.InvariantCulture,
 @"Digest username=""Mufasa"",realm=""testrealm@host.com"",
                      nonce=""{0}"",
                      uri=""/dir/index.html"",qop=auth,nc=00000001,cnonce=""0a4f113b"",

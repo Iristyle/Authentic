@@ -12,7 +12,7 @@ namespace EPS.Web.Authentication.Digest
 	/// <remarks>   ebrown, 4/6/2011. </remarks>
 	public class PrivateHashEncoder
 	{
-		private readonly string privateKey;
+		private readonly string _privateKey;
 
 		/// <summary>   Constructor. </summary>
 		/// <remarks>   ebrown, 4/6/2011. </remarks>
@@ -23,7 +23,7 @@ namespace EPS.Web.Authentication.Digest
 		{
 			if (null == privateKey) { throw new ArgumentNullException("privateKey"); }
 			if (string.IsNullOrWhiteSpace(privateKey)) { throw new ArgumentException("privateKey must be non-empty", "privateKey"); }
-			this.privateKey = privateKey;
+			this._privateKey = privateKey;
 		}
 
 		/// <summary>   Encodes a millisecond value and ip address along with the given private key to be used in a nonce. </summary>
@@ -42,7 +42,7 @@ namespace EPS.Web.Authentication.Digest
 			if (string.IsNullOrWhiteSpace(dateTimeInMilliseconds)) { throw new ArgumentException("value must be non-whitespace", "dateTimeInMilliseconds"); }
 
 			string stringToEncode = string.Format(CultureInfo.InvariantCulture, "{0}:{1}:{2}",
-				dateTimeInMilliseconds, ipAddress, privateKey);
+				dateTimeInMilliseconds, ipAddress, _privateKey);
 
 			using (var algorithm = MD5.Create())
 			{

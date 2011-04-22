@@ -156,10 +156,11 @@ namespace EPS.Web.Authentication
 
 		private void ExecuteFailureHandler(HttpContextBase context, Dictionary<IAuthenticator, AuthenticationResult> inspectors)
 		{
-			if (null == Configuration.FailureHandler)
+			var failureHandler = Configuration.FailureHandler;
+			if (null == failureHandler)
 				return;
 
-			if (Configuration.FailureHandler.Configuration.RequireSsl && !context.Request.IsSecureConnection)
+			if (failureHandler.Configuration.RequireSsl && !context.Request.IsSecureConnection)
 			{
 				log.ErrorFormat(CultureInfo.InvariantCulture, "Inspector configuration requires SSL, but request is not secure");
 				context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
@@ -168,7 +169,7 @@ namespace EPS.Web.Authentication
 			}
 
 			//new AuthenticationFailureEvent(this, (null != inspectors[failureInspector] && null != inspectors[failureInspector].Identity ? inspectors[failureInspector].Identity.Name : string.Empty)).Raise();
-			context.User = Configuration.FailureHandler.OnAuthenticationFailure(context, inspectors);
+			context.User = failureHandler.OnAuthenticationFailure(context, inspectors);
 		}
 	}
 }

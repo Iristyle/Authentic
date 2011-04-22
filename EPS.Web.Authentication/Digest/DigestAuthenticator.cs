@@ -53,13 +53,14 @@ namespace EPS.Web.Authentication.Digest
 			{
 				if (null == context) { throw new ArgumentNullException("context"); }
 
-				string authHeader = context.Request.Headers["Authorization"];
+				HttpRequestBase request = context.Request;
+				string authHeader = request.Headers["Authorization"];
 
 				Log.InfoFormat(CultureInfo.InvariantCulture, "Authorization header [{0}] received", authHeader.IfMissing("**Missing**"));
 
 				////attempt to extract credentials from header
 				DigestHeader digestHeader;
-				if (!HttpDigestAuthHeaderParser.TryExtractDigestHeader(context.Request.HttpMethod.ToEnumFromEnumValue<HttpMethodNames>(), authHeader, out digestHeader))
+				if (!HttpDigestAuthHeaderParser.TryExtractDigestHeader(request.HttpMethod.ToEnumFromEnumValue<HttpMethodNames>(), authHeader, out digestHeader))
 				{
 					//don't log an event since there was nothing to succeed / fail
 					return new AuthenticationResult(false, null, "No digest credentials found in HTTP header");
@@ -75,7 +76,7 @@ namespace EPS.Web.Authentication.Digest
 
 				//three things validate this digest request -- that the nonce matches the given address, that its not stale
 				//and that the credentials match the given realm / opaque / password
-				if (NonceManager.Validate(digestHeader.Nonce, context.Request.UserHostAddress, privateHashEncoder) &&
+				if (NonceManager.Validate(digestHeader.Nonce, request.UserHostAddress, privateHashEncoder) &&
 					!NonceManager.IsStale(digestHeader.Nonce, Configuration.NonceValidDuration) &&
 					digestHeader.MatchesCredentials(Configuration.Realm, Opaque.Current(), userPassword))
 				{

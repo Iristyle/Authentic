@@ -1,6 +1,7 @@
 ﻿using System;
-using Xunit;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using Xunit;
 
 namespace EPS.Web.Authentication.Digest.Tests.Unit
 {
@@ -16,6 +17,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 			privateHashEncoder = new PrivateHashEncoder(key);
 		}
 
+		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		private void FreezeNonceClock()
 		{
 			//freeze the clock 
@@ -23,6 +25,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 			NonceManager.Now = () => now;
 		}
 
+		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		private void ThawNonceClock()
 		{
 			NonceManager.Now = () => { return DateTime.UtcNow; };
@@ -42,13 +45,13 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		}
 
 		[Fact]
-		public void Generate_ThrowsOnNullIpAddress()
+		public void Generate_ThrowsOnNullIPAddress()
 		{
 			Assert.Throws<ArgumentNullException>(() => NonceManager.Generate(null, privateHashEncoder));
 		}
 
 		[Fact]
-		public void Generate_ThrowsOnEmptyIpAddress()
+		public void Generate_ThrowsOnEmptyIPAddress()
 		{
 			Assert.Throws<ArgumentException>(() => NonceManager.Generate(string.Empty, privateHashEncoder));
 		}
@@ -79,6 +82,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		}
 
 		[Fact]
+		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		public void Generate_ProducesDifferentNonceValuesOverElapsedTime()
 		{
 			string firstNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
@@ -93,13 +97,13 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		}
 
 		[Fact]
-		public void Validate_ThrowsOnNullIpAddress()
+		public void Validate_ThrowsOnNullIPAddress()
 		{
 			Assert.Throws<ArgumentNullException>(() => NonceManager.Validate(validNonce, null, privateHashEncoder));
 		}
 
 		[Fact]
-		public void Validate_ThrowsOnEmptyIpAddress()
+		public void Validate_ThrowsOnEmptyIPAddress()
 		{
 			Assert.Throws<ArgumentException>(() => NonceManager.Validate(validNonce, string.Empty, privateHashEncoder));
 		}

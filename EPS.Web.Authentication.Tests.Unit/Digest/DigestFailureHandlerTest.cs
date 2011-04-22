@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Web;
 using EPS.Web.Authentication.Abstractions;
 using EPS.Web.Authentication.Digest.Configuration;
 using FakeItEasy;
 using Xunit;
+
+#pragma warning disable 0649 // for [Fake]
 
 namespace EPS.Web.Authentication.Digest.Tests.Unit
 {
@@ -24,7 +27,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		HttpContextBase context;
 		[Fake]
 		IDigestFailureHandlerConfiguration configuration;
-		string privateKey = "MyPrivateKey";
+
 		string realm = "test@test.com";
 		string ipAddress = "127.0.0.1";
 		PrivateHashEncoder privateHashEncoder;
@@ -35,16 +38,18 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 
 		public DigestFailureHandlerTest()
 		{
+			string secretKey = "MyPrivateKey";
 			Fake.InitializeFixture(this);
 			//our classes guard against a null .ApplicationInstance
 			A.CallTo(() => context.ApplicationInstance).Returns(null);
 			A.CallTo(() => configuration.Realm).Returns(realm);
-			A.CallTo(() => configuration.PrivateKey).Returns(privateKey);
+			A.CallTo(() => configuration.PrivateKey).Returns(secretKey);
 			A.CallTo(() => configuration.NonceValidDuration).Returns(TimeSpan.FromSeconds(30));
-			privateHashEncoder = new PrivateHashEncoder(privateKey);
+			privateHashEncoder = new PrivateHashEncoder(secretKey);
 			failureHandler = new DigestFailureHandler(configuration);
 		}
 
+		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		private void FreezeNonceClock()
 		{
 			//freeze the clock 
@@ -52,6 +57,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 			NonceManager.Now = () => now;
 		}
 
+		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		private void ThawNonceClock()
 		{
 			NonceManager.Now = () => { return DateTime.UtcNow; };
@@ -144,13 +150,14 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		}
 
 		[Fact]
+		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		public void OnAuthenticationFailure_RecognizesAndReportsStaleNonce()
 		{
 			string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
 			A.CallTo(() => context.Request.HttpMethod).Returns("GET");
 			A.CallTo(() => context.Request.UserHostAddress).Returns(ipAddress);
 
-			var headers = new NameValueCollection() { { "Authorization", string.Format(
+			var headers = new NameValueCollection() { { "Authorization", string.Format(CultureInfo.InvariantCulture,
 @"Digest username=""Mufasa"",realm=""testrealm@host.com"",
                      nonce=""{0}"",
                      uri=""/dir/index.html"",qop=auth,nc=00000001,cnonce=""0a4f113b"",

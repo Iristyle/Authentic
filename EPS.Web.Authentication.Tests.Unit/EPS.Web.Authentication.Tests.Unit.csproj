@@ -31,7 +31,7 @@
     <Compile Include="Digest\DigestAuthenticatorFactoryTest.cs" />
     <Compile Include="Digest\DigestAuthenticatorTest.cs" />
     <Compile Include="Digest\NonceManagerTest.cs" />
-    <Compile Include="Digest\NonceTimeStampParserTest.cs" />
+    <Compile Include="Digest\NonceTimestampParserTest.cs" />
     <Compile Include="Digest\PrivateHashEncoderTest.cs" />
     <Compile Include="HttpAuthenticationModuleTest.cs" />
     <Compile Include="HttpContextInspectorsLocatorTest.cs" />

@@ -27,15 +27,16 @@ namespace EPS.Web.Authentication.Digest
 		{
 			//TODO: 4-6-2011 -- find a better way to hook up the validation logic here so that it matches up with the config class
 			if (null == config) { throw new ArgumentNullException("config"); }
-			if (null == config.PrivateKey) { throw new ArgumentNullException("config", "IDigestAuthenticatorConfiguration.PrivateKey is null"); }
+			string privateKey = config.PrivateKey;
+			if (null == privateKey) { throw new ArgumentNullException("config", "IDigestAuthenticatorConfiguration.PrivateKey is null"); }
 			if (null == config.Realm) { throw new ArgumentNullException("config", "IDigestAuthenticatorConfiguration.Realm is null"); }
-			if (string.IsNullOrWhiteSpace(config.PrivateKey)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.PrivateKey must not be whitespace", "config"); }
-			if (config.PrivateKey.Length < 8) { throw new ArgumentException("IDigestAuthenticatorConfiguration.PrivateKey must be at least 8 characters", "config"); }
+			if (string.IsNullOrWhiteSpace(privateKey)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.PrivateKey must not be whitespace", "config"); }
+			if (privateKey.Length < 8) { throw new ArgumentException("IDigestAuthenticatorConfiguration.PrivateKey must be at least 8 characters", "config"); }
 			if (string.IsNullOrWhiteSpace(config.Realm)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.Realm must not be whitespace", "config"); }
 			if (config.NonceValidDuration < TimeSpan.FromSeconds(20)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.NonceValidDuration must be at least 20 seconds", "config"); }
 			if (config.NonceValidDuration > TimeSpan.FromMinutes(60)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.NonceValidDuration must be less than 60 minutes", "config"); }
 
-			privateHashEncoder = new PrivateHashEncoder(config.PrivateKey);
+			privateHashEncoder = new PrivateHashEncoder(privateKey);
 		}
 
 		#region IFailureHandler Members
@@ -59,8 +60,9 @@ namespace EPS.Web.Authentication.Digest
 			string stale = "FALSE";
 			//attempt to extract credentials from header -- assuming they might be stale
 			DigestHeader digestHeader;
-			if (HttpDigestAuthHeaderParser.TryExtractDigestHeader(context.Request.HttpMethod.ToEnumFromEnumValue<HttpMethodNames>(), context.Request.Headers["Authorization"], out digestHeader)
-				&& NonceManager.Validate(digestHeader.Nonce, context.Request.UserHostAddress, privateHashEncoder)
+			HttpRequestBase request = context.Request;
+			if (HttpDigestAuthHeaderParser.TryExtractDigestHeader(request.HttpMethod.ToEnumFromEnumValue<HttpMethodNames>(), request.Headers["Authorization"], out digestHeader)
+				&& NonceManager.Validate(digestHeader.Nonce, request.UserHostAddress, privateHashEncoder)
 				&& NonceManager.IsStale(digestHeader.Nonce, Configuration.NonceValidDuration))
 			{
 				stale = "TRUE";
@@ -68,13 +70,14 @@ namespace EPS.Web.Authentication.Digest
 
 			context.Response.AddHeader("WWW-Authenticate", String.Format(CultureInfo.InvariantCulture,
 				"Digest realm=\"{0}\", nonce=\"{1}\", opaque=\"{2}\", stale={3}, algorithm=MD5, qop=\"{4}\"",
-				Configuration.Realm, NonceManager.Generate(context.Request.UserHostAddress, privateHashEncoder), Opaque.Current(),
+				Configuration.Realm, NonceManager.Generate(request.UserHostAddress, privateHashEncoder), Opaque.Current(),
 				stale, DigestQualityOfProtectionType.Authentication.ToEnumValueString()));
 
 			//this is a guard since we can't effectively mock CompleteRequest in tests
-			if (null != context.ApplicationInstance)
+			var application = context.ApplicationInstance;
+			if (null != application)
 			{
-				context.ApplicationInstance.CompleteRequest();
+				application.CompleteRequest();
 			}
 
 			return null;
