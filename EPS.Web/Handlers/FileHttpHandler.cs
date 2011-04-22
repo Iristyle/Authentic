@@ -141,26 +141,26 @@ namespace EPS.Web.Handlers
 
 			//we have ranges specified in the header, but they're invalid
 			if (this._request.HasRangeHeaders() &&
-				!this._request.TryParseRangeRequests(fileDetails.Size.Value, out rangeRequests))
+				!this._request.TryParseRangeRequests(fileDetails.Metadata.Size.Value, out rangeRequests))
 			{
 				RedirectWithStatusCode(this._response, HttpStatusCode.BadRequest, _configuration.UnauthorizedErrorRedirectUrl);
 				return false;
 			}
 			//modified since the requested date -- passing this sessionType value back will keep everything behind the scenes w/ the browser
-			else if (fileDetails.LastWriteTimeUtc.HasValue &&
-				!this._request.IfModifiedSinceHeaderIsBeforeGiven(fileDetails.LastWriteTimeUtc.Value))
+			else if (fileDetails.Metadata.LastWriteTimeUtc.HasValue &&
+				!this._request.IfModifiedSinceHeaderIsBeforeGiven(fileDetails.Metadata.LastWriteTimeUtc.Value))
 			{
 				this._response.StatusCode = (int)HttpStatusCode.NotModified;
 				return false;
 			}
-			else if (fileDetails.LastWriteTimeUtc.HasValue &&
-				!this._request.IfUnmodifiedHeaderIsAfterGivenDate(fileDetails.LastWriteTimeUtc.Value))
+			else if (fileDetails.Metadata.LastWriteTimeUtc.HasValue &&
+				!this._request.IfUnmodifiedHeaderIsAfterGivenDate(fileDetails.Metadata.LastWriteTimeUtc.Value))
 			{
 				this._response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
 				return false;
 			}
 			//ETag doesn't match request
-			else if (!this._request.IfMatchHeaderIsValid(fileDetails.ExpectedMD5))
+			else if (!this._request.IfMatchHeaderIsValid(fileDetails.Metadata.ExpectedMD5))
 			{
 				this._response.StatusCode = (int)HttpStatusCode.PreconditionFailed;
 				return false;
@@ -172,10 +172,10 @@ namespace EPS.Web.Handlers
 				return false;
 			}
 			// The entity does match the none-match request, the response code was set inside the IsIfNoneMatchHeaderValid function
-			else if (this._request.IfNoneMatchHeaderHasMatchingETagSpecified(fileDetails.ExpectedMD5))
+			else if (this._request.IfNoneMatchHeaderHasMatchingETagSpecified(fileDetails.Metadata.ExpectedMD5))
 			{
 				this._response.StatusCode = (int)HttpStatusCode.NotModified;
-				this._response.AppendHeader(HttpHeaderFields.EntityTag.ToEnumValueString(), fileDetails.ExpectedMD5);
+				this._response.AppendHeader(HttpHeaderFields.EntityTag.ToEnumValueString(), fileDetails.Metadata.ExpectedMD5);
 				return false;
 			}
 

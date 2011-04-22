@@ -17,8 +17,8 @@ namespace EPS.Web.Handlers.Tests.Unit
         public void StreamFile_StreamsHeadProperly()
         {
             var response = A.Fake<HttpResponseBase>();
-            var responseStreamWriter = new ResponseStreamWriter(response, 512);
-            StreamLoaderResult streamLoaderResult = new StreamLoaderResult(StreamLoadStatus.Success, "foo.bar", null, null, null, null, null, null);
+			var responseStreamWriter = new ResponseStreamWriter(response, 512);
+			StreamLoaderResult streamLoaderResult = new StreamLoaderResult(StreamLoadStatus.Success, new StreamMetadata("foo.bar", null, null, null), null, null, null);
 
             responseStreamWriter.StreamFile(HttpResponseType.HeadOnly, streamLoaderResult, null, null, false);
         }

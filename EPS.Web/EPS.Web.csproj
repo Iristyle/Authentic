@@ -44,6 +44,7 @@
     <Compile Include="Handlers\StreamLoaderResult.cs" />
     <Compile Include="Handlers\FileHttpHandler.cs" />
     <Compile Include="Configuration\FileHttpHandlerConfigurationSection.cs" />
+    <Compile Include="Handlers\StreamMetadata.cs" />
     <Compile Include="Handlers\StreamWriteStatus.cs" />
     <Compile Include="Handlers\ResponseStreamWriter.cs" />
     <Compile Include="Handlers\IFileHttpHandlerStatusLog.cs" />
