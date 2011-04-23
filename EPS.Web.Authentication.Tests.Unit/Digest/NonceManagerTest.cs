@@ -56,12 +56,17 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 			Assert.Throws<ArgumentException>(() => NonceManager.Generate(string.Empty, privateHashEncoder));
 		}
 
+		private string GenerateNonce()
+		{
+			return NonceManager.Generate(ipAddress, privateHashEncoder);
+		}
+
 		[Fact]
 		public void Generate_CanRoundtripThroughValidate()
 		{
 			FreezeNonceClock();
 
-			string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+			string nonce = GenerateNonce();
 			bool match = NonceManager.Validate(nonce, ipAddress, privateHashEncoder);
 
 			ThawNonceClock();
@@ -74,8 +79,8 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		{
 			FreezeNonceClock();
 
-			string firstNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
-			string secondNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+			string firstNonce = GenerateNonce();
+			string secondNonce = GenerateNonce();
 
 			ThawNonceClock();
 			Assert.Equal(firstNonce, secondNonce);
@@ -85,11 +90,11 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		public void Generate_ProducesDifferentNonceValuesOverElapsedTime()
 		{
-			string firstNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+			string firstNonce = GenerateNonce();
 
 			NonceManager.Now = () => DateTime.UtcNow.AddHours(1);
 
-			string secondNonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+			string secondNonce = GenerateNonce();
 
 			ThawNonceClock();
 
@@ -143,7 +148,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		{
 			FreezeNonceClock();
 
-			string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+			string nonce = GenerateNonce();
 			bool stale = NonceManager.IsStale(nonce, TimeSpan.FromSeconds(1));
 
 			ThawNonceClock();
@@ -154,7 +159,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		[Fact]
 		public void IsStale_TrueOnZeroSeconds()
 		{
-			string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
+			string nonce = GenerateNonce();
 			Thread.Sleep(2);
 			Assert.True(NonceManager.IsStale(nonce, TimeSpan.FromSeconds(0)));
 		}
