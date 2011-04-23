@@ -19,8 +19,9 @@ namespace EPS.Web.Handlers
 	public class ResponseStreamWriter
 	{
 		private static readonly ILog log = LogManager.GetCurrentClassLogger();
-		private HttpResponseBase _response;
-		private long _bufferSizeBytes;
+		private static string _MultipartFooter = String.Format(CultureInfo.InvariantCulture, "--{0}--{1}{1}", MultipartNames.MultipartBoundary, Environment.NewLine);
+        private readonly HttpResponseBase _response;
+		private readonly long _bufferSizeBytes;
 
 		/// <summary>   Initializes a new instance of the ResponseStreamWriter class, with a HttpResponseBase to write to, and a buffer size. </summary>
 		/// <remarks>   ebrown, 2/15/2011. </remarks>
@@ -61,14 +62,12 @@ namespace EPS.Web.Handlers
 				}
 
 				bool isMultipart = RangeRequestHelpers.IsMultipartRequest(rangeRequests),
-					isActionableRangeRequest = IsActionableRangeRequest(downloadProperties, rangeRequests, ifRangeEntityTag);
+					isActionableRangeRequest = IsActionableRangeRequest(downloadProperties.Metadata, rangeRequests, ifRangeEntityTag);
 
 				//TODO: is this response.Clear() necessary here?
 				this._response.Clear();
 
-				string multipartFooter = String.Format(CultureInfo.InvariantCulture, "--{0}--{1}{1}", MultipartNames.MultipartBoundary, Environment.NewLine);
-				long responseContentLength = CalculateContentLength(downloadProperties, rangeRequests, ifRangeEntityTag, contentType, isMultipart, multipartFooter);
-
+				long responseContentLength = CalculateContentLength(downloadProperties.Metadata, rangeRequests, ifRangeEntityTag, contentType, isMultipart);
 				this._response.StatusCode = isActionableRangeRequest ? (int)HttpStatusCode.PartialContent : (int)HttpStatusCode.OK;
 
 				if (isActionableRangeRequest && !isMultipart)
@@ -100,7 +99,7 @@ namespace EPS.Web.Handlers
 					return StreamWriteStatus.SentHttpHead;
 				}
 
-				StreamWriteStatus result = BufferStreamToResponse(downloadProperties, rangeRequests, contentType, multipartFooter);
+				StreamWriteStatus result = BufferStreamToResponse(downloadProperties, rangeRequests, contentType);
 				return (StreamWriteStatus.ClientDisconnected == result) ? result : StreamWriteStatus.SentFile;
 
 				//this causes a ThreadAbortException
@@ -131,18 +130,18 @@ namespace EPS.Web.Handlers
 			}
 		}
 
-		private static bool IsActionableRangeRequest(StreamLoaderResult downloadProperties, IEnumerable<RangeRequest> rangeRequests, string ifRangeEntityTag)
+		private static bool IsActionableRangeRequest(StreamMetadata metadata, IEnumerable<RangeRequest> rangeRequests, string ifRangeEntityTag)
 		{
-			bool isRangeRequest = RangeRequestHelpers.IsPartialOrMultipleRangeRequests(rangeRequests, downloadProperties.Metadata.Size.Value);
+			bool isRangeRequest = RangeRequestHelpers.IsPartialOrMultipleRangeRequests(rangeRequests, metadata.Size.Value);
 
 			return isRangeRequest &&
 								(string.IsNullOrWhiteSpace(ifRangeEntityTag)
-								|| string.Equals(downloadProperties.Metadata.ExpectedMD5, ifRangeEntityTag, StringComparison.OrdinalIgnoreCase));
+								|| string.Equals(metadata.ExpectedMD5, ifRangeEntityTag, StringComparison.OrdinalIgnoreCase));
 		}
 
-		private static long CalculateContentLength(StreamLoaderResult downloadProperties, IEnumerable<RangeRequest> rangeRequests, string ifRangeEntityTag, string contentType, bool isMultipart, string multipartFooter)
+		private static long CalculateContentLength(StreamMetadata metadata, IEnumerable<RangeRequest> rangeRequests, string ifRangeEntityTag, string contentType, bool isMultipart)
 		{
-			if (IsActionableRangeRequest(downloadProperties, rangeRequests, ifRangeEntityTag))
+			if (IsActionableRangeRequest(metadata, rangeRequests, ifRangeEntityTag))
 			{
 				//sum the content length of each request, taking special care when we support multipart
 				long length = rangeRequests.Sum(rangeRequest => rangeRequest.End - rangeRequest.Start + 1 +
@@ -152,13 +151,13 @@ namespace EPS.Web.Handlers
 
 				//tack on the last intermediate header length if applicable
 				return isMultipart ?
-					length + multipartFooter.Length : length;
+					length + _MultipartFooter.Length : length;
 			}
 			// not a Range request, or the requested Range entity ID does not match the current entity ID, so start a new download
 
-			return downloadProperties.Metadata.Size.Value;
+			return metadata.Size.Value;
 		}
-		private StreamWriteStatus BufferStreamToResponse(StreamLoaderResult fileStreamDetails, IEnumerable<RangeRequest> rangeRequests, string contentType, string multipartFooter)
+		private StreamWriteStatus BufferStreamToResponse(StreamLoaderResult fileStreamDetails, IEnumerable<RangeRequest> rangeRequests, string contentType)
 		{
 			bool isMultipart = RangeRequestHelpers.IsMultipartRequest(rangeRequests);
 			int bytesRead;
@@ -202,7 +201,7 @@ namespace EPS.Web.Handlers
 
 			if (isMultipart)
 			{
-				_output.Write(multipartFooter);
+				_output.Write(_MultipartFooter);
 			}
 			return StreamWriteStatus.ApplicationRestarted;
 		}
