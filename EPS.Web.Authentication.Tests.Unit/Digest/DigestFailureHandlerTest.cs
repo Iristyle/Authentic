@@ -124,10 +124,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		public void OnAuthenticationFailure_GeneratesCorrectHeaderForNewRequest()
 		{
 			FreezeNonceClock();
-			HttpContextBase context = A.Fake<HttpContextBase>();
-			A.CallTo(() => context.Request.HttpMethod).Returns("GET");
-			A.CallTo(() => context.Request.UserHostAddress).Returns(ipAddress);
-			A.CallTo(() => context.ApplicationInstance).Returns(null); //implementations guard against a null Application
+			HttpContextBase context = GetDefaultFakedContext();
 
 			//record the values from the AddHeader call and make sure they match our expectations
 			string headerName = string.Empty, headerValue = string.Empty;
@@ -152,13 +149,10 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		public void OnAuthenticationFailure_RecognizesAndReportsStaleNonce()
 		{
-			HttpContextBase context = A.Fake<HttpContextBase>();
+			HttpContextBase context = GetDefaultFakedContext();
 			var failureHandler = GetFailureHandler();
 
 			string nonce = NonceManager.Generate(ipAddress, privateHashEncoder);
-			A.CallTo(() => context.Request.HttpMethod).Returns("GET");
-			A.CallTo(() => context.Request.UserHostAddress).Returns(ipAddress);
-			A.CallTo(() => context.ApplicationInstance).Returns(null); //implementations guard against a null Application
 
 			var headers = new NameValueCollection() { { "Authorization", string.Format(CultureInfo.InvariantCulture,
 @"Digest username=""Mufasa"",realm=""testrealm@host.com"",
@@ -186,8 +180,17 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 
 			ThawNonceClock();
 
-			Assert.Equal(headerName, "WWW-Authenticate");
-			Assert.Equal(expectedHeader, headerValue);
+			Assert.True(headerName == "WWW-Authenticate" && expectedHeader == headerValue);
+		}
+
+		private HttpContextBase GetDefaultFakedContext()
+		{
+			HttpContextBase context = A.Fake<HttpContextBase>();
+			A.CallTo(() => context.Request.HttpMethod).Returns("GET");
+			A.CallTo(() => context.Request.UserHostAddress).Returns(ipAddress);
+			A.CallTo(() => context.ApplicationInstance).Returns(null); //implementations guard against a null Application
+
+			return context;
 		}
 
 		[Fact(Skip = "Simulate some other missing headers and make sure we handle properly")]
