@@ -25,41 +25,46 @@ namespace EPS.Web.Routing
 		{
 			if (null == routes) { throw new ArgumentNullException("routes"); }
 
-			Route route = new Route(url, new DelegateRouteHandler(context => GetRedirectHandler(context, targetUrl, true)));
+			Route route = new Route(url, new DelegateRouteHandler(context => context.GetRedirectHandler(targetUrl, true)));
 			routes.Add(route);
 			return route;
 		}
 
-		private static HttpHandlerBase GetRedirectHandler(RequestContext context, string targetUrl, bool permanently)
+		private static HttpHandlerBase GetRedirectHandler(this RequestContext context, string targetUrl, bool permanently)
 		{
-			if (targetUrl.StartsWith("~/", StringComparison.Ordinal))
-			{
-				Route route = new Route(targetUrl.Substring(2), null);
-				var vpd = route.GetVirtualPath(context, context.RouteData.Values);
-				if (vpd != null)
-					targetUrl = "~/" + vpd.VirtualPath;
-			}
-			else if (targetUrl.StartsWith("/", StringComparison.Ordinal))
-			{
-				Route route = new Route(targetUrl.Substring(1), null);
-				var vpd = route.GetVirtualPath(context, context.RouteData.Values);
-				if (null != vpd)
-					targetUrl = "/" + vpd.VirtualPath;
-			}
-
 			return new DelegateHttpHandler(httpContext =>
 				{
 					if (permanently)
 					{
 						httpContext.Response.Status = "301 Moved Permanently";
 						httpContext.Response.StatusCode = 301;
-						httpContext.Response.AddHeader("Location", targetUrl);
+						httpContext.Response.AddHeader("Location", context.GenerateTargetUrl(targetUrl, true));
 					}
 					else
 					{
-						httpContext.Response.Redirect(targetUrl, false);
+						httpContext.Response.Redirect(context.GenerateTargetUrl(targetUrl, false), false);
 					}
 				}, false);
+		}
+
+		private static string GenerateTargetUrl(this RequestContext context, string targetUrl, bool permanent)
+		{
+			if (targetUrl.StartsWith("~/", StringComparison.Ordinal))
+			{
+				Route route = new Route(targetUrl.Substring(2), null);
+				var vpd = route.GetVirtualPath(context, context.RouteData.Values);
+				if (vpd != null)
+					return string.Format("{0}/{1}", permanent ? string.Empty : "~", vpd.VirtualPath);
+			}
+			else if (targetUrl.StartsWith("/", StringComparison.Ordinal))
+			{
+				Route route = new Route(targetUrl.Substring(1), null);
+				var vpd = route.GetVirtualPath(context, context.RouteData.Values);
+				if (null != vpd)
+					return "/" + vpd.VirtualPath;
+			}
+
+			return targetUrl;
 		}
 	}
 }
