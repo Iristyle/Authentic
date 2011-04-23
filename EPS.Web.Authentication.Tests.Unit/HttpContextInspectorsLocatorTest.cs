@@ -73,12 +73,6 @@ namespace EPS.Web.Authentication.Tests.Unit
 				this._config = config;
 			}
 
-			[SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "inspectorResults", Justification = "False positive")]
-			public IPrincipal OnAuthenticationFailure(HttpContextBase context, Dictionary<IAuthenticator, AuthenticationResult> inspectorResults)
-			{
-				return new MockPrincipal();
-			}
-
 			public IFailureHandlerConfiguration Configuration
 			{
 				get { return _config; }
