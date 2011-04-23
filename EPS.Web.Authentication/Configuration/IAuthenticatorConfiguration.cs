@@ -11,11 +11,11 @@ namespace EPS.Web.Authentication.Configuration
 	{
 		/// <summary>   Gets or sets the name of the role provider used to validate the principal. </summary>
 		/// <value> The name of the role provider. </value>
-		string RoleProviderName { get; set; }
+		string RoleProviderName { get; }
 
 		/// <summary>   Gets or sets the human-friendly name / key for this inspector. </summary>
 		/// <value> The name. </value>
-		string Name { get; set; }
+		string Name { get; }
 
 		/// <summary>   Gets or sets the authenticator instance. </summary>
 		/// <value> The authenticator. </value>
@@ -23,7 +23,7 @@ namespace EPS.Web.Authentication.Configuration
 
 		/// <summary>   Gets or sets a value indicating whether the require SSL. </summary>
 		/// <value> true if require SSL, false if not. </value>
-		bool RequireSsl { get; set; }
+		bool RequireSsl { get; }
 
 		/// <summary>   
 		/// Get or sets the name of the MembershipProvider to be used.  By default no membership provider is used as it may be just as costly as
@@ -32,7 +32,7 @@ namespace EPS.Web.Authentication.Configuration
 		/// MembershipProvider for the system. 
 		/// </summary>
 		/// <value> The name of the provider. </value>
-		string ProviderName { get; set; }
+		string ProviderName { get; }
 
 		/// <summary>   Gets or sets the principal builder instance. </summary>
 		/// <value> 
