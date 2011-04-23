@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -25,6 +26,7 @@ namespace EPS.Web
 		public string Nonce { get; set; }
 		/// <summary>   Gets or sets URI of the document. </summary>
 		/// <value> The uri. </value>
+		[SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "The Uri in a digest auth request is not necessarily complete")]
 		public string Uri { get; set; }
 		/// <summary>   Gets or sets the quality of protection. </summary>
 		/// <value> The quality of protection. </value>
