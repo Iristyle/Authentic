@@ -18,7 +18,7 @@ namespace EPS.Web.Tests.Unit
 		public void MatchesCredentials_ThrowsOnInvalidHttpMethodName()
 		{
 			var header = new DigestHeader() { Verb = (HttpMethodNames)57 };
-			Assert.Throws<ArgumentOutOfRangeException>(() => { header.MatchesCredentials(string.Empty, string.Empty, string.Empty); });
+			Assert.Throws<NotSupportedException>(() => { header.MatchesCredentials(string.Empty, string.Empty, string.Empty); });
 		}
 
 		[Fact]
