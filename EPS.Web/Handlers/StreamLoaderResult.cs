@@ -5,8 +5,10 @@ namespace EPS.Web.Handlers
 {
 	/// <summary>   Represents the details of a file returned through the <see cref="T:EPS.Web.Handlers.IFileHttpHandlerStreamLoader"/>. </summary>
 	/// <remarks>   ebrown, 2/9/2011. </remarks>
-	public class StreamLoaderResult
+	public class StreamLoaderResult : IDisposable
 	{
+		private bool _disposed;
+
 		/// <summary>   Gets the status of the request. </summary>
 		/// <value> The status. </value>
 		public StreamLoadStatus Status { get; private set; }
@@ -38,6 +40,28 @@ namespace EPS.Web.Handlers
 			//MimeTypes.GetMimeTypeForFileExtension(Path.GetExtension(FileName));
 			CloudLocation = cloudLocation;
 			FileStream = fileStream;
+		}
+
+		/// <summary>	Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. </summary>
+		/// <remarks>	ebrown, 4/22/2011. </remarks>
+		public void Dispose()
+		{
+			if (!this._disposed)
+			{
+				Dispose(true);
+				GC.SuppressFinalize(this);
+			}
+		}
+
+		/// <summary>	Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. </summary>
+		/// <remarks>	ebrown, 4/22/2011. </remarks>
+		/// <param name="disposing">	true if resources should be disposed, false if not. </param>
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this._disposed = true;
+			}
 		}
 
 		//TODO: other details we might want at some point

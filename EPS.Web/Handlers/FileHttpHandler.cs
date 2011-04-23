@@ -15,7 +15,7 @@ namespace EPS.Web.Handlers
 {
 	/// <summary>   File http handler. </summary>
 	/// <remarks>   ebrown, 2/9/2011. </remarks>
-	public class FileHttpHandler : HttpHandlerBase, IReadOnlySessionState
+	public class FileHttpHandler : HttpHandlerBase, IReadOnlySessionState, IDisposable
 	{
 		private Stopwatch stopwatch = new Stopwatch();
 		private static readonly ILog log = LogManager.GetCurrentClassLogger();
@@ -27,6 +27,33 @@ namespace EPS.Web.Handlers
 		private HttpContextBase _context;
 		private HttpResponseBase _response;
 		private HttpRequestBase _request;
+		private bool _disposed;
+
+		/// <summary>   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. </summary>
+		/// <remarks>   ebrown, 12/1/2010. </remarks>
+		public void Dispose()
+		{
+			if (!this._disposed)
+			{
+				Dispose(true);
+				GC.SuppressFinalize(this);
+			}
+		}
+
+		/// <summary>   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources. </summary>
+		/// <remarks>   ebrown, 12/23/2010. </remarks>
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (null != _streamLoader)
+				{
+					_streamLoader.Dispose();
+				}
+				this._disposed = true;
+			}
+		}
+
 
 		/// <summary>   Gets the instance of the configuration used by this class as set in the constructor. </summary>
 		/// <value> The configuration. </value>
