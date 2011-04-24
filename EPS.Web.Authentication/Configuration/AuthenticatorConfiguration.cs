@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using EPS.Web.Abstractions;
 using EPS.Web.Authentication.Abstractions;
 
@@ -6,15 +7,17 @@ namespace EPS.Web.Authentication.Configuration
 {
 	/// <summary>   A class that supports code-based configuration. </summary>
 	/// <remarks>   ebrown, 4/8/2011. </remarks>
+	[SuppressMessage("Gendarme.Rules.Maintainability", "AvoidLackOfCohesionOfMethodsRule", Justification = "DTOs by design aren't particularly cohesive")]
+	[SuppressMessage("Gendarme.Rules.Design", "ConsiderAddingInterfaceRule", Justification = "IFailureHandlerConfiguration and IAuthenticatorConfiguration do not share commonality")]
 	public class AuthenticatorConfiguration :
 		IAuthenticatorConfiguration
 	{
 		private string _roleProviderName;
-		private bool _roleProviderNameInitialized;
+		private bool roleProviderNameInitialized;
 		private bool _requireSsl;
-		private bool _requireSslInitialized;
+		private bool requireSslInitialized;
 		private string _providerName;
-		private bool _providerNameInitialized;
+		private bool providerNameInitialized;
 
 		/// <summary>
 		/// Initializes a new instance of the HttpContextInspectingAuthenticatorConfiguration class.
@@ -29,19 +32,20 @@ namespace EPS.Web.Authentication.Configuration
 
 		/// <summary>   Gets or sets the name of the role provider used to validate the principal. </summary>
 		/// <value> The name of the role provider. </value>
+		[SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RoleProviderName", Justification = "Legit compound terms")]
 		public string RoleProviderName
 		{
 			get { return _roleProviderName; }
-			set 
+			set
 			{
-				if (_roleProviderNameInitialized)
+				if (roleProviderNameInitialized)
 				{
 					throw new NotSupportedException("RoleProviderName has already been initialized");
 				}
 				else
 				{
 					_roleProviderName = value;
-					_roleProviderNameInitialized = true;
+					roleProviderNameInitialized = true;
 				}
 			}
 		}
@@ -52,19 +56,20 @@ namespace EPS.Web.Authentication.Configuration
 
 		/// <summary>   Gets or sets a value indicating whether the require SSL. </summary>
 		/// <value> true if require SSL, false if not. </value>
+		[SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RequireSsl", Justification = "Legit compound terms")]
 		public bool RequireSsl
 		{
 			get { return _requireSsl; }
-			set 
+			set
 			{
-				if (_requireSslInitialized)
+				if (requireSslInitialized)
 				{
 					throw new NotSupportedException("RequireSsl has already been initialized");
 				}
 				else
 				{
 					_requireSsl = value;
-					_requireSslInitialized = true;
+					requireSslInitialized = true;
 				}
 			}
 		}
@@ -76,19 +81,20 @@ namespace EPS.Web.Authentication.Configuration
 		/// MembershipProvider for the system. 
 		/// </summary>
 		/// <value> The name of the provider. </value>
+		[SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ProviderName", Justification = "Legit compound terms")]
 		public string ProviderName
 		{
 			get { return _providerName; }
-			set 
+			set
 			{
-				if (_providerNameInitialized)
+				if (providerNameInitialized)
 				{
 					throw new NotSupportedException("ProviderName has already been initialized");
 				}
 				else
 				{
 					_providerName = value;
-					_providerNameInitialized = true;
+					providerNameInitialized = true;
 				}
 			}
 		}
