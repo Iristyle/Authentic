@@ -48,7 +48,10 @@ namespace EPS.Web.Handlers.Tests.Unit
 		[Fact]
 		public void FileHttpHandler_ThrowsOnNullConfiguration()
 		{
-			Assert.Throws<ArgumentNullException>(() => new FileHttpHandler(null, container.Resolve<IFileHttpHandlerStreamLoader>(), container.Resolve<IFileHttpHandlerStatusLog>()));
+			Assert.Throws<ArgumentNullException>(() =>
+				{
+					using (var fileHandler = new FileHttpHandler(null, container.Resolve<IFileHttpHandlerStreamLoader>(), container.Resolve<IFileHttpHandlerStatusLog>())) { }
+				});
 		}
 
 		[Fact]
