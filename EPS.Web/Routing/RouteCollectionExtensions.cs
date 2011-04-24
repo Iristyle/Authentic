@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Web.Routing;
 using EPS.Web.Abstractions;
 
@@ -30,7 +31,7 @@ namespace EPS.Web.Routing
 			return route;
 		}
 
-		private static HttpHandlerBase GetRedirectHandler(this RequestContext context, string targetUrl, bool permanently)
+		private static HttpHandlerBase GetRedirectHandler(this RequestContext context, string target, bool permanently)
 		{
 			return new DelegateHttpHandler(httpContext =>
 				{
@@ -38,33 +39,33 @@ namespace EPS.Web.Routing
 					{
 						httpContext.Response.Status = "301 Moved Permanently";
 						httpContext.Response.StatusCode = 301;
-						httpContext.Response.AddHeader("Location", context.GenerateTargetUrl(targetUrl, true));
+						httpContext.Response.AddHeader("Location", context.GenerateTargetLocation(target, true));
 					}
 					else
 					{
-						httpContext.Response.Redirect(context.GenerateTargetUrl(targetUrl, false), false);
+						httpContext.Response.Redirect(context.GenerateTargetLocation(target, false), false);
 					}
 				}, false);
 		}
 
-		private static string GenerateTargetUrl(this RequestContext context, string targetUrl, bool permanent)
+		private static string GenerateTargetLocation(this RequestContext context, string target, bool permanent)
 		{
-			if (targetUrl.StartsWith("~/", StringComparison.Ordinal))
+			if (target.StartsWith("~/", StringComparison.Ordinal))
 			{
-				Route route = new Route(targetUrl.Substring(2), null);
+				Route route = new Route(target.Substring(2), null);
 				var vpd = route.GetVirtualPath(context, context.RouteData.Values);
 				if (vpd != null)
-					return string.Format("{0}/{1}", permanent ? string.Empty : "~", vpd.VirtualPath);
+					return string.Format(CultureInfo.InvariantCulture, "{0}/{1}", permanent ? string.Empty : "~", vpd.VirtualPath);
 			}
-			else if (targetUrl.StartsWith("/", StringComparison.Ordinal))
+			else if (target.StartsWith("/", StringComparison.Ordinal))
 			{
-				Route route = new Route(targetUrl.Substring(1), null);
+				Route route = new Route(target.Substring(1), null);
 				var vpd = route.GetVirtualPath(context, context.RouteData.Values);
 				if (null != vpd)
 					return "/" + vpd.VirtualPath;
 			}
 
-			return targetUrl;
+			return target;
 		}
 	}
 }
