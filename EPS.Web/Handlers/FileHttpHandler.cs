@@ -54,7 +54,6 @@ namespace EPS.Web.Handlers
 			}
 		}
 
-
 		/// <summary>   Gets the instance of the configuration used by this class as set in the constructor. </summary>
 		/// <value> The configuration. </value>
 		public IFileHttpHandlerConfiguration Configuration
@@ -95,16 +94,18 @@ namespace EPS.Web.Handlers
 			this._statusLogger = statusLogger;
 		}
 
-		/// <summary>   
+		/// <summary>	
 		/// Enables processing of HTTP Web requests by a custom HttpHandler that implements the <see cref="T:System.Web.IHttpHandler"
 		/// />interface. 
 		/// </summary>
-		/// <remarks>   ebrown, 2/10/2011. </remarks>
-		/// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
-		/// <param name="context">  An <see cref="T:System.Web.HttpContext" /> object that provides references to the intrinsic server objects
-		///                         (for example, Request, Response, Session, and Server) used to service HTTP requests. </param>
+		/// <remarks>	ebrown, 2/10/2011. </remarks>
+		/// <exception cref="ObjectDisposedException">	Thrown when a supplied object has been disposed. </exception>
+		/// <exception cref="ArgumentNullException">	Thrown when one or more required arguments are null. </exception>
+		/// <param name="context">	An <see cref="T:System.Web.HttpContext" /> object that provides references to the intrinsic server objects
+		/// 						(for example, Request, Response, Session, and Server) used to service HTTP requests. </param>
 		public override void ProcessRequest(HttpContextBase context)
 		{
+			if (_disposed) { throw new ObjectDisposedException("this"); }
 			stopwatch.Start();
 			//TODO: 5-1-09 -- Response.Redirect doesn't make any sense... maybe we should just give them an 'unauthorized' empty file thing
 			if (null == context) { throw new ArgumentNullException("context"); }
@@ -129,23 +130,24 @@ namespace EPS.Web.Handlers
 				_statusLogger.Log(context, StreamWriteStatus.ApplicationRestarted);
 
 				//now pass the HttpRequestBase to our class responsible for examining specific state and loading the Stream
-				StreamLoaderResult fileDetails = _streamLoader.ParseRequest(this._request);
-
-				if (fileDetails.Status != StreamLoadStatus.Success)
+				using (StreamLoaderResult fileDetails = _streamLoader.ParseRequest(this._request))
 				{
-					RedirectOnFailedStatus(fileDetails);
-					return;
+					if (fileDetails.Status != StreamLoadStatus.Success)
+					{
+						RedirectOnFailedStatus(fileDetails);
+						return;
+					}
+
+					IEnumerable<RangeRequest> rangeRequests;
+					if (!HeadersValidate(fileDetails, out rangeRequests)) { return; }
+
+					HttpResponseType responseStreamType = method == HttpMethodNames.Header.ToEnumValueString() ?
+						HttpResponseType.HeadOnly : HttpResponseType.Complete;
+					//we've passed our credential checking and we're ready to send out our response
+					StreamWriteStatus streamWriteStatus = new ResponseStreamWriter(this._response, this._configuration.FileTransferBufferSizeInKBytes)
+						.StreamFile(responseStreamType, fileDetails, rangeRequests, this._request.RetrieveHeader(HttpHeaderFields.IfRange), true);
+					HandleStreamWriteStatus(streamWriteStatus);
 				}
-
-				IEnumerable<RangeRequest> rangeRequests;
-				if (!HeadersValidate(fileDetails, out rangeRequests)) { return; }
-
-				HttpResponseType responseStreamType = method == HttpMethodNames.Header.ToEnumValueString() ?
-					HttpResponseType.HeadOnly : HttpResponseType.Complete;
-				//we've passed our credential checking and we're ready to send out our response
-				StreamWriteStatus streamWriteStatus = new ResponseStreamWriter(this._response, this._configuration.FileTransferBufferSizeInKBytes)
-					.StreamFile(responseStreamType, fileDetails, rangeRequests, this._request.RetrieveHeader(HttpHeaderFields.IfRange), true);
-				HandleStreamWriteStatus(streamWriteStatus);
 			}
 			catch (HttpException hex)
 			{
