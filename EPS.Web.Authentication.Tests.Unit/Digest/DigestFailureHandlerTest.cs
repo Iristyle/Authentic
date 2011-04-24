@@ -145,7 +145,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 		}
 
 		[Fact]
-		//[SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "It's a test")]
+		[SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "This is a fairly complex end-to-end test")]
 		[SuppressMessage("Gendarme.Rules.Concurrency", "WriteStaticFieldFromInstanceMethodRule", Justification = "NonceManager.Now is intended to only be used internally by tests, and as such is OK")]
 		public void OnAuthenticationFailure_RecognizesAndReportsStaleNonce()
 		{
