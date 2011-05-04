@@ -37,6 +37,7 @@
     <Compile Include="HttpContextInspectorsLocatorTest.cs" />
     <Compile Include="PrincipalBuilderLocatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryBasedMembershipProviderTest.cs" />
     <Compile Include="Utility\MembershipProviderLocatorTest.cs" />
     <Compile Include="ProviderCollectionExtensions.cs" />
   </ItemGroup>
