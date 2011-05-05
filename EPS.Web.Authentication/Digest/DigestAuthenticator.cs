@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security.Principal;
 using System.Web;
+using System.Web.Security;
 using EPS.Text;
 using EPS.Web.Authentication.Abstractions;
 using EPS.Web.Authentication.Digest.Configuration;
@@ -73,7 +74,8 @@ namespace EPS.Web.Authentication.Digest
 					throw new ArgumentException("MembershipProvider specified in configuration cannot be found, but is required to lookup user password for comparison");
 				}
 
-				string userPassword = membershipProvider.GetUser(digestHeader.UserName, false).GetPassword();
+				var membershipUser = membershipProvider.GetUser(digestHeader.UserName, true);
+				string userPassword = membershipUser.GetPassword();
 
 				//three things validate this digest request -- that the nonce matches the given address, that its not stale
 				//and that the credentials match the given realm / opaque / password
@@ -86,7 +88,7 @@ namespace EPS.Web.Authentication.Digest
 						new AuthenticationSuccessEvent(this, digestHeader.UserName).Raise();
 					}
 
-					IPrincipal principal = GetPrincipal(context, digestHeader.UserName, userPassword);
+					IPrincipal principal = GetPrincipal(context, membershipUser, digestHeader.UserName, userPassword);
 					IIdentity identity = null != principal ? principal.Identity : null;
 					if (null != identity && identity.IsAuthenticated)
 					{
@@ -105,13 +107,13 @@ namespace EPS.Web.Authentication.Digest
 			}
 		}
 
-		private IPrincipal GetPrincipal(HttpContextBase context, string username, string password)
+		private IPrincipal GetPrincipal(HttpContextBase context, MembershipUser membershipUser, string username, string password)
 		{
 			//if configuration specifies a plug-in principal builder, then use what's specified
 			//this allows us to accept digest auth credentials, but return custom principal objects
 			//i.e. digest username /password -> MyPrincipal!
 			if (null != Configuration.PrincipalBuilder)
-				return Configuration.PrincipalBuilder.ConstructPrincipal(context, username, password);
+				return Configuration.PrincipalBuilder.ConstructPrincipal(context, membershipUser, username, password);
 
 			//otherwise, use our generic identities / principals create principal and set Context.User
 			GenericIdentity id = new GenericIdentity(username, "CustomDigest");

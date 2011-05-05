@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Security.Principal;
+using System.Web;
+using System.Web.Security;
 using EPS.Web.Abstractions;
-using FakeItEasy;
 using Xunit;
 
 namespace EPS.Web.Authentication.Configuration.Tests.Unit
@@ -27,7 +29,7 @@ namespace EPS.Web.Authentication.Configuration.Tests.Unit
 				get { throw new InvalidOperationException(); }
 			}
 
-			public System.Security.Principal.IPrincipal ConstructPrincipal(System.Web.HttpContextBase context, string userName, string password)
+			public IPrincipal ConstructPrincipal(HttpContextBase context, MembershipUser membershipUser, string userName, string password)
 			{
 				throw new InvalidOperationException();
 			}

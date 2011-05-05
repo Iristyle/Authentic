@@ -24,6 +24,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Basic\BasicAuthenticatorTest.cs" />
     <Compile Include="Configuration\FailureHandlerConfigurationSectionLocatorTest.cs" />
     <Compile Include="Configuration\AuthenticatorConfigurationValidatorTest.cs" />
     <Compile Include="Digest\DigestFailureHandlerTest.cs" />
@@ -57,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abstractions\" />
-    <Folder Include="Basic\" />
   </ItemGroup>
   <Import Project="..\Build\Shared.Test.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

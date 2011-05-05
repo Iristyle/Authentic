@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Net;
 using System.Security.Principal;
 using System.Web;
+using System.Web.Security;
 using EPS.Web.Authentication.Abstractions;
 using EPS.Web.Authentication.Basic.Configuration;
 using EPS.Web.Authentication.Security;
@@ -52,16 +53,21 @@ namespace EPS.Web.Authentication.Basic
 				}
 
 				var membershipProvider = MembershipProviderLocator.GetProvider(Configuration.ProviderName);
+				MembershipUser membershipUser = null;
+				if (null != membershipProvider && membershipProvider.ValidateUser(credentials.UserName, credentials.Password))
+				{
+					membershipUser = membershipProvider.GetUser(credentials.UserName, true);
+				}
 
 				//either we don't need to validate, or the user specified a validator
-				if (null == membershipProvider || membershipProvider.ValidateUser(credentials.UserName, credentials.Password))
+				if (null == membershipProvider || null != membershipUser)
 				{
 					if (null != membershipProvider)
 					{
 						new AuthenticationSuccessEvent(this, credentials.UserName).Raise();
 					}
 
-					IPrincipal principal = GetPrincipal(context, credentials.UserName, credentials.Password);
+					IPrincipal principal = GetPrincipal(context, membershipUser, credentials.UserName, credentials.Password);
 					IIdentity identity = null != principal ? principal.Identity : null;
 					if (null != identity && identity.IsAuthenticated)
 					{
@@ -80,13 +86,13 @@ namespace EPS.Web.Authentication.Basic
 			}
 		}
 
-		private IPrincipal GetPrincipal(HttpContextBase context, string username, string password)
+		private IPrincipal GetPrincipal(HttpContextBase context, MembershipUser membershipUser, string username, string password)
 		{
 			//if configuration specifies a plug-in principal builder, then use what's specified
 			//this allows use to accept basic auth credentials, but return custom principal objects
 			//i.e. username /password -> custom principal!
 			if (null != Configuration.PrincipalBuilder)
-				return Configuration.PrincipalBuilder.ConstructPrincipal(context, username, password);
+				return Configuration.PrincipalBuilder.ConstructPrincipal(context, membershipUser, username, password);
 
 			//otherwise, use our generic identities / principals create principal and set Context.User
 			GenericIdentity id = new GenericIdentity(username, "CustomBasic");

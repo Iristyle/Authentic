@@ -1,6 +1,6 @@
-using System;
 using System.Security.Principal;
 using System.Web;
+using System.Web.Security;
 using EPS.Web.Authentication.Configuration;
 
 namespace EPS.Web.Abstractions
@@ -20,11 +20,12 @@ namespace EPS.Web.Abstractions
         /// <value> The configuration. </value>
         IAuthenticatorConfiguration Configuration { get; }
         
-        /// <summary>   Construct an IPrincipal given a username and password (context through in for good measure). </summary>
-        /// <param name="context">  The context. </param>
-        /// <param name="userName"> The username. </param>
-        /// <param name="password"> The password. </param>
-        /// <returns>   An IPrincipal if the given credentials could be authenticated, otherwise null. </returns>
-        IPrincipal ConstructPrincipal(HttpContextBase context, string userName, string password);
+        /// <summary>	Construct an IPrincipal given a username and password / MembershipUser (context thrown in for good measure). </summary>
+        /// <param name="context">			The context. </param>
+        /// <param name="membershipUser">	The membership user extracted if there was a MembershipProvider specified through configuration.  May be null. </param>
+        /// <param name="userName">			The username. </param>
+        /// <param name="password">			The password. </param>
+        /// <returns>	An IPrincipal if the given credentials could be authenticated, otherwise null. </returns>
+        IPrincipal ConstructPrincipal(HttpContextBase context, MembershipUser membershipUser, string userName, string password);
     }
 }
