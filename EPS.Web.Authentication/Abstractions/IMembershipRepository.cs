@@ -3,6 +3,9 @@ using System.Web.Security;
 
 namespace EPS.Web.Authentication.Abstractions
 {
+	//TODO: 5-4-2011 consider making this IMembershipRepository<T> with a property
+	// of IMembershipUserConverter<T> 
+	// and all the methods spec'd out so that they return a T, or ReadOnlyCollection<T> -- ie UpdateUser<T>, etc
 	/// <summary>	Interface for membership repository. Can be used as the backing store for provider RepositoryBasedMembershipProvider.  This interface
 	/// 			is almost completely derived from IMembershipProvider</summary>
 	/// <remarks>	ebrown, 5/2/2011. </remarks>

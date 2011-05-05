@@ -18,6 +18,6 @@ namespace EPS.Web.Authentication
 				resolve = new Lazy<Func<string, IMembershipRepository>>(() => value);
 			}
 		}
-		private static Lazy<Func<string, IMembershipRepository>> resolve = new Lazy<Func<string,IMembershipRepository>>();
+		private static Lazy<Func<string, IMembershipRepository>> resolve = new Lazy<Func<string, IMembershipRepository>>();
 	}
 }
