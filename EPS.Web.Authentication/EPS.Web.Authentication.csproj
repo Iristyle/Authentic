@@ -64,6 +64,7 @@
     <Compile Include="Digest\PrivateHashEncoder.cs" />
     <Compile Include="Configuration\HttpContextInspectorsLocator.cs" />
     <Compile Include="Abstractions\IMembershipRepository.cs" />
+    <Compile Include="IMembershipUserConverter.cs" />
     <Compile Include="MembershipRepositoryFactory.cs" />
     <Compile Include="RepositoryBasedMembershipProvider.cs" />
     <Compile Include="SimpleFailureEventArgs.cs" />
