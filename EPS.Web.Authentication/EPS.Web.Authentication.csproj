@@ -33,8 +33,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicMembership.cs" />
-    <Compile Include="MembershipRepositoryOperations.cs" />
     <Compile Include="Basic\Configuration\BasicFailureHandlerConfiguration.cs" />
     <Compile Include="Basic\Configuration\IBasicAuthenticatorConfiguration.cs" />
     <Compile Include="Basic\Configuration\IBasicFailureHandlerConfiguration.cs" />
@@ -108,9 +106,9 @@
       <Project>{10D51FFF-4F91-4917-82EA-B7426B2652F6}</Project>
       <Name>EPS.Utility</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EPS.Web.Authentication.Abstractions\EPS.Web.Authentication.Abstractions.csproj">
+    <ProjectReference Include="..\EPS.Web.Authentication.Abstractions\EPS.Web.Authentication.Membership.csproj">
       <Project>{861A7486-13AB-4837-B21D-43CE461B6AA1}</Project>
-      <Name>EPS.Web.Authentication.Abstractions</Name>
+      <Name>EPS.Web.Authentication.Membership</Name>
     </ProjectReference>
     <ProjectReference Include="..\EPS.Web\EPS.Web.csproj">
       <Project>{41E2BFC8-105F-4927-B43D-644DD25BD8CE}</Project>
