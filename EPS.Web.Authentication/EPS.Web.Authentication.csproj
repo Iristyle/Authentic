@@ -33,6 +33,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicMembership.cs" />
+    <Compile Include="IBasicMembership.cs" />
     <Compile Include="MembershipRepositoryOperations.cs" />
     <Compile Include="Basic\Configuration\BasicFailureHandlerConfiguration.cs" />
     <Compile Include="Basic\Configuration\IBasicAuthenticatorConfiguration.cs" />
