@@ -8,6 +8,10 @@ namespace EPS.Web.Authentication.Digest.Configuration
 	public interface IDigestAuthenticatorConfiguration :
 			IAuthenticatorConfiguration
 	{
+		/// <summary>	Gets the password retriever implementation - either this or a ProviderName for membership must be setup. </summary>
+		/// <value>	The password retriever. </value>
+		IPasswordRetriever PasswordRetriever { get; }
+
 		/// <summary>   Gets or sets the realm of the digest response on an outgoing 401 challenge. </summary>
 		/// <value> The realm. </value>
 		string Realm { get; }

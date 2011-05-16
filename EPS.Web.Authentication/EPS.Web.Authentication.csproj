@@ -45,9 +45,11 @@
     <Compile Include="Configuration\IModuleConfiguration.cs" />
     <Compile Include="Configuration\IAuthenticatorConfiguration.cs" />
     <Compile Include="Configuration\IRedirectFailureHandlerConfiguration.cs" />
+    <Compile Include="Configuration\PasswordRetrieverLocator.cs" />
     <Compile Include="Configuration\RedirectFailureHandlerConfiguration.cs" />
     <Compile Include="Digest\Configuration\DigestFailureHandlerConfiguration.cs" />
     <Compile Include="Digest\Configuration\DigestAuthenticatorConfiguration.cs" />
+    <Compile Include="Digest\IPasswordRetriever.cs" />
     <Compile Include="HttpAuthenticationModuleConfigureEventArgs.cs" />
     <Compile Include="Configuration\PrincipalBuilderLocator.cs" />
     <Compile Include="Digest\DigestFailureHandler.cs" />

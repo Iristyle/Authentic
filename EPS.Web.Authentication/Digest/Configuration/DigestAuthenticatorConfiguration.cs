@@ -24,6 +24,19 @@ namespace EPS.Web.Authentication.Digest.Configuration
 			PrivateKey = privateKey;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the DigestAuthenticatorConfiguration class.
+		/// </summary>
+		public DigestAuthenticatorConfiguration(string name, IAuthenticator authenticator,
+			IPrincipalBuilder principalBuilder, string realm, string privateKey, IPasswordRetriever passwordRetriever) :
+			base(name, authenticator, principalBuilder)
+		{
+			Realm = realm;
+			PrivateKey = privateKey;
+			PasswordRetriever = passwordRetriever;
+		}
+
+
 		/// <summary>   Gets or sets the realm of the digest response on an outgoing 401 challenge. </summary>
 		/// <value> The realm. </value>
 		public string Realm { get; private set; }
@@ -39,5 +52,9 @@ namespace EPS.Web.Authentication.Digest.Configuration
 			get { return _nonceValidDuration; }
 			set { _nonceValidDuration = value; }
 		}
+
+		/// <summary>	Gets the password retriever implementation - either this or a ProviderName for membership must be setup. </summary>
+		/// <value>	The password retriever. </value>
+		public IPasswordRetriever PasswordRetriever { get; private set; }
 	}
 }

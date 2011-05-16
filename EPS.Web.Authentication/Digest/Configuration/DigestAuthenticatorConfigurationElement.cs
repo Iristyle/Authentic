@@ -59,5 +59,26 @@ namespace EPS.Web.Authentication.Digest.Configuration
 			get { return (TimeSpan)this["nonceValidDuration"]; }
 			set { base["nonceValidDuration"] = value; }
 		}
+
+
+		/// <summary>   Gets or sets the principal builder factory Type name. </summary>
+		/// <value> 
+		/// The FullName for the type of the principal builder factory -- i.e. the class that implements <see cref="T:
+		/// EPS.Web.Abstractions.IPrincipalBuilderFactory"/>. 
+		/// </value>
+		[ConfigurationProperty("passwordRetrieverName", DefaultValue = "")]
+		public string PasswordRetrieverName
+		{
+			get { return (string)this["passwordRetrieverName"]; }
+			set { this["passwordRetrieverName"] = value; }
+		}
+
+
+		/// <summary>	Gets the password retriever implementation - either this or a ProviderName for membership must be setup. </summary>
+		/// <value>	The password retriever. </value>
+		public IPasswordRetriever PasswordRetriever
+		{
+			get { throw new NotImplementedException(); }
+		}
 	}
 }

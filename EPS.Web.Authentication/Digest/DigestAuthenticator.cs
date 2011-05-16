@@ -39,6 +39,7 @@ namespace EPS.Web.Authentication.Digest
 			if (string.IsNullOrWhiteSpace(config.Realm)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.Realm must not be whitespace", "config"); }
 			if (config.NonceValidDuration < TimeSpan.FromSeconds(20)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.NonceValidDuration must be at least 20 seconds", "config"); }
 			if (config.NonceValidDuration > TimeSpan.FromMinutes(60)) { throw new ArgumentException("IDigestAuthenticatorConfiguration.NonceValidDuration must be less than 60 minutes", "config"); }
+			if (string.IsNullOrWhiteSpace(config.ProviderName) && null == config.PasswordRetriever) { throw new ArgumentException("When no ProviderName is set, DigestAuthenticator requires a PasswordRetriever"); }
 
 			privateHashEncoder = new PrivateHashEncoder(configPrivateKey);
 		}
@@ -68,14 +69,26 @@ namespace EPS.Web.Authentication.Digest
 					return new AuthenticationResult(false, null, "No digest credentials found in HTTP header");
 				}
 
-				var membershipProvider = MembershipProviderLocator.GetProvider(Configuration.ProviderName);
-				if (null == membershipProvider)
-				{
-					throw new ArgumentException("MembershipProvider specified in configuration cannot be found, but is required to lookup user password for comparison");
-				}
+				MembershipProvider membershipProvider = null;
+				MembershipUser membershipUser = null;
+				string userPassword = null;
 
-				var membershipUser = membershipProvider.GetUser(digestHeader.UserName, true);
-				string userPassword = membershipUser.GetPassword();
+				//try our specially configured function first, and fail out to membership if not available
+				if (null != Configuration.PasswordRetriever)
+				{
+					userPassword = Configuration.PasswordRetriever.GetPassword(digestHeader.UserName);
+				}
+				else
+				{
+					membershipProvider = MembershipProviderLocator.GetProvider(Configuration.ProviderName);
+					if (null == membershipProvider)
+					{
+						throw new ArgumentException("MembershipProvider specified in configuration cannot be found, but is required to lookup user password for comparison");					
+					}
+
+					membershipUser = membershipProvider.GetUser(digestHeader.UserName, true);
+					userPassword = membershipUser.GetPassword();
+				}
 
 				//three things validate this digest request -- that the nonce matches the given address, that its not stale
 				//and that the credentials match the given realm / opaque / password
