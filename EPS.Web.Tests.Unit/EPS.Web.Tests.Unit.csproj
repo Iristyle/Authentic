@@ -59,6 +59,10 @@
     <Compile Include="WebHelpersTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EPS.Annotations\EPS.Annotations.csproj">
+      <Project>{ACAF7C74-B396-4768-A3B4-F4479C884FFC}</Project>
+      <Name>EPS.Annotations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EPS.Utility\EPS.Utility.csproj">
       <Project>{10D51FFF-4F91-4917-82EA-B7426B2652F6}</Project>
       <Name>EPS.Utility</Name>

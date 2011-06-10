@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Web;
-using EPS.Text;
+using EPS.Annotations;
 using FakeItEasy;
 using Xunit;
 

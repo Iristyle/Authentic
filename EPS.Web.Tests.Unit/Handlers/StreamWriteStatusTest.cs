@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using EPS.Text;
+using EPS.Annotations;
 using Xunit;
 
 namespace EPS.Web.Handlers.Tests.Unit

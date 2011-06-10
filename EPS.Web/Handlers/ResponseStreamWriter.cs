@@ -7,7 +7,7 @@ using System.Net;
 using System.Security.Principal;
 using System.Web;
 using Common.Logging;
-using EPS.Text;
+using EPS.Annotations;
 
 namespace EPS.Web.Handlers
 {

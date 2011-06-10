@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using EPS.Security.Cryptography;
-using EPS.Text;
+using EPS.Annotations;
 
 namespace EPS.Web
 {

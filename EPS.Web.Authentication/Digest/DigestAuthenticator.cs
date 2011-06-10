@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
-using EPS.Text;
+using EPS.Annotations;
 using EPS.Web.Authentication.Abstractions;
 using EPS.Web.Authentication.Digest.Configuration;
 using EPS.Web.Authentication.Security;

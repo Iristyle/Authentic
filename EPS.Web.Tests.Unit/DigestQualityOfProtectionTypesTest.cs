@@ -1,5 +1,5 @@
 using System;
-using EPS.Text;
+using EPS.Annotations;
 using Xunit;
 
 namespace EPS.Web.Tests.Unit

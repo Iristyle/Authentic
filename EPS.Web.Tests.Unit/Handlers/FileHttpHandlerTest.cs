@@ -2,7 +2,7 @@
 using System.Net;
 using System.Web;
 using Autofac;
-using EPS.Text;
+using EPS.Annotations;
 using EPS.Web.Configuration;
 using FakeItEasy;
 using Xunit;

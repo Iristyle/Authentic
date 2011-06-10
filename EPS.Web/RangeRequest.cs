@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using EPS.Text;
+using EPS.Annotations;
 
 namespace EPS.Web
 {

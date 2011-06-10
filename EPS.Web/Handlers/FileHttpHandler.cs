@@ -7,7 +7,7 @@ using System.Threading;
 using System.Web;
 using System.Web.SessionState;
 using Common.Logging;
-using EPS.Text;
+using EPS.Annotations;
 using EPS.Web.Abstractions;
 using EPS.Web.Configuration;
 
