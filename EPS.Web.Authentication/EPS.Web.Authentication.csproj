@@ -50,7 +50,6 @@
     <Compile Include="Digest\Configuration\DigestFailureHandlerConfiguration.cs" />
     <Compile Include="Digest\Configuration\DigestAuthenticatorConfiguration.cs" />
     <Compile Include="Digest\IPasswordRetriever.cs" />
-    <Compile Include="HttpAuthenticationModuleConfigureEventArgs.cs" />
     <Compile Include="Configuration\PrincipalBuilderLocator.cs" />
     <Compile Include="Digest\DigestFailureHandler.cs" />
     <Compile Include="Digest\DigestFailureHandlerFactory.cs" />
