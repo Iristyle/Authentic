@@ -38,11 +38,11 @@
     <Compile Include="Basic\Configuration\IBasicFailureHandlerConfiguration.cs" />
     <Compile Include="Configuration\FailureHandlerConfigurationSectionLocator.cs" />
     <Compile Include="Configuration\FailureHandlerConfiguration.cs" />
-    <Compile Include="Configuration\ModuleConfiguration.cs" />
+    <Compile Include="Configuration\HttpAuthenticationConfiguration.cs" />
     <Compile Include="Configuration\AuthenticatorConfiguration.cs" />
     <Compile Include="Configuration\AuthenticatorConfigurationValidator.cs" />
     <Compile Include="Configuration\IFailureHandlerConfiguration.cs" />
-    <Compile Include="Configuration\IModuleConfiguration.cs" />
+    <Compile Include="Configuration\IHttpAuthenticationConfiguration.cs" />
     <Compile Include="Configuration\IAuthenticatorConfiguration.cs" />
     <Compile Include="Configuration\IRedirectFailureHandlerConfiguration.cs" />
     <Compile Include="Configuration\PasswordRetrieverLocator.cs" />
@@ -64,6 +64,8 @@
     <Compile Include="Digest\Opaque.cs" />
     <Compile Include="Digest\PrivateHashEncoder.cs" />
     <Compile Include="Configuration\HttpContextInspectorsLocator.cs" />
+    <Compile Include="HttpAuthenticationHandler.cs" />
+    <Compile Include="HttpContextRequestProcessor.cs" />
     <Compile Include="MembershipRepositoryFactory.cs" />
     <Compile Include="RepositoryBasedMembershipProvider.cs" />
     <Compile Include="SimpleFailureEventArgs.cs" />
@@ -87,7 +89,7 @@
     <Compile Include="Basic\BasicAuthenticator.cs" />
     <Compile Include="Basic\BasicAuthenticatorFactory.cs" />
     <Compile Include="Basic\Configuration\BasicAuthenticatorConfigurationElement.cs" />
-    <Compile Include="Configuration\HttpAuthenticationModuleConfigurationSection.cs" />
+    <Compile Include="Configuration\HttpAuthenticationConfigurationSection.cs" />
     <Compile Include="Configuration\AuthenticatorConfigurationElement.cs" />
     <Compile Include="Configuration\AuthenticatorConfigurationElementDictionary.cs" />
     <Compile Include="Abstractions\IPrincipalBuilder.cs" />

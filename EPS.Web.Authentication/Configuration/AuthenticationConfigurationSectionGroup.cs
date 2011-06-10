@@ -10,9 +10,9 @@ namespace EPS.Web.Authentication.Configuration
         /// <summary>   Gets the configuration section responsible for configuring the header inspector. </summary>
         /// <value> The header inspector. </value>
         [ConfigurationProperty("httpHeaderAuthentication", IsRequired = false)]
-        public HttpAuthenticationModuleConfigurationSection HeaderInspector
+        public HttpAuthenticationConfigurationSection HeaderInspector
         {
-            get { return (HttpAuthenticationModuleConfigurationSection)Sections["httpHeaderAuthentication"]; }
+            get { return (HttpAuthenticationConfigurationSection)Sections["httpHeaderAuthentication"]; }
         }
 
         /*

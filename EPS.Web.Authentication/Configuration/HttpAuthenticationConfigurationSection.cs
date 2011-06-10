@@ -31,9 +31,9 @@ namespace EPS.Web.Authentication.Configuration
 
     /// <summary>   The top-level ConfigurationSection used to setup the Http context inspecting authenticators. </summary>
     /// <remarks>   ebrown, 1/3/2011. </remarks>
-    public class HttpAuthenticationModuleConfigurationSection : 
+    public class HttpAuthenticationConfigurationSection : 
         ConfigurationSection, 
-        IModuleConfiguration
+        IHttpAuthenticationConfiguration
     {
         /// <summary>   Inspects the configuration specified and throws errors where configuration is invaild. </summary>
         /// <remarks>   ebrown, 1/3/2011. </remarks>

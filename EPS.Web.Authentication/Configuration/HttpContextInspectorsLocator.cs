@@ -62,7 +62,7 @@ namespace EPS.Web.Authentication.Configuration
 		/// <exception cref="ArgumentNullException">    Thrown when one or more required arguments are null. </exception>
 		/// <param name="configuration">    The configuration. </param>
 		/// <returns>   The failure handler. </returns>
-		public static IFailureHandler GetFailureHandler(HttpAuthenticationModuleConfigurationSection configuration)
+		public static IFailureHandler GetFailureHandler(HttpAuthenticationConfigurationSection configuration)
 		{
 			if (null == configuration) { throw new ArgumentNullException("configuration"); }
 

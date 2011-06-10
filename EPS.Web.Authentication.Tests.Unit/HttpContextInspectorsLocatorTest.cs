@@ -129,21 +129,21 @@ namespace EPS.Web.Authentication.Tests.Unit
 		[Fact]
 		public void GetFailureHandler_ReturnsNullOnNullConfiguration()
 		{
-			var config = new HttpAuthenticationModuleConfigurationSection();
+			var config = new HttpAuthenticationConfigurationSection();
 			Assert.Null(HttpContextInspectorsLocator.GetFailureHandler(config));
 		}
 
 		[Fact]
 		public void GetFailureHandler_ThrowsOnInvalidConfigurationTypeName()
 		{
-			var config = new HttpAuthenticationModuleConfigurationSection() { FailureHandlerFactoryName = "GobbledyGook" };
+			var config = new HttpAuthenticationConfigurationSection() { FailureHandlerFactoryName = "GobbledyGook" };
 			Assert.Throws<ArgumentNullException>(() => HttpContextInspectorsLocator.GetFailureHandler(config));
 		}
 
 		[Fact]
 		public void GetFailureHandler_ReturnsCorrectlyTypedInstance()
 		{
-			var config = new HttpAuthenticationModuleConfigurationSection() { FailureHandlerFactoryName = typeof(MockConfigFactory).AssemblyQualifiedName };
+			var config = new HttpAuthenticationConfigurationSection() { FailureHandlerFactoryName = typeof(MockConfigFactory).AssemblyQualifiedName };
 
 			Assert.IsType<MockFailureHandler>(HttpContextInspectorsLocator.GetFailureHandler(config));
 		}
