@@ -2,8 +2,6 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Web;
-using EPS.Web.Authentication;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -22,8 +20,6 @@ using EPS.Web.Authentication;
 [assembly: Guid("3BFA6D41-DA95-448F-A0EB-67CC4CF67673")]
 
 [assembly: InternalsVisibleTo("EPS.Web.Authentication.Tests.Unit")]
-
-[assembly: PreApplicationStartMethod(typeof(HttpAuthenticationModule), "RegisterModule")]
 
 [assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Target = "EPS.Web.Authentication.Security", Scope = "namespace", Justification = "Most appropriate namespace structure")]
 [assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Target = "EPS.Web.Authentication.Utility", Scope = "namespace", Justification = "Most appropriate namespace structure")]
