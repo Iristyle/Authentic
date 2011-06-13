@@ -10,20 +10,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpAuthenticationModuleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EPS.Web.Authentication.IIS\EPS.Web.Authentication.IIS.csproj">
       <Project>{E9FC1B7E-83F3-4F07-B8C9-AFBF60D2E419}</Project>
       <Name>EPS.Web.Authentication.IIS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EPS.Web.Authentication.Membership\EPS.Web.Authentication.Membership.csproj">
+      <Project>{861A7486-13AB-4837-B21D-43CE461B6AA1}</Project>
+      <Name>EPS.Web.Authentication.Membership</Name>
     </ProjectReference>
     <ProjectReference Include="..\EPS.Web.Authentication\EPS.Web.Authentication.csproj">
       <Project>{E5EA4024-EB71-462D-A3D4-447182A000D6}</Project>

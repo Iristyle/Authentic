@@ -2,7 +2,7 @@
 using FakeItEasy;
 using Xunit;
 
-namespace EPS.Web.Authentication.Tests.Unit
+namespace EPS.Web.Authentication.IIS.Tests.Unit
 {
 	public class HttpAuthenticationModuleTest
 	{

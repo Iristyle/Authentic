@@ -11,15 +11,21 @@
   <ItemGroup>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HttpAuthenticationModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EPS.Web.Authentication.Membership\EPS.Web.Authentication.Membership.csproj">
+      <Project>{861A7486-13AB-4837-B21D-43CE461B6AA1}</Project>
+      <Name>EPS.Web.Authentication.Membership</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EPS.Web.Authentication\EPS.Web.Authentication.csproj">
       <Project>{E5EA4024-EB71-462D-A3D4-447182A000D6}</Project>
       <Name>EPS.Web.Authentication</Name>

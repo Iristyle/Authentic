@@ -34,7 +34,6 @@
     <Compile Include="Digest\NonceManagerTest.cs" />
     <Compile Include="Digest\NonceTimestampParserTest.cs" />
     <Compile Include="Digest\PrivateHashEncoderTest.cs" />
-    <Compile Include="HttpAuthenticationModuleTest.cs" />
     <Compile Include="HttpContextInspectorsLocatorTest.cs" />
     <Compile Include="PrincipalBuilderLocatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
