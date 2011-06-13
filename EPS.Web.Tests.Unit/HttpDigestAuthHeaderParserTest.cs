@@ -9,7 +9,7 @@ namespace EPS.Web.Tests.Unit
 	public class HttpDigestAuthHeaderParserTest
 	{
 		private IEqualityComparer<DigestHeader> comparer = new GenericEqualityComparer<DigestHeader>
-			((x, y) => PropertyComparer.Equal(x, y));
+			((x, y) => MemberComparer.Equal(x, y));
 
 		[Fact]
 		public void TryExtractDigestHeader_ReturnsFalseWithNullDigestHeaderInstance_OnNullString()

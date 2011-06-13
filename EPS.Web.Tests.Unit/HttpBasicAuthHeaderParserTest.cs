@@ -9,7 +9,7 @@ namespace EPS.Web.Tests.Unit
     public class HttpBasicAuthHeaderParserTest
     {
         private IEqualityComparer<NetworkCredential> comparer = new GenericEqualityComparer<NetworkCredential>
-            ((x, y) => PropertyComparer.Equal(x, y));
+            ((x, y) => MemberComparer.Equal(x, y));
 
         [Fact]
         public void TryExtractCredentialsFromHeader_ReturnsFalseWithNullNetworkCredentialInstance_OnNullString()
