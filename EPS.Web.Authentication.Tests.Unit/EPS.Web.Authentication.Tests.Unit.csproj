@@ -37,7 +37,6 @@
     <Compile Include="HttpContextInspectorsLocatorTest.cs" />
     <Compile Include="PrincipalBuilderLocatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepositoryBasedMembershipProviderTest.cs" />
     <Compile Include="Utility\MembershipProviderLocatorTest.cs" />
     <Compile Include="ProviderCollectionExtensions.cs" />
   </ItemGroup>
@@ -45,10 +44,6 @@
     <ProjectReference Include="..\EPS.Utility\EPS.Utility.csproj">
       <Project>{10D51FFF-4F91-4917-82EA-B7426B2652F6}</Project>
       <Name>EPS.Utility</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\EPS.Web.Authentication.Membership\EPS.Web.Authentication.Membership.csproj">
-      <Project>{861A7486-13AB-4837-B21D-43CE461B6AA1}</Project>
-      <Name>EPS.Web.Authentication.Membership</Name>
     </ProjectReference>
     <ProjectReference Include="..\EPS.Web.Authentication\EPS.Web.Authentication.csproj">
       <Project>{E5EA4024-EB71-462D-A3D4-447182A000D6}</Project>
