@@ -9,9 +9,9 @@ namespace EPS.Web.Authentication.Digest
 	/// <remarks>	ebrown, 5/16/2011. </remarks>
 	public interface IPasswordRetriever
 	{
-		/// <summary>	Gets a password. </summary>
+		/// <summary>	Gets a plaintext password given a userName. </summary>
 		/// <param name="userName">	Name of the user. </param>
-		/// <returns>	The password. </returns>
+		/// <returns>	The plaintext password. </returns>
 		string GetPassword(string userName);
 	}
 }
