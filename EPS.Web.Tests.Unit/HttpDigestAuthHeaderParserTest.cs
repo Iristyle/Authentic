@@ -15,7 +15,7 @@ namespace EPS.Web.Tests.Unit
 		public void TryExtractDigestHeader_ReturnsFalseWithNullDigestHeaderInstance_OnNullString()
 		{
 			DigestHeader digestHeader;
-			bool status = HttpDigestAuthHeaderParser.TryExtractDigestHeader(HttpMethodNames.Get, null, out digestHeader);
+			bool status = HttpDigestAuthHeaderParser.TryExtractDigestHeader("GET", null, out digestHeader);
 			Assert.True(status == false && null == digestHeader);
 		}
 
@@ -23,39 +23,39 @@ namespace EPS.Web.Tests.Unit
 		public void TryExtractDigestHeader_ReturnsFalseWithNullDigestHeaderInstance_OnEmptyString()
 		{
 			DigestHeader digestHeader;
-			bool status = HttpDigestAuthHeaderParser.TryExtractDigestHeader(HttpMethodNames.Get, string.Empty, out digestHeader);
+			bool status = HttpDigestAuthHeaderParser.TryExtractDigestHeader("GET", string.Empty, out digestHeader);
 			Assert.True(status == false && null == digestHeader);
 		}
 
 		[Fact]
 		public void ExtractDigestHeader_ThrowsOnNullString()
 		{
-			Assert.Throws<ArgumentNullException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader(HttpMethodNames.Get, null));
+			Assert.Throws<ArgumentNullException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader("GET", null));
 		}
 
 		[Fact]
 		public void ExtractDigestHeader_ThrowsOnInvalidHttpMethodName()
 		{
-			Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader((HttpMethodNames)80, string.Empty));
+			Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader("GOO", string.Empty));
 		}
 
 		[Fact]
 		public void ExtractDigestHeader_ThrowsOnEmptyString()
 		{
-			Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader(HttpMethodNames.Get, string.Empty));
+			Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader("GET", string.Empty));
 		}
 
 		[Fact]
 		public void ExtractDigestHeader_ThrowsOnBasicAuthTypeString()
 		{
-			Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader(HttpMethodNames.Get, @"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="));
+			Assert.Throws<ArgumentException>(() => HttpDigestAuthHeaderParser.ExtractDigestHeader("GET", @"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="));
 		}
 
 		[Fact]
 		[SuppressMessage("Gendarme.Rules.Portability", "DoNotHardcodePathsRule", Justification = "The path is part of a Uri and this usage is acceptable")]
 		public void ExtractDigestHeader_ParsesCompleteHeaderCorrectly()
 		{
-			HttpMethodNames verb = HttpMethodNames.Get;
+			string verb = "GET";
 			string header = @"Digest username=""Mufasa"",
 realm=""testrealm@host.com"",
 nonce=""QWxhZGRpbjpvcGVuIHNlc2FtZQ=="",

@@ -17,7 +17,7 @@ namespace EPS.Web.Tests.Unit
 		[Fact]
 		public void MatchesCredentials_ThrowsOnInvalidHttpMethodName()
 		{
-			var header = new DigestHeader() { Verb = (HttpMethodNames)57 };
+			var header = new DigestHeader() { Verb = "FOO" };
 			Assert.Throws<NotSupportedException>(() => { header.MatchesCredentials(string.Empty, string.Empty, string.Empty); });
 		}
 
@@ -44,7 +44,7 @@ namespace EPS.Web.Tests.Unit
 
 			var header = new DigestHeader()
 			{
-				Verb = HttpMethodNames.Get,
+				Verb = "GET",
 				UserName = "Mufasa",
 				Realm = "testrealm@host.com",
 				Nonce = "dcd98b7102dd2f0e8b11d0f600bfb0c093",
@@ -70,7 +70,7 @@ namespace EPS.Web.Tests.Unit
 
 			var header = new DigestHeader()
 			{
-				Verb = HttpMethodNames.Get,
+				Verb = "GET",
 				UserName = "Mufasa",
 				Realm = realm,
 				Nonce = "dcd98b7102dd2f0e8b11d0f600bfb0c093",
@@ -95,7 +95,7 @@ namespace EPS.Web.Tests.Unit
 
 			var header = new DigestHeader()
 			{
-				Verb = HttpMethodNames.Get,
+				Verb = "GET",
 				UserName = "Mufasa",
 				Realm = realm,
 				Nonce = "dcd98b7102dd2f0e8b11d0f600bfb0c093",
