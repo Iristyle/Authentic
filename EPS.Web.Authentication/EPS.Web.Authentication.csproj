@@ -21,6 +21,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\FailureHandlerAction.cs" />
     <Compile Include="Basic\Configuration\BasicFailureHandlerConfiguration.cs" />
     <Compile Include="Basic\Configuration\IBasicAuthenticatorConfiguration.cs" />
     <Compile Include="Basic\Configuration\IBasicFailureHandlerConfiguration.cs" />
