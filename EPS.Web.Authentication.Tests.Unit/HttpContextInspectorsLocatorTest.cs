@@ -52,7 +52,7 @@ namespace EPS.Web.Authentication.Tests.Unit
 		class MockFailureHandler :
 			IFailureHandler
 		{
-			public IPrincipal OnAuthenticationFailure(HttpContextBase context, Dictionary<IAuthenticator, AuthenticationResult> inspectorResults)
+			public FailureHandlerAction OnAuthenticationFailure(HttpContextBase context, Dictionary<IAuthenticator, AuthenticationResult> inspectorResults)
 			{
 				throw new InvalidOperationException();
 			}
