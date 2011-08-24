@@ -19,6 +19,7 @@ namespace EPS.Web.Authentication
 		private IHttpAuthenticationConfiguration configuration;
 		//TODO: 6-10-2011 -- we should provide a similar hook for the standard .config parsers to publish this information up to the module level
 		private static Func<HttpAuthenticationHandler, IHttpAuthenticationConfiguration> _configure;
+		private static string RequestProcessedKey = Guid.NewGuid().ToString("N");
 
 		/// <summary>	
 		/// A user defined configuration function so that the module may be configured in code.  This should be implemented as close to the root
@@ -88,7 +89,12 @@ namespace EPS.Web.Authentication
 			//this shouldn't ever happen
 			if (null == context) { throw new ArgumentNullException("context"); }
 
-			HttpContextRequestProcessor.Process(context, Configuration);
+			//prevent double execution
+			if (!context.Items.Contains(RequestProcessedKey))
+			{
+				context.Items[RequestProcessedKey] = true;
+				HttpContextRequestProcessor.Process(context, Configuration);
+			}
 		}		
 	}
 }
