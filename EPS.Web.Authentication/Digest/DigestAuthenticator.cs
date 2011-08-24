@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
-using EPS.Annotations;
 using EPS.Web.Authentication.Abstractions;
 using EPS.Web.Authentication.Digest.Configuration;
 using EPS.Web.Authentication.Security;
@@ -63,7 +62,7 @@ namespace EPS.Web.Authentication.Digest
 
 				////attempt to extract credentials from header
 				DigestHeader digestHeader;
-				if (!HttpDigestAuthHeaderParser.TryExtractDigestHeader(request.HttpMethod.ToEnumFromEnumValue<HttpMethodNames>(), authHeader, out digestHeader))
+				if (!HttpDigestAuthHeaderParser.TryExtractDigestHeader(request.HttpMethod ?? request.RequestType, authHeader, out digestHeader))
 				{
 					//don't log an event since there was nothing to succeed / fail
 					return new AuthenticationResult(false, null, "No digest credentials found in HTTP header");
@@ -91,7 +90,7 @@ namespace EPS.Web.Authentication.Digest
 				}
 
 				//three things validate this digest request -- that the nonce matches the given address, that its not stale
-				//and that the credentials match the given realm / opaque / password
+				//and that the credentials match the given realm / opaque / password				
 				if (NonceManager.Validate(digestHeader.Nonce, request.UserHostAddress, privateHashEncoder) &&
 					!NonceManager.IsStale(digestHeader.Nonce, Configuration.NonceValidDuration) &&
 					digestHeader.MatchesCredentials(Configuration.Realm, Opaque.Current(), userPassword))

@@ -22,7 +22,7 @@ namespace EPS.Web
 		/// <returns>   true if it succeeds in extracting a header, false if it fails. </returns>
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Intent is to eat any exceptions that may occur")]
 		[SuppressMessage("Gendarme.Rules.Smells", "AvoidSpeculativeGeneralityRule", Justification = "This method is useful because it doesn't throw exceptions")]
-		public static bool TryExtractDigestHeader(HttpMethodNames verb, string authHeader, out DigestHeader header)
+		public static bool TryExtractDigestHeader(string verb, string authHeader, out DigestHeader header)
 		{
 			header = null;
 
@@ -45,12 +45,13 @@ namespace EPS.Web
 		/// <param name="verb">         The HTTP verb. </param>
 		/// <param name="authHeader">   The incoming authorization header. </param>
 		/// <returns>   A new DigestHeader instance containing the relevant values as parsed from the header. </returns>
-		public static DigestHeader ExtractDigestHeader(HttpMethodNames verb, string authHeader)
+		public static DigestHeader ExtractDigestHeader(string verb, string authHeader)
 		{
 			try
 			{
 				if (null == authHeader) { throw new ArgumentNullException("authHeader"); }
-				if (!Enum.IsDefined(typeof(HttpMethodNames), verb)) { throw new ArgumentException("The verb specified is not valid", "verb"); }
+				if (null == verb) { throw new ArgumentNullException("verb"); }
+				if (!verb.IsEnumFromEnumValue<HttpMethodNames>()) { throw new ArgumentException(String.Format("The verb {0} specified is not valid", verb), "verb"); }
 
 				if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Digest", StringComparison.OrdinalIgnoreCase))
 				{

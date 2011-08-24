@@ -14,7 +14,7 @@ namespace EPS.Web
 	{
 		/// <summary>   Gets or sets the verb used during the request. </summary>
 		/// <value> The HTTP verb. </value>
-		public HttpMethodNames Verb { get; set; }
+		public string Verb { get; set; }
 		/// <summary>   Gets or sets the name of the user. </summary>
 		/// <value> The name of the user. </value>
 		public string UserName { get; set; }
@@ -59,8 +59,7 @@ namespace EPS.Web
 			if (null == realm) { throw new ArgumentNullException("realm"); }
 			if (null == password) { throw new ArgumentNullException("password"); }
 			if (DigestQualityOfProtectionType.AuthenticationWithIntegrity == QualityOfProtection) { throw new NotImplementedException("auth-int is not currently supported"); }
-			if (!Enum.IsDefined(typeof(HttpMethodNames), Verb)) { throw new NotSupportedException("The verb specified is not valid"); }
-
+			if (!Verb.IsEnumFromEnumValue<HttpMethodNames>()) { throw new NotSupportedException(String.Format("The verb {0} specified is not valid", Verb)); }
 
 			var encoding = Encoding.GetEncoding("ISO-8859-1");
 			using (var algorithm = MD5.Create())
@@ -75,7 +74,7 @@ namespace EPS.Web
 					encoding.GetBytes(string.Format(CultureInfo.InvariantCulture, "{0}:{1}:{2}", UserName, Realm, password)));
 				//valid for auth and unspecified
 				string hash2 = HashHelpers.SafeHash(algorithm,
-					encoding.GetBytes(string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Verb.ToEnumValueString(), Uri)));
+					encoding.GetBytes(string.Format(CultureInfo.InvariantCulture, "{0}:{1}", Verb, Uri)));
 
 				if (QualityOfProtection == DigestQualityOfProtectionType.Authentication)
 				{
