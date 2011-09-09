@@ -20,7 +20,7 @@ namespace EPS.Web.Authentication.Configuration
 		private bool providerNameInitialized;
 
 		/// <summary>
-		/// Initializes a new instance of the HttpContextInspectingAuthenticatorConfiguration class.
+		/// Initializes a new instance of the AuthenticatorConfiguration class.
 		/// </summary>
 		public AuthenticatorConfiguration(string name, IAuthenticator authenticator, IPrincipalBuilder principalBuilder)
 		{
@@ -52,7 +52,7 @@ namespace EPS.Web.Authentication.Configuration
 
 		/// <summary>   Gets or sets the human-friendly name / key for this inspector. </summary>
 		/// <value> The name. </value>
-		public string Name { get; private set; }
+		public string Name { get; protected set; }
 
 		/// <summary>   Gets or sets a value indicating whether the require SSL. </summary>
 		/// <value> true if require SSL, false if not. </value>
@@ -101,10 +101,10 @@ namespace EPS.Web.Authentication.Configuration
 
 		/// <summary>   Gets or sets the authenticator instance. </summary>
 		/// <value> The authenticator. </value>
-		public IAuthenticator Authenticator { get; private set; }
+		public IAuthenticator Authenticator { get; protected set; }
 
 		/// <summary>   Gets or sets the principal builder instance. </summary>
 		/// <value> The builder instance. </value>
-		public IPrincipalBuilder PrincipalBuilder { get; private set; }
+		public IPrincipalBuilder PrincipalBuilder { get; protected set; }
 	}
 }
