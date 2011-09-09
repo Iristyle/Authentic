@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Net;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
@@ -100,7 +101,7 @@ namespace EPS.Web.Authentication.Digest
 						new AuthenticationSuccessEvent(this, digestHeader.UserName).Raise();
 					}
 
-					IPrincipal principal = GetPrincipal(context, membershipUser, digestHeader.UserName, userPassword);
+					IPrincipal principal = GetPrincipal(context, membershipUser, new NetworkCredential(digestHeader.UserName, userPassword));
 					IIdentity identity = null != principal ? principal.Identity : null;
 					if (null != identity && identity.IsAuthenticated)
 					{
@@ -119,16 +120,16 @@ namespace EPS.Web.Authentication.Digest
 			}
 		}
 
-		private IPrincipal GetPrincipal(HttpContextBase context, MembershipUser membershipUser, string username, string password)
+		private IPrincipal GetPrincipal(HttpContextBase context, MembershipUser membershipUser, NetworkCredential credential)
 		{
 			//if configuration specifies a plug-in principal builder, then use what's specified
 			//this allows us to accept digest auth credentials, but return custom principal objects
 			//i.e. digest username /password -> MyPrincipal!
 			if (null != Configuration.PrincipalBuilder)
-				return Configuration.PrincipalBuilder.ConstructPrincipal(context, membershipUser, username, password);
+				return Configuration.PrincipalBuilder.ConstructPrincipal(context, membershipUser, credential);
 
 			//otherwise, use our generic identities / principals create principal and set Context.User
-			GenericIdentity id = new GenericIdentity(username, "CustomDigest");
+			GenericIdentity id = new GenericIdentity(credential.UserName, "CustomDigest");
 			if (!string.IsNullOrEmpty(Configuration.RoleProviderName))
 				return new FixedProviderRolePrincipal(RoleProviderHelper.GetProviderByName(Configuration.RoleProviderName), id);
 

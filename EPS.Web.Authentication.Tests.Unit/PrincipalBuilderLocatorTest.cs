@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
@@ -29,7 +30,7 @@ namespace EPS.Web.Authentication.Configuration.Tests.Unit
 				get { throw new InvalidOperationException(); }
 			}
 
-			public IPrincipal ConstructPrincipal(HttpContextBase context, MembershipUser membershipUser, string userName, string password)
+			public IPrincipal ConstructPrincipal(HttpContextBase context, MembershipUser membershipUser, NetworkCredential credential)
 			{
 				throw new InvalidOperationException();
 			}

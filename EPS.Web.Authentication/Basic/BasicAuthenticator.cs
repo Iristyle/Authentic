@@ -67,7 +67,7 @@ namespace EPS.Web.Authentication.Basic
 						new AuthenticationSuccessEvent(this, credentials.UserName).Raise();
 					}
 
-					IPrincipal principal = GetPrincipal(context, membershipUser, credentials.UserName, credentials.Password);
+					IPrincipal principal = GetPrincipal(context, membershipUser, credentials);
 					IIdentity identity = null != principal ? principal.Identity : null;
 					if (null != identity && identity.IsAuthenticated)
 					{
@@ -86,16 +86,16 @@ namespace EPS.Web.Authentication.Basic
 			}
 		}
 
-		private IPrincipal GetPrincipal(HttpContextBase context, MembershipUser membershipUser, string username, string password)
+		private IPrincipal GetPrincipal(HttpContextBase context, MembershipUser membershipUser, NetworkCredential credential)
 		{
 			//if configuration specifies a plug-in principal builder, then use what's specified
 			//this allows use to accept basic auth credentials, but return custom principal objects
 			//i.e. username /password -> custom principal!
 			if (null != Configuration.PrincipalBuilder)
-				return Configuration.PrincipalBuilder.ConstructPrincipal(context, membershipUser, username, password);
+				return Configuration.PrincipalBuilder.ConstructPrincipal(context, membershipUser, credential);
 
 			//otherwise, use our generic identities / principals create principal and set Context.User
-			GenericIdentity id = new GenericIdentity(username, "CustomBasic");
+			GenericIdentity id = new GenericIdentity(credential.UserName, "CustomBasic");
 			if (!string.IsNullOrEmpty(Configuration.RoleProviderName))
 				return new FixedProviderRolePrincipal(RoleProviderHelper.GetProviderByName(Configuration.RoleProviderName), id);
 

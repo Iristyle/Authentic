@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Net;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
@@ -43,7 +44,7 @@ namespace EPS.Web.Authentication.Digest.Tests.Unit
 			//for our tests, we're just going to wire up this one hardcoded principalBuilder
 			MockPrincipalBuilderFactory.Builder = A.Fake<IPrincipalBuilder>();
 
-			A.CallTo(() => MockPrincipalBuilderFactory.Builder.ConstructPrincipal(A<HttpContextBase>.Ignored, A<MembershipUser>.Ignored, A<string>.Ignored, A<string>.Ignored))
+			A.CallTo(() => MockPrincipalBuilderFactory.Builder.ConstructPrincipal(A<HttpContextBase>.Ignored, A<MembershipUser>.Ignored, A<NetworkCredential>.Ignored))
 				.ReturnsLazily(call => new GenericPrincipal(new GenericIdentity(call.GetArgument<string>("userName")), new[] { "roles" }));
 
 			privateHashEncoder = new PrivateHashEncoder("MyPrivateKey");

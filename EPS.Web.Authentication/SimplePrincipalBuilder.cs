@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
@@ -12,16 +13,17 @@ namespace EPS.Web.Authentication
 	/// principals.
 	/// </summary>
 	/// <remarks>	9/2/2011. </remarks>
-	public class SimplePrincipalBuilder : IPrincipalBuilder
+	public class SimplePrincipalBuilder 
+		: IPrincipalBuilder
 	{
-		private readonly Func<HttpContextBase, MembershipUser, string, string, IPrincipal> _constructor;
+		private readonly Func<HttpContextBase, MembershipUser, NetworkCredential, IPrincipal> _constructor;
 
 		/// <summary>	Initializes a new instance of the SimplePrincipalBuilder class. </summary>
 		/// <remarks>	9/2/2011. </remarks>
 		/// <exception cref="ArgumentNullException">	Thrown when one or more required arguments are null. </exception>
 		/// <param name="constructor">	An inspection function that accepts the context, an optional membership user, username and password in
 		/// 							that order. </param>
-		public SimplePrincipalBuilder(Func<HttpContextBase, MembershipUser, string, string, IPrincipal> constructor)
+		public SimplePrincipalBuilder(Func<HttpContextBase, MembershipUser, NetworkCredential, IPrincipal> constructor)
 		{
 			if (null == constructor) { throw new ArgumentNullException("constructor"); }
 
@@ -50,12 +52,11 @@ namespace EPS.Web.Authentication
 		/// <param name="context">		 	The context. </param>
 		/// <param name="membershipUser">	The membership user extracted if there was a MembershipProvider specified through configuration.  May
 		/// 								be null. </param>
-		/// <param name="userName">		 	The username. </param>
-		/// <param name="password">		 	The password. </param>
+		/// <param name="credential">	 	The username / password as a NetworkCredential. </param>
 		/// <returns>	An IPrincipal if the given credentials could be authenticated, otherwise null. </returns>
-		public IPrincipal ConstructPrincipal(HttpContextBase context, MembershipUser membershipUser, string userName, string password)
+		public IPrincipal ConstructPrincipal(HttpContextBase context, MembershipUser membershipUser, NetworkCredential credential)
 		{
-			return _constructor(context, membershipUser, userName, password);
+			return _constructor(context, membershipUser, credential);
 		}
 	}
 }
