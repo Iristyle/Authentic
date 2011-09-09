@@ -19,16 +19,20 @@ namespace EPS.Web.Authentication
 	/// to configure authenticators through code. 
 	/// </summary>
 	/// <remarks>	ebrown, 6/10/2011. </remarks>
-	public class HttpContextRequestProcessor
+	public static class HttpContextRequestProcessor
 	{
 		private static readonly ILog log = LogManager.GetCurrentClassLogger();
 
 		/// <summary>	Process this object. </summary>
 		/// <remarks>	ebrown, 6/10/2011. </remarks>
+		/// <exception cref="ArgumentNullException">	Thrown when the context or configuration are null. </exception>
 		/// <param name="context">			The context. </param>
 		/// <param name="configuration">	The configuration. </param>
 		public static void Process(HttpContextBase context, IHttpAuthenticationConfiguration configuration)
 		{
+			if (null == context) { throw new ArgumentNullException("context"); }
+			if (null == configuration) { throw new ArgumentNullException("configuration"); }
+
 			// check if module is enabled
 			if (!configuration.Enabled)
 				return;
