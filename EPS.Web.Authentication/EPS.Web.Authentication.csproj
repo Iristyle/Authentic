@@ -22,6 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstractions\FailureHandlerAction.cs" />
+    <Compile Include="Basic\Configuration\BasicAuthenticatorConfiguration.cs" />
     <Compile Include="Basic\Configuration\BasicFailureHandlerConfiguration.cs" />
     <Compile Include="Basic\Configuration\IBasicAuthenticatorConfiguration.cs" />
     <Compile Include="Basic\Configuration\IBasicFailureHandlerConfiguration.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Security\FixedProviderRolePrincipal.cs" />
     <Compile Include="Abstractions\IAuthenticator.cs" />
     <Compile Include="Abstractions\IAuthenticatorFactory.cs" />
+    <Compile Include="SimplePrincipalBuilder.cs" />
     <Compile Include="Utility\MembershipProviderLocator.cs" />
     <Compile Include="Utility\PrincipalExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
