@@ -11,8 +11,9 @@
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentValidation, Version=3.0.0.1, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\FluentValidation-3.0.0.1\FluentValidation\FluentValidation.dll</HintPath>
+    <Reference Include="FluentValidation, Version=3.2.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FluentValidation.3.2.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -58,6 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Abstractions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="..\Build\Shared.Test.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
