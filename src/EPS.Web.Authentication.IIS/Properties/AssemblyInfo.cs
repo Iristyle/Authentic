@@ -7,7 +7,7 @@ using EPS.Web.Authentication;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("EPS.Web.Authentication.IIS")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Library for web authentication in IIS")]
 [assembly: AssemblyProduct("EPS.Web.Authentication.IIS")]
 [assembly: AssemblyCulture("")]
 

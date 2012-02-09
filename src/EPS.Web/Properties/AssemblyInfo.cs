@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("EPS.Web")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Helpers for web applications")]
 [assembly: AssemblyProduct("EPS.Web")]
 [assembly: AssemblyCulture("")]
 

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("EPS.Web.Authentication")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Library for web authentication")]
 [assembly: AssemblyProduct("EPS.Web.Authentication")]
 [assembly: AssemblyCulture("")]
 
